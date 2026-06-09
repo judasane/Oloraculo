@@ -1,16 +1,16 @@
-<div class="brand">
-    <div class="mark">O</div>
+<div class="brand-lockup">
+    <MudAvatar Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium">O</MudAvatar>
     <div>
-        <strong>Oloráculo</strong>
-        <span>World Cup Oracle</span>
+        <MudText Typo="Typo.subtitle1">Oloraculo</MudText>
+        <MudText Typo="Typo.caption" Color="Color.Secondary">World Cup Oracle</MudText>
     </div>
 </div>
 
-<nav class="nav-list">
-    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Overview</NavLink>
-    <NavLink class="nav-link" href="lab">Oracle Lab</NavLink>
-    <NavLink class="nav-link" href="matches">Matches</NavLink>
-    <NavLink class="nav-link" href="tournament">Tournament</NavLink>
-    <NavLink class="nav-link" href="performance">Performance</NavLink>
-    <NavLink class="nav-link" href="data">Data</NavLink>
-</nav>
+<MudNavMenu Dense="true" Class="app-nav">
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Overview</MudNavLink>
+    <MudNavLink Href="lab" Icon="@Icons.Material.Filled.Science">Oracle Lab</MudNavLink>
+    <MudNavLink Href="matches" Icon="@Icons.Material.Filled.SportsSoccer">Matches</MudNavLink>
+    <MudNavLink Href="tournament" Icon="@Icons.Material.Filled.EmojiEvents">Tournament</MudNavLink>
+    <MudNavLink Href="performance" Icon="@Icons.Material.Filled.QueryStats">Performance</MudNavLink>
+    <MudNavLink Href="data" Icon="@Icons.Material.Filled.Storage">Data</MudNavLink>
+</MudNavMenu>

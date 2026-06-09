@@ -5,10 +5,16 @@ namespace Oloraculo.Web.Services.Simulation
 {
     public class MatchSamplerCache
     {
-        private readonly PredictionService _prediction;
+        private readonly Func<string, string, CancellationToken, Task<MatchPredictionResult>> _predictPairAsync;
         private readonly Dictionary<string, MatchPredictionResult> _cache = new(StringComparer.Ordinal);
 
-        public MatchSamplerCache(PredictionService prediction) => _prediction = prediction;
+        public MatchSamplerCache(PredictionService prediction)
+            : this(prediction.PredictPairAsync)
+        {
+        }
+
+        public MatchSamplerCache(Func<string, string, CancellationToken, Task<MatchPredictionResult>> predictPairAsync) =>
+            _predictPairAsync = predictPairAsync;
 
         public async Task<(int Home, int Away)> SampleScoreAsync(string homeId, string awayId, Random rng, CancellationToken ct)
         {
@@ -29,7 +35,7 @@ namespace Oloraculo.Web.Services.Simulation
             if (_cache.TryGetValue(key, out var cached))
                 return cached;
 
-            cached = await _prediction.PredictPairAsync(homeId, awayId, ct);
+            cached = await _predictPairAsync(homeId, awayId, ct);
             _cache[key] = cached;
             return cached;
         }

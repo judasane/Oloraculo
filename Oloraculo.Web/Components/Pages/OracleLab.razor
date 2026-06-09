@@ -2,67 +2,82 @@
 @rendermode InteractiveServer
 @inject OloraculoDbContext Db
 @inject PredictionService Predictor
+@inject ISnackbar Snackbar
 
 <PageTitle>Oracle Lab</PageTitle>
 
-<div class="page-head">
-    <h1>Oracle Lab</h1>
-    <p>Compare any two teams across the full prediction ladder.</p>
-</div>
-
-<div class="card">
-    <div class="row controls">
-        <label>
-            <span class="small muted">Team A</span>
-            <select @bind="_homeId">
-                @foreach (var team in _teams)
-                {
-                    <option value="@team.Id">@team.Name</option>
-                }
-            </select>
-        </label>
-        <strong>vs</strong>
-        <label>
-            <span class="small muted">Team B</span>
-            <select @bind="_awayId">
-                @foreach (var team in _teams)
-                {
-                    <option value="@team.Id">@team.Name</option>
-                }
-            </select>
-        </label>
-        <span class="spacer"></span>
-        <button @onclick="Predict" disabled="@_busy">@(_busy ? "Predicting..." : "Predict")</button>
-    </div>
-</div>
-
-@if (_result is not null)
-{
-    <div class="card final-call">
-        <div class="row">
-            <span class="badge">Final</span>
-            <strong>@_result.HomeTeamName vs @_result.AwayTeamName</strong>
-        </div>
-        <div class="prob-wrap">
-            <ProbabilityBar Outcome="_result.BestPrediction.Outcome" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
-        </div>
-        <p class="explain">@_result.BestPrediction.Explanation</p>
+<MudStack Spacing="3">
+    <div class="page-head">
+        <MudText Typo="Typo.h3">Oracle Lab</MudText>
+        <MudText Typo="Typo.body1" Color="Color.Secondary">Compare any two teams across the full prediction ladder.</MudText>
     </div>
 
-    <div class="grid cols-2">
-        @foreach (var prediction in _result.Predictions)
+    <MudPaper Class="surface-card" Elevation="0">
+        <MudGrid Spacing="2" Class="control-grid">
+            <MudItem xs="12" md="5">
+                <MudSelect T="string" Label="Team A" @bind-Value="_homeId" Dense="true" Disabled="@_busy" Variant="Variant.Outlined">
+                    @foreach (var team in _teams)
+                    {
+                        <MudSelectItem T="string" Value="@team.Id">@team.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="5">
+                <MudSelect T="string" Label="Team B" @bind-Value="_awayId" Dense="true" Disabled="@_busy" Variant="Variant.Outlined">
+                    @foreach (var team in _teams)
+                    {
+                        <MudSelectItem T="string" Value="@team.Id">@team.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="2" Class="action-cell">
+                <BusyButton Text="Predict" BusyText="Predicting" IsBusy="_busy" Disabled="@(_homeId is null || _awayId is null || _homeId == _awayId)" Icon="@Icons.Material.Filled.AutoAwesome" OnClick="Predict" />
+            </MudItem>
+        </MudGrid>
+        @if (_busy)
         {
-            <PredictionCard Prediction="@prediction" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
+            <MudProgressLinear Class="inline-progress" Color="Color.Primary" Indeterminate="true" />
         }
-        <PredictionCard Prediction="@_result.BestPrediction" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
-    </div>
-}
+    </MudPaper>
+
+    @if (!string.IsNullOrWhiteSpace(_error))
+    {
+        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@_error</MudAlert>
+    }
+
+    @if (_result is not null)
+    {
+        <MudPaper Class="surface-card final-call" Elevation="0">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                <MudChip T="string" Size="Size.Small" Color="Color.Secondary" Variant="Variant.Filled">Final</MudChip>
+                <MudText Typo="Typo.h6">@_result.HomeTeamName vs @_result.AwayTeamName</MudText>
+            </MudStack>
+            <div class="prob-wrap">
+                <ProbabilityBar Outcome="_result.BestPrediction.Outcome" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
+            </div>
+            <MudText Typo="Typo.body2" Class="explain">@_result.BestPrediction.Explanation</MudText>
+        </MudPaper>
+
+        <MudGrid Spacing="2">
+            @foreach (var prediction in _result.Predictions)
+            {
+                <MudItem xs="12" lg="6">
+                    <PredictionCard Prediction="@prediction" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
+                </MudItem>
+            }
+            <MudItem xs="12" lg="6">
+                <PredictionCard Prediction="@_result.BestPrediction" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
+            </MudItem>
+        </MudGrid>
+    }
+</MudStack>
 
 @code {
     private List<Team> _teams = [];
     private string? _homeId;
     private string? _awayId;
     private bool _busy;
+    private string _error = "";
     private MatchPredictionResult? _result;
 
     protected override async Task OnInitializedAsync()
@@ -78,9 +93,16 @@
             return;
 
         _busy = true;
+        _error = "";
         try
         {
             _result = await Predictor.PredictPairAsync(_homeId, _awayId);
+            Snackbar.Add("Prediction complete.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            Snackbar.Add("Prediction failed.", Severity.Error);
         }
         finally
         {

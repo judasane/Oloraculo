@@ -4,69 +4,98 @@
 @inject RankingRefreshService Rankings
 @inject ApiFootballService Api
 @inject OloraculoDbContext Db
+@inject ISnackbar Snackbar
 
 <PageTitle>Data</PageTitle>
 
-<div class="page-head">
-    <h1>Data</h1>
-    <p>CSV import status and optional API-Football refresh.</p>
-</div>
-
-<div class="card">
-    <div class="row">
-        <button @onclick="ImportAll" disabled="@_busy">@(_busy ? "Importing..." : "Re-import CSV data")</button>
-        <button class="secondary" @onclick="RefreshRankings" disabled="@_rankingsBusy">@(_rankingsBusy ? "Refreshing..." : "Refresh rankings")</button>
-        <button class="secondary" @onclick="RefreshApi" disabled="@_apiBusy">@(_apiBusy ? "Refreshing..." : "Refresh API-Football fixtures")</button>
+<MudStack Spacing="3">
+    <div class="page-head">
+        <MudText Typo="Typo.h3">Data</MudText>
+        <MudText Typo="Typo.body1" Color="Color.Secondary">CSV import status and optional API-Football refresh.</MudText>
     </div>
-    @if (_report is not null)
-    {
-        <p class="small muted">@_report.Teams teams, @_report.Groups groups, @_report.Fixtures fixtures, @_report.Results results, @_report.Ratings ratings.</p>
-    }
-    @if (_rankingsReport is not null)
-    {
-        <p class="small muted">@string.Join(" ", _rankingsReport.Notes)</p>
-        @if (_rankingsReport.AnyFileUpdated)
-        {
-            <p class="small muted">Updated @string.Join(", ", _rankingsReport.UpdatedFiles). Imported @_ratings ratings.</p>
-        }
-        @foreach (var error in _rankingsReport.Errors)
-        {
-            <div class="banner warn">@error</div>
-        }
-    }
-    @if (_apiReport is not null)
-    {
-        <p class="small muted">@string.Join(" ", _apiReport.Notes)</p>
-        @foreach (var error in _apiReport.Errors)
-        {
-            <div class="banner warn">@error</div>
-        }
-    }
-</div>
 
-<div class="grid cols-3">
-    <div class="card stat"><span class="value">@_teams</span><span class="label">Teams</span></div>
-    <div class="card stat"><span class="value">@_fixtures</span><span class="label">Fixtures</span></div>
-    <div class="card stat"><span class="value">@_ratings</span><span class="label">Ratings</span></div>
-</div>
+    @if (!string.IsNullOrWhiteSpace(_error))
+    {
+        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@_error</MudAlert>
+    }
 
-<div class="card">
-    <h2>Ratings</h2>
-    <table>
-        <thead><tr><th>Team</th><th>Type</th><th class="num">Value</th><th>Source</th></tr></thead>
-        <tbody>
-            @foreach (var rating in _ratingRows)
+    <MudPaper Class="surface-card" Elevation="0">
+        <MudStack Row="true" Spacing="1" Class="action-row">
+            <BusyButton Text="Re-import CSV data" BusyText="Importing" IsBusy="_busy" Icon="@Icons.Material.Filled.UploadFile" OnClick="ImportAll" />
+            <BusyButton Text="Refresh rankings" BusyText="Refreshing" IsBusy="_rankingsBusy" Variant="Variant.Outlined" Color="Color.Secondary" Icon="@Icons.Material.Filled.Sync" OnClick="RefreshRankings" />
+            <BusyButton Text="Refresh API-Football fixtures" BusyText="Refreshing" IsBusy="_apiBusy" Variant="Variant.Outlined" Color="Color.Secondary" Icon="@Icons.Material.Filled.CloudSync" OnClick="RefreshApi" />
+        </MudStack>
+        @if (_busy || _rankingsBusy || _apiBusy)
+        {
+            <MudProgressLinear Class="inline-progress" Color="Color.Primary" Indeterminate="true" />
+        }
+        @if (_report is not null)
+        {
+            <MudAlert Class="mt-2" Severity="Severity.Success" Variant="Variant.Outlined">@_report.Teams teams, @_report.Groups groups, @_report.Fixtures fixtures, @_report.Results results, @_report.Ratings ratings.</MudAlert>
+        }
+        @if (_rankingsReport is not null)
+        {
+            <MudAlert Class="mt-2" Severity="@(_rankingsReport.Errors.Count > 0 ? Severity.Warning : Severity.Info)" Variant="Variant.Outlined">
+                @string.Join(" ", _rankingsReport.Notes)
+                @if (_rankingsReport.AnyFileUpdated)
+                {
+                    <span> Updated @string.Join(", ", _rankingsReport.UpdatedFiles). Imported @_ratings ratings.</span>
+                }
+            </MudAlert>
+            @foreach (var error in _rankingsReport.Errors)
             {
-                <tr><td>@Name(rating.TeamId)</td><td>@rating.Type</td><td class="num">@rating.Value.ToString("0")</td><td>@rating.Source</td></tr>
+                <MudAlert Class="mt-2" Severity="Severity.Warning" Variant="Variant.Outlined">@error</MudAlert>
             }
-        </tbody>
-    </table>
-</div>
+        }
+        @if (_apiReport is not null)
+        {
+            <MudAlert Class="mt-2" Severity="@(_apiReport.Errors.Count > 0 ? Severity.Warning : Severity.Info)" Variant="Variant.Outlined">@string.Join(" ", _apiReport.Notes)</MudAlert>
+            @foreach (var error in _apiReport.Errors)
+            {
+                <MudAlert Class="mt-2" Severity="Severity.Warning" Variant="Variant.Outlined">@error</MudAlert>
+            }
+        }
+    </MudPaper>
+
+    <MudGrid Spacing="2">
+        <MudItem xs="12" md="4"><MudPaper Class="stat-card" Elevation="0"><MudText Typo="Typo.h4">@_teams</MudText><MudText Typo="Typo.body2" Color="Color.Secondary">Teams</MudText></MudPaper></MudItem>
+        <MudItem xs="12" md="4"><MudPaper Class="stat-card" Elevation="0"><MudText Typo="Typo.h4">@_fixtures</MudText><MudText Typo="Typo.body2" Color="Color.Secondary">Fixtures</MudText></MudPaper></MudItem>
+        <MudItem xs="12" md="4"><MudPaper Class="stat-card" Elevation="0"><MudText Typo="Typo.h4">@_ratings</MudText><MudText Typo="Typo.body2" Color="Color.Secondary">Ratings</MudText></MudPaper></MudItem>
+    </MudGrid>
+
+    <MudPaper Class="surface-card" Elevation="0">
+        <MudText Typo="Typo.h6">Ratings</MudText>
+        @if (!_loaded)
+        {
+            <MudSkeleton Height="34px" Class="skeleton-row" />
+            <MudSkeleton Height="34px" Class="skeleton-row" />
+            <MudSkeleton Height="34px" Class="skeleton-row" />
+        }
+        else
+        {
+            <MudTable Items="_ratingRows" Dense="true" Hover="true" Elevation="0" Class="dense-table">
+                <HeaderContent>
+                    <MudTh>Team</MudTh>
+                    <MudTh>Type</MudTh>
+                    <MudTh Class="num">Value</MudTh>
+                    <MudTh>Source</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Team">@Name(context.TeamId)</MudTd>
+                    <MudTd DataLabel="Type">@context.Type</MudTd>
+                    <MudTd DataLabel="Value" Class="num">@context.Value.ToString("0")</MudTd>
+                    <MudTd DataLabel="Source">@context.Source</MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
+    </MudPaper>
+</MudStack>
 
 @code {
     private bool _busy;
     private bool _apiBusy;
     private bool _rankingsBusy;
+    private bool _loaded;
     private CsvImportReport? _report;
     private RankingRefreshReport? _rankingsReport;
     private ApiFootballRefreshReport? _apiReport;
@@ -75,16 +104,28 @@
     private int _ratings;
     private List<Rating> _ratingRows = [];
     private Dictionary<string, string> _names = [];
+    private string _error = "";
 
-    protected override async Task OnInitializedAsync() => await Load();
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+        _loaded = true;
+    }
 
     private async Task ImportAll()
     {
         _busy = true;
+        _error = "";
         try
         {
             _report = await Importer.ImportAllAsync();
             await Load();
+            Snackbar.Add("CSV data imported.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            Snackbar.Add("CSV import failed.", Severity.Error);
         }
         finally
         {
@@ -95,10 +136,17 @@
     private async Task RefreshApi()
     {
         _apiBusy = true;
+        _error = "";
         try
         {
             _apiReport = await Api.RefreshFixturesAsync();
             await Load();
+            Snackbar.Add(_apiReport.Errors.Count > 0 ? "API refresh completed with warnings." : "API-Football fixtures refreshed.", _apiReport.Errors.Count > 0 ? Severity.Warning : Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            Snackbar.Add("API-Football refresh failed.", Severity.Error);
         }
         finally
         {
@@ -109,12 +157,19 @@
     private async Task RefreshRankings()
     {
         _rankingsBusy = true;
+        _error = "";
         try
         {
             _rankingsReport = await Rankings.RefreshAsync();
             if (_rankingsReport.AnyFileUpdated)
                 _ratings = await Importer.ImportRatingsOnlyAsync();
             await Load();
+            Snackbar.Add(_rankingsReport.Errors.Count > 0 ? "Ranking refresh completed with warnings." : "Rankings refreshed.", _rankingsReport.Errors.Count > 0 ? Severity.Warning : Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            Snackbar.Add("Ranking refresh failed.", Severity.Error);
         }
         finally
         {

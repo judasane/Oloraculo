@@ -5,70 +5,84 @@
 
 <PageTitle>Performance</PageTitle>
 
-<div class="page-head">
-    <h1>Performance</h1>
-    <p>Saved predictions scored with Brier, ranked probability score, log loss, and top-pick accuracy.</p>
-</div>
-
-@if (_performance.Count == 0)
-{
-    <div class="banner warn">No evaluations yet.</div>
-}
-else
-{
-    <div class="card">
-        <h2>Model Scores</h2>
-        <table>
-            <thead><tr><th>Model</th><th class="num">N</th><th class="num">Top pick</th><th class="num">RPS</th><th class="num">Brier</th><th class="num">Log loss</th></tr></thead>
-            <tbody>
-                @foreach (var row in _performance)
-                {
-                    <tr>
-                        <td>@row.ModelName</td>
-                        <td class="num">@row.Count</td>
-                        <td class="num">@row.TopPickAccuracy.ToString("P0")</td>
-                        <td class="num">@row.MeanRps.ToString("0.000")</td>
-                        <td class="num">@row.MeanBrier.ToString("0.000")</td>
-                        <td class="num">@row.MeanLogLoss.ToString("0.000")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<MudStack Spacing="3">
+    <div class="page-head">
+        <MudText Typo="Typo.h3">Performance</MudText>
+        <MudText Typo="Typo.body1" Color="Color.Secondary">Saved predictions scored with Brier, ranked probability score, log loss, and top-pick accuracy.</MudText>
     </div>
 
-    <div class="grid cols-2">
-        <div class="card">
-            <h2>Best Calls</h2>
-            <table>
-                <thead><tr><th>Match</th><th class="num">RPS</th></tr></thead>
-                <tbody>
-                    @foreach (var e in _best)
-                    {
-                        <tr><td>@Name(e.HomeTeamId) @e.HomeGoals-@e.AwayGoals @Name(e.AwayTeamId)</td><td class="num">@e.RankedProbabilityScore.ToString("0.000")</td></tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="card">
-            <h2>Overconfident Misses</h2>
-            <table>
-                <thead><tr><th>Match</th><th class="num">Log loss</th></tr></thead>
-                <tbody>
-                    @foreach (var e in _worst)
-                    {
-                        <tr><td>@Name(e.HomeTeamId) @e.HomeGoals-@e.AwayGoals @Name(e.AwayTeamId)</td><td class="num">@e.LogLoss.ToString("0.000")</td></tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-}
+    @if (!_loaded)
+    {
+        <MudPaper Class="surface-card" Elevation="0">
+            <MudSkeleton Height="32px" Width="35%" />
+            <MudSkeleton Height="34px" Class="skeleton-row" />
+            <MudSkeleton Height="34px" Class="skeleton-row" />
+            <MudProgressLinear Class="inline-progress" Color="Color.Primary" Indeterminate="true" />
+        </MudPaper>
+    }
+    else if (_performance.Count == 0)
+    {
+        <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined">No evaluations yet.</MudAlert>
+    }
+    else
+    {
+        <MudPaper Class="surface-card" Elevation="0">
+            <MudText Typo="Typo.h6">Model Scores</MudText>
+            <MudTable Items="_performance" Dense="true" Hover="true" Elevation="0" Class="dense-table">
+                <HeaderContent>
+                    <MudTh>Model</MudTh>
+                    <MudTh Class="num">N</MudTh>
+                    <MudTh Class="num">Top pick</MudTh>
+                    <MudTh Class="num">RPS</MudTh>
+                    <MudTh Class="num">Brier</MudTh>
+                    <MudTh Class="num">Log loss</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Model">@context.ModelName</MudTd>
+                    <MudTd DataLabel="N" Class="num">@context.Count</MudTd>
+                    <MudTd DataLabel="Top pick" Class="num">@context.TopPickAccuracy.ToString("P0")</MudTd>
+                    <MudTd DataLabel="RPS" Class="num">@context.MeanRps.ToString("0.000")</MudTd>
+                    <MudTd DataLabel="Brier" Class="num">@context.MeanBrier.ToString("0.000")</MudTd>
+                    <MudTd DataLabel="Log loss" Class="num">@context.MeanLogLoss.ToString("0.000")</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+
+        <MudGrid Spacing="2">
+            <MudItem xs="12" md="6">
+                <MudPaper Class="surface-card" Elevation="0">
+                    <MudText Typo="Typo.h6">Best Calls</MudText>
+                    <MudTable Items="_best" Dense="true" Hover="true" Elevation="0" Class="dense-table">
+                        <HeaderContent><MudTh>Match</MudTh><MudTh Class="num">RPS</MudTh></HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Match">@Name(context.HomeTeamId) @context.HomeGoals-@context.AwayGoals @Name(context.AwayTeamId)</MudTd>
+                            <MudTd DataLabel="RPS" Class="num">@context.RankedProbabilityScore.ToString("0.000")</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudPaper Class="surface-card" Elevation="0">
+                    <MudText Typo="Typo.h6">Overconfident Misses</MudText>
+                    <MudTable Items="_worst" Dense="true" Hover="true" Elevation="0" Class="dense-table">
+                        <HeaderContent><MudTh>Match</MudTh><MudTh Class="num">Log loss</MudTh></HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Match">@Name(context.HomeTeamId) @context.HomeGoals-@context.AwayGoals @Name(context.AwayTeamId)</MudTd>
+                            <MudTd DataLabel="Log loss" Class="num">@context.LogLoss.ToString("0.000")</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    }
+</MudStack>
 
 @code {
     private IReadOnlyList<ModelPerformanceRow> _performance = [];
     private IReadOnlyList<PredictionEvaluation> _best = [];
     private IReadOnlyList<PredictionEvaluation> _worst = [];
     private Dictionary<string, string> _names = [];
+    private bool _loaded;
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,6 +90,7 @@ else
         _performance = await Evaluation.PerformanceAsync();
         _best = await Evaluation.BestCallsAsync();
         _worst = await Evaluation.OverconfidentFailuresAsync();
+        _loaded = true;
     }
 
     private string Name(string id) => _names.TryGetValue(id, out var name) ? name : id;

@@ -1,0 +1,28 @@
+<MudButton Variant="@Variant"
+           Color="@Color"
+           Size="@Size"
+           Disabled="@(Disabled || IsBusy)"
+           OnClick="OnClick"
+           StartIcon="@(!IsBusy ? Icon : null)">
+    @if (IsBusy)
+    {
+        <MudProgressCircular Class="busy-button-spinner" Size="Size.Small" Color="Color.Inherit" Indeterminate="true" />
+        <span>@BusyText</span>
+    }
+    else
+    {
+        <span>@Text</span>
+    }
+</MudButton>
+
+@code {
+    [Parameter] public string Text { get; set; } = "Run";
+    [Parameter] public string BusyText { get; set; } = "Working";
+    [Parameter] public bool IsBusy { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? Icon { get; set; }
+    [Parameter] public Variant Variant { get; set; } = Variant.Filled;
+    [Parameter] public MudBlazor.Color Color { get; set; } = MudBlazor.Color.Primary;
+    [Parameter] public Size Size { get; set; } = Size.Medium;
+    [Parameter] public EventCallback OnClick { get; set; }
+}

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 using Oloraculo.Web;
 using Oloraculo.Web.Components;
 using Oloraculo.Web.DAL;
@@ -13,6 +14,7 @@ builder.Logging.AddConsole();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddMudServices();
 
 builder.Services.Configure<OloraculoConfig>(builder.Configuration.GetSection("Oloraculo"));
 var ConnectionString = builder.Configuration.GetConnectionString("Oloraculo") ?? 

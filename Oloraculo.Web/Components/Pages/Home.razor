@@ -4,52 +4,64 @@
 
 <PageTitle>Oloraculo</PageTitle>
 
-<div class="page-head">
-    <h1>Oloráculo</h1>
-    <p>One Blazor app, one SQLite database, a visible prediction ladder, and an official 2026 tournament simulation.</p>
-</div>
-
-<div class="grid cols-4">
-    <div class="card stat"><span class="value">@_teams</span><span class="label">Teams</span></div>
-    <div class="card stat"><span class="value">@_fixtures</span><span class="label">Fixtures</span></div>
-    <div class="card stat"><span class="value">@_results</span><span class="label">Results</span></div>
-    <div class="card stat"><span class="value">@Options.Value.SimulationCount.ToString("N0")</span><span class="label">Simulations</span></div>
-</div>
-
-<div class="grid cols-2">
-    <div class="card">
-        <h2>Project Loop</h2>
-        <ol>
-            <li>CSV data creates the football world.</li>
-            <li>API-Football can enrich fixtures when available.</li>
-            <li>The ladder predicts one match at a time.</li>
-            <li>The Final Oracle selects the highest usable rung.</li>
-            <li>Monte Carlo plays the official 2026 tournament many times.</li>
-            <li>Saved predictions are graded after results arrive.</li>
-        </ol>
-        <a class="btn" href="lab">Open Oracle Lab</a>
+<MudStack Spacing="3">
+    <div class="page-head">
+        <MudText Typo="Typo.h3">Oloraculo</MudText>
+        <MudText Typo="Typo.body1" Color="Color.Secondary">One Blazor app, one SQLite database, a visible prediction ladder, and an official 2026 tournament simulation.</MudText>
     </div>
 
-    <div class="card">
-        <h2>Ladder</h2>
-        <table>
-            <tbody>
-                <tr><td><span class="badge">L0</span></td><td>Baseline</td><td class="muted">uniform prior</td></tr>
-                <tr><td><span class="badge">L1</span></td><td>FIFA ranking</td><td class="muted">external points</td></tr>
-                <tr><td><span class="badge">L2</span></td><td>Elo</td><td class="muted">long-term strength</td></tr>
-                <tr><td><span class="badge">L3</span></td><td>Recent form</td><td class="muted">short-term results</td></tr>
-                <tr><td><span class="badge">L4</span></td><td>Goals</td><td class="muted">Poisson scorelines</td></tr>
-                <tr><td><span class="badge">L5</span></td><td>Context</td><td class="muted">sourced adjustment</td></tr>
-                <tr><td><span class="badge">Final</span></td><td>Final Oracle</td><td class="muted">highest usable rung</td></tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+    <MudGrid Spacing="2">
+        <MudItem xs="12" sm="6" lg="3"><MudPaper Class="stat-card" Elevation="0"><MudText Typo="Typo.h4">@_teams</MudText><MudText Typo="Typo.body2" Color="Color.Secondary">Teams</MudText></MudPaper></MudItem>
+        <MudItem xs="12" sm="6" lg="3"><MudPaper Class="stat-card" Elevation="0"><MudText Typo="Typo.h4">@_fixtures</MudText><MudText Typo="Typo.body2" Color="Color.Secondary">Fixtures</MudText></MudPaper></MudItem>
+        <MudItem xs="12" sm="6" lg="3"><MudPaper Class="stat-card" Elevation="0"><MudText Typo="Typo.h4">@_results</MudText><MudText Typo="Typo.body2" Color="Color.Secondary">Results</MudText></MudPaper></MudItem>
+        <MudItem xs="12" sm="6" lg="3"><MudPaper Class="stat-card" Elevation="0"><MudText Typo="Typo.h4">@Options.Value.SimulationCount.ToString("N0")</MudText><MudText Typo="Typo.body2" Color="Color.Secondary">Simulations</MudText></MudPaper></MudItem>
+    </MudGrid>
+
+    <MudGrid Spacing="2">
+        <MudItem xs="12" md="6">
+            <MudPaper Class="surface-card" Elevation="0">
+                <MudText Typo="Typo.h6">Project Loop</MudText>
+                <ol class="clean-list">
+                    <li>CSV data creates the football world.</li>
+                    <li>API-Football can enrich fixtures when available.</li>
+                    <li>The ladder predicts one match at a time.</li>
+                    <li>The Final Oracle selects the highest usable rung.</li>
+                    <li>Monte Carlo plays the official 2026 tournament many times.</li>
+                    <li>Saved predictions are graded after results arrive.</li>
+                </ol>
+                <MudButton Href="lab" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Science">Open Oracle Lab</MudButton>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <MudPaper Class="surface-card" Elevation="0">
+                <MudText Typo="Typo.h6">Ladder</MudText>
+                <MudTable Items="_ladder" Dense="true" Hover="true" Elevation="0">
+                    <RowTemplate>
+                        <MudTd DataLabel="Level"><MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Outlined">@context.Level</MudChip></MudTd>
+                        <MudTd DataLabel="Model">@context.Model</MudTd>
+                        <MudTd DataLabel="Signal"><MudText Typo="Typo.body2" Color="Color.Secondary">@context.Signal</MudText></MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudStack>
 
 @code {
     private int _teams;
     private int _fixtures;
     private int _results;
+    private readonly List<LadderRow> _ladder =
+    [
+        new("L0", "Baseline", "uniform prior"),
+        new("L1", "FIFA ranking", "external points"),
+        new("L2", "Elo", "long-term strength"),
+        new("L3", "Recent form", "short-term results"),
+        new("L4", "Goals", "Poisson scorelines"),
+        new("L5", "Context", "sourced adjustment"),
+        new("Final", "Final Oracle", "highest usable rung")
+    ];
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,4 +69,6 @@
         _fixtures = await Db.Fixtures.CountAsync();
         _results = await Db.Results.CountAsync();
     }
+
+    private sealed record LadderRow(string Level, string Model, string Signal);
 }

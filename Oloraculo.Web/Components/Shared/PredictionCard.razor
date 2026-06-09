@@ -1,12 +1,12 @@
-<div class="card">
-    <div class="row">
-        <span class="badge">L@(Prediction.PredictorPriority)</span>
-        <strong>@Prediction.PredictorName</strong>
+<MudPaper Class="prediction-card" Elevation="0">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+        <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Outlined">L@(Prediction.PredictorPriority)</MudChip>
+        <MudText Typo="Typo.subtitle1">@Prediction.PredictorName</MudText>
         @if (Prediction.Degraded)
         {
-            <span class="badge bad">degraded</span>
+            <MudChip T="string" Size="Size.Small" Color="Color.Error" Variant="Variant.Outlined">degraded</MudChip>
         }
-    </div>
+    </MudStack>
 
     <div class="prob-wrap">
         <ProbabilityBar Outcome="Prediction.Outcome" HomeLabel="@HomeLabel" AwayLabel="@AwayLabel" />
@@ -14,53 +14,53 @@
 
     @if (Prediction.ExpectedHomeGoals.HasValue && Prediction.ExpectedAwayGoals.HasValue)
     {
-        <div class="small muted">
+        <MudText Typo="Typo.caption" Color="Color.Secondary">
             xG @HomeLabel @Prediction.ExpectedHomeGoals.Value.ToString("0.00")
             - @Prediction.ExpectedAwayGoals.Value.ToString("0.00") @AwayLabel
             @if (Prediction.MostLikelyScore.HasValue)
             {
                 <span> | likely @Prediction.MostLikelyScore.Value.Home-@Prediction.MostLikelyScore.Value.Away</span>
             }
-        </div>
+        </MudText>
     }
 
-    <p class="explain">@Prediction.Explanation</p>
+    <MudText Typo="Typo.body2" Class="explain">@Prediction.Explanation</MudText>
 
     @if (ShowDetails)
     {
-        <div class="grid cols-2 compact">
-            <div>
-                <h3>Used</h3>
-                <div class="row">
+        <MudGrid Spacing="2" Class="mt-2">
+            <MudItem xs="12" md="6">
+                <MudText Typo="Typo.caption" Color="Color.Secondary">Used</MudText>
+                <MudStack Row="true" Spacing="1" Class="chip-wrap">
                     @foreach (var feature in Prediction.FeaturesUsed)
                     {
-                        <span class="badge good">@feature</span>
+                        <MudChip T="string" Size="Size.Small" Color="Color.Success" Variant="Variant.Outlined">@feature.ToString()</MudChip>
                     }
                     @if (Prediction.FeaturesUsed.Count == 0)
                     {
-                        <span class="muted small">none</span>
+                        <MudText Typo="Typo.caption" Color="Color.Secondary">none</MudText>
                     }
-                </div>
-            </div>
-            <div>
-                <h3>Missing</h3>
-                <div class="row">
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudText Typo="Typo.caption" Color="Color.Secondary">Missing</MudText>
+                <MudStack Row="true" Spacing="1" Class="chip-wrap">
                     @foreach (var feature in Prediction.FeaturesMissing)
                     {
-                        <span class="badge bad">@feature</span>
+                        <MudChip T="string" Size="Size.Small" Color="Color.Error" Variant="Variant.Outlined">@feature.ToString()</MudChip>
                     }
                     @if (Prediction.FeaturesMissing.Count == 0)
                     {
-                        <span class="muted small">none</span>
+                        <MudText Typo="Typo.caption" Color="Color.Secondary">none</MudText>
                     }
-                </div>
-            </div>
-        </div>
+                </MudStack>
+            </MudItem>
+        </MudGrid>
 
         @if (Prediction.Drivers.Count > 0)
         {
-            <h3 class="section-label">Drivers</h3>
-            <ul class="small">
+            <MudText Typo="Typo.caption" Color="Color.Secondary" Class="section-label">Drivers</MudText>
+            <ul class="driver-list">
                 @foreach (var driver in Prediction.Drivers)
                 {
                     <li>@driver</li>
@@ -68,7 +68,7 @@
             </ul>
         }
     }
-</div>
+</MudPaper>
 
 @code {
     [Parameter, EditorRequired] public MatchPrediction Prediction { get; set; } = default!;

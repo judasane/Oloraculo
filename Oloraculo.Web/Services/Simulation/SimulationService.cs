@@ -33,7 +33,8 @@ namespace Oloraculo.Web.Services.Simulation
             var rng = new Random(seed ?? _config.SimulationSeed ?? Environment.TickCount);
             var n = simulations ?? _config.SimulationCount;
             var counters = teams.ToDictionary(t => t, _ => new Counter());
-            var sampler = new MatchSamplerCache(_prediction);
+            var predictionContext = await SimulationPredictionContext.CreateAsync(_db, _config, ct);
+            var sampler = new MatchSamplerCache(predictionContext.PredictPairAsync);
 
             for (var i = 0; i < n; i++)
             {

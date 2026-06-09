@@ -141,6 +141,58 @@ public class CoreTests
     }
 
     [Fact]
+    public void FinalSelector_AppliesLightRankingBiasWhenEloAndFifaAgreeAgainstSelected()
+    {
+        var fifa = Prediction(1, "FIFA ranking", .15, .20, .65, sources: [SourceMetadata.FifaRankings]);
+        var elo = Prediction(2, "Elo", .10, .20, .70, sources: [SourceMetadata.EloRatings]);
+        var goalScoreline = ProbabilityHelper.PoissonScoreline(1.4, 1.1);
+        var goal = Prediction(4, "Goal", .45, .35, .20, scoreline: goalScoreline);
+
+        var final = FinalPredictionSelector.Select([fifa, elo, goal]);
+
+        Assert.Equal("Final Oracle", final.PredictorName);
+        Assert.Equal(4, final.PredictorPriority);
+        Assert.Equal(.40125, final.Outcome.HomeWin, 5);
+        Assert.Equal(.3275, final.Outcome.Draw, 5);
+        Assert.Equal(.27125, final.Outcome.AwayWin, 5);
+        Assert.Same(goalScoreline, final.Scoreline);
+        Assert.Contains(final.Drivers, d => d.Contains("Elo/FIFA calibration"));
+        Assert.Contains("Elo/FIFA calibration", final.Explanation);
+        Assert.Contains(SourceMetadata.FifaRankings, final.Sources);
+        Assert.Contains(SourceMetadata.EloRatings, final.Sources);
+    }
+
+    [Fact]
+    public void FinalSelector_DoesNotApplyRankingBiasWhenRankingModelsDisagree()
+    {
+        var fifa = Prediction(1, "FIFA ranking", .65, .20, .15, sources: [SourceMetadata.FifaRankings]);
+        var elo = Prediction(2, "Elo", .10, .20, .70, sources: [SourceMetadata.EloRatings]);
+        var goal = Prediction(4, "Goal", .45, .35, .20);
+
+        var final = FinalPredictionSelector.Select([fifa, elo, goal]);
+
+        Assert.Equal(goal.Outcome, final.Outcome);
+        Assert.DoesNotContain(final.Drivers, d => d.Contains("Elo/FIFA calibration"));
+        Assert.DoesNotContain(SourceMetadata.FifaRankings, final.Sources);
+        Assert.DoesNotContain(SourceMetadata.EloRatings, final.Sources);
+    }
+
+    [Fact]
+    public void FinalSelector_DoesNotApplyRankingBiasWhenRankingModelIsDegraded()
+    {
+        var fifa = Prediction(1, "FIFA ranking", .15, .20, .65, degraded: true, sources: [SourceMetadata.FifaRankings]);
+        var elo = Prediction(2, "Elo", .10, .20, .70, sources: [SourceMetadata.EloRatings]);
+        var goal = Prediction(4, "Goal", .45, .35, .20);
+
+        var final = FinalPredictionSelector.Select([fifa, elo, goal]);
+
+        Assert.Equal(goal.Outcome, final.Outcome);
+        Assert.DoesNotContain(final.Drivers, d => d.Contains("Elo/FIFA calibration"));
+        Assert.DoesNotContain(SourceMetadata.FifaRankings, final.Sources);
+        Assert.DoesNotContain(SourceMetadata.EloRatings, final.Sources);
+    }
+
+    [Fact]
     public void RankingRefresh_ParsesFifaLuaRows()
     {
         var rows = RankingRefreshService.ParseFifaRankings(SampleFifaRaw());
@@ -334,6 +386,37 @@ public class CoreTests
         Assert.Equal(1.0, one.Teams.Sum(t => t.WinTournament), 6);
     }
 
+    [Theory]
+    [InlineData("argentina", "france")]
+    [InlineData("france", "argentina")]
+    [InlineData("mexico", "canada")]
+    public async Task SimulationPredictionContext_MatchesPredictionServiceForPairs(string homeId, string awayId)
+    {
+        await using var db = await ImportedDb();
+        var options = SimulationOptions(simulations: 1, seed: 42);
+        var prediction = new PredictionService(db, options);
+        var simulationPrediction = await SimulationPredictionContext.CreateAsync(db, options.Value);
+
+        var expected = await prediction.PredictPairAsync(homeId, awayId);
+        var actual = await simulationPrediction.PredictPairAsync(homeId, awayId);
+
+        AssertPredictionResultEqual(expected, actual);
+    }
+
+    [Fact]
+    public async Task Simulation_WithFixedSeedKeepsDeterministicTournamentOutput()
+    {
+        await using var db = await ImportedDb();
+        var service = Simulation(db, simulations: 2, seed: 2026);
+
+        var one = await service.RunAsync(saveSnapshot: false);
+        var two = await service.RunAsync(saveSnapshot: false);
+
+        Assert.Equal(2, one.Simulations);
+        Assert.Equal(1.0, one.Teams.Sum(t => t.WinTournament), 6);
+        Assert.Equal(one.Teams.Select(ProjectionKey), two.Teams.Select(ProjectionKey));
+    }
+
     [Fact]
     public async Task Simulation_UsesKnownGroupFixtureScores()
     {
@@ -359,17 +442,20 @@ public class CoreTests
 
     private static SimulationService Simulation(OloraculoDbContext db, int simulations, int seed)
     {
-        var options = Options.Create(new OloraculoConfig
+        var options = SimulationOptions(simulations, seed);
+        var prediction = new PredictionService(db, options);
+        var snapshots = new SnapshotService(db);
+        return new SimulationService(db, prediction, snapshots, options);
+    }
+
+    private static IOptions<OloraculoConfig> SimulationOptions(int simulations, int seed) =>
+        Options.Create(new OloraculoConfig
         {
             GoalModelYearsWindow = 3,
             RecentResultCount = 8,
             SimulationCount = simulations,
             SimulationSeed = seed
         });
-        var prediction = new PredictionService(db, options);
-        var snapshots = new SnapshotService(db);
-        return new SimulationService(db, prediction, snapshots, options);
-    }
 
     private static async Task<OloraculoDbContext> ImportedDb()
     {
@@ -421,7 +507,8 @@ public class CoreTests
         double away,
         bool degraded = false,
         IReadOnlyList<string>? missing = null,
-        ScorelineDistribution? scoreline = null) => new()
+        ScorelineDistribution? scoreline = null,
+        IReadOnlyList<SourceMetadata>? sources = null) => new()
     {
         PredictorPriority = priority,
         PredictorName = name,
@@ -432,7 +519,67 @@ public class CoreTests
         Scoreline = scoreline,
         Explanation = name,
         FeaturesMissing = missing ?? [],
+        Sources = sources ?? [],
         Degraded = degraded
+    };
+
+    private static void AssertPredictionResultEqual(MatchPredictionResult expected, MatchPredictionResult actual)
+    {
+        Assert.Equal(expected.Fixture.Id, actual.Fixture.Id);
+        Assert.Equal(expected.Fixture.HomeTeamId, actual.Fixture.HomeTeamId);
+        Assert.Equal(expected.Fixture.AwayTeamId, actual.Fixture.AwayTeamId);
+        Assert.Equal(expected.HomeTeamName, actual.HomeTeamName);
+        Assert.Equal(expected.AwayTeamName, actual.AwayTeamName);
+        Assert.Equal(expected.Predictions.Count, actual.Predictions.Count);
+
+        for (var i = 0; i < expected.Predictions.Count; i++)
+            AssertPredictionEqual(expected.Predictions[i], actual.Predictions[i]);
+
+        AssertPredictionEqual(expected.BestPrediction, actual.BestPrediction);
+    }
+
+    private static void AssertPredictionEqual(MatchPrediction expected, MatchPrediction actual)
+    {
+        Assert.Equal(expected.PredictorName, actual.PredictorName);
+        Assert.Equal(expected.PredictorPriority, actual.PredictorPriority);
+        Assert.Equal(expected.FixtureId, actual.FixtureId);
+        Assert.Equal(expected.HomeTeamId, actual.HomeTeamId);
+        Assert.Equal(expected.AwayTeamId, actual.AwayTeamId);
+        Assert.Equal(expected.Outcome.HomeWin, actual.Outcome.HomeWin);
+        Assert.Equal(expected.Outcome.Draw, actual.Outcome.Draw);
+        Assert.Equal(expected.Outcome.AwayWin, actual.Outcome.AwayWin);
+        Assert.Equal(expected.ExpectedHomeGoals, actual.ExpectedHomeGoals);
+        Assert.Equal(expected.ExpectedAwayGoals, actual.ExpectedAwayGoals);
+        Assert.Equal(expected.MostLikelyScore, actual.MostLikelyScore);
+        Assert.Equal(expected.Degraded, actual.Degraded);
+        Assert.Equal(expected.FeaturesMissing, actual.FeaturesMissing);
+        AssertScorelineEqual(expected.Scoreline, actual.Scoreline);
+    }
+
+    private static void AssertScorelineEqual(ScorelineDistribution? expected, ScorelineDistribution? actual)
+    {
+        Assert.Equal(expected is null, actual is null);
+        if (expected is null || actual is null)
+            return;
+
+        Assert.Equal(expected.MaxGoals, actual.MaxGoals);
+        for (var home = 0; home <= expected.MaxGoals; home++)
+            for (var away = 0; away <= expected.MaxGoals; away++)
+                Assert.Equal(expected.Probability(home, away), actual.Probability(home, away));
+    }
+
+    private static object ProjectionKey(TeamTournamentProbability team) => new
+    {
+        team.TeamId,
+        team.Group,
+        team.WinGroup,
+        team.Qualify,
+        team.ReachRoundOf16,
+        team.ReachQuarterFinal,
+        team.ReachSemiFinal,
+        team.ReachFinal,
+        team.WinTournament,
+        team.ExpectedGroupPoints
     };
 
     private static string WebProjectRoot() =>

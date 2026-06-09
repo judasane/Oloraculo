@@ -5,87 +5,126 @@
 @inject SnapshotService Snapshots
 @inject EvaluationService Evaluation
 @inject ApiFootballService Api
+@inject ISnackbar Snackbar
 
 <PageTitle>Matches</PageTitle>
 
-<div class="page-head">
-    <h1>Matches</h1>
-    <p>Group fixtures, snapshots, API context, and result entry.</p>
-</div>
+<MudStack Spacing="3">
+    <div class="page-head">
+        <MudText Typo="Typo.h3">Matches</MudText>
+        <MudText Typo="Typo.body1" Color="Color.Secondary">Group fixtures, snapshots, API context, and result entry.</MudText>
+    </div>
 
-<div class="grid cols-2">
-    <div class="card fixture-list">
-        <h2>Fixtures</h2>
-        @foreach (var group in _fixtures.GroupBy(f => f.Group).OrderBy(g => g.Key))
-        {
-            <h3>Group @group.Key</h3>
-            @foreach (var fixture in group)
-            {
-                <div class="fixture-row">
-                    <button class="secondary" @onclick="() => Select(fixture)">Predict</button>
-                    <span>@Name(fixture.HomeTeamId) v @Name(fixture.AwayTeamId)</span>
-                    <span class="spacer"></span>
-                    @if (fixture.IsPlayed && fixture.HomeGoals.HasValue && fixture.AwayGoals.HasValue)
+    @if (!string.IsNullOrWhiteSpace(_error))
+    {
+        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@_error</MudAlert>
+    }
+
+    <MudGrid Spacing="2">
+        <MudItem xs="12" lg="5">
+            <MudPaper Class="surface-card fixture-list" Elevation="0">
+                <MudText Typo="Typo.h6">Fixtures</MudText>
+                @if (!_loaded)
+                {
+                    <MudSkeleton Height="34px" Class="skeleton-row" />
+                    <MudSkeleton Height="34px" Class="skeleton-row" />
+                    <MudSkeleton Height="34px" Class="skeleton-row" />
+                }
+                else
+                {
+                    @foreach (var group in _fixtures.GroupBy(f => f.Group).OrderBy(g => g.Key))
                     {
-                        <span class="badge good">@fixture.HomeGoals-@fixture.AwayGoals</span>
+                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary" Class="group-label">Group @group.Key</MudText>
+                        @foreach (var fixture in group)
+                        {
+                            <div class="fixture-row @SelectedClass(fixture)">
+                                <MudButton Variant="Variant.Text"
+                                           Size="Size.Small"
+                                           Color="Color.Primary"
+                                           Disabled="@_busy"
+                                           OnClick="() => Select(fixture)"
+                                           StartIcon="@Icons.Material.Filled.AutoAwesome">
+                                    Predict
+                                </MudButton>
+                                <MudText Typo="Typo.body2">@Name(fixture.HomeTeamId) vs @Name(fixture.AwayTeamId)</MudText>
+                                <MudSpacer />
+                                @if (fixture.IsPlayed && fixture.HomeGoals.HasValue && fixture.AwayGoals.HasValue)
+                                {
+                                    <MudChip T="string" Size="Size.Small" Color="Color.Success" Variant="Variant.Outlined">@fixture.HomeGoals-@fixture.AwayGoals</MudChip>
+                                }
+                            </div>
+                        }
                     }
-                </div>
+                }
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" lg="7">
+            @if (_busy)
+            {
+                <MudPaper Class="surface-card" Elevation="0">
+                    <MudSkeleton Height="28px" Width="45%" />
+                    <MudSkeleton Height="34px" Class="skeleton-row" />
+                    <MudSkeleton Height="88px" Class="skeleton-row" />
+                    <MudProgressLinear Class="inline-progress" Color="Color.Primary" Indeterminate="true" />
+                </MudPaper>
             }
-        }
-    </div>
+            else if (_result is not null && _selected is not null)
+            {
+                <MudStack Spacing="2">
+                    <MudPaper Class="surface-card final-call" Elevation="0">
+                        <MudText Typo="Typo.h6">@_result.HomeTeamName vs @_result.AwayTeamName</MudText>
+                        @if (!string.IsNullOrWhiteSpace(_selected.Venue) || _selected.KickoffUtc is not null)
+                        {
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">@_selected.KickoffUtc?.ToString("yyyy-MM-dd HH:mm 'UTC'") @_selected.Venue @_selected.Status</MudText>
+                        }
+                        <div class="prob-wrap">
+                            <ProbabilityBar Outcome="_result.BestPrediction.Outcome" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
+                        </div>
+                        <MudText Typo="Typo.body2" Class="explain">@_result.BestPrediction.Explanation</MudText>
+                        <MudStack Row="true" Spacing="1" Class="action-row">
+                            <BusyButton Text="@(_saved ? "Snapshot saved" : "Save prediction")" BusyText="Saving" IsBusy="_saving" Disabled="_saved" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Save" OnClick="SaveSnapshot" />
+                            <BusyButton Text="Refresh API context" BusyText="Refreshing" IsBusy="_refreshing" Variant="Variant.Outlined" Color="Color.Secondary" Icon="@Icons.Material.Filled.Sync" OnClick="RefreshContext" />
+                        </MudStack>
+                        @if (_refreshing)
+                        {
+                            <MudProgressLinear Class="inline-progress" Color="Color.Secondary" Indeterminate="true" />
+                        }
+                    </MudPaper>
 
-    <div>
-        @if (_busy)
-        {
-            <div class="card">Predicting...</div>
-        }
-        else if (_result is not null && _selected is not null)
-        {
-            <div class="card final-call">
-                <h2>@_result.HomeTeamName vs @_result.AwayTeamName</h2>
-                @if (!string.IsNullOrWhiteSpace(_selected.Venue) || _selected.KickoffUtc is not null)
-                {
-                    <p class="small muted">@_selected.KickoffUtc?.ToString("yyyy-MM-dd HH:mm 'UTC'") @_selected.Venue @_selected.Status</p>
-                }
-                <ProbabilityBar Outcome="_result.BestPrediction.Outcome" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
-                <p class="explain">@_result.BestPrediction.Explanation</p>
-                <div class="row">
-                    <button class="secondary" @onclick="SaveSnapshot" disabled="@_saving">@(_saved ? "Snapshot saved" : "Save prediction")</button>
-                    <button class="secondary" @onclick="RefreshContext" disabled="@_refreshing">@(_refreshing ? "Refreshing..." : "Refresh API context")</button>
-                </div>
-            </div>
+                    <PredictionCard Prediction="@_result.BestPrediction" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
 
-            <PredictionCard Prediction="@_result.BestPrediction" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
-
-            <div class="card">
-                <h2>Result</h2>
-                <div class="row controls">
-                    <span>@_result.HomeTeamName</span>
-                    <input type="number" min="0" class="score-input" @bind="_homeGoals" />
-                    <span>-</span>
-                    <input type="number" min="0" class="score-input" @bind="_awayGoals" />
-                    <span>@_result.AwayTeamName</span>
-                    <span class="spacer"></span>
-                    <button @onclick="ApplyResult" disabled="@_applying">@(_applying ? "Scoring..." : "Score snapshot")</button>
-                </div>
-                @if (!string.IsNullOrWhiteSpace(_note))
-                {
-                    <p class="small muted">@_note</p>
-                }
-            </div>
-        }
-        else
-        {
-            <div class="card muted">Select a fixture.</div>
-        }
-    </div>
-</div>
+                    <MudPaper Class="surface-card" Elevation="0">
+                        <MudText Typo="Typo.h6">Result</MudText>
+                        <MudGrid Spacing="2" Class="control-grid">
+                            <MudItem xs="12" md="3"><MudText Typo="Typo.body2">@_result.HomeTeamName</MudText></MudItem>
+                            <MudItem xs="5" md="2"><MudNumericField T="int" @bind-Value="_homeGoals" Min="0" Variant="Variant.Outlined" /></MudItem>
+                            <MudItem xs="2" md="1" Class="score-separator"><MudText Typo="Typo.body1">-</MudText></MudItem>
+                            <MudItem xs="5" md="2"><MudNumericField T="int" @bind-Value="_awayGoals" Min="0" Variant="Variant.Outlined" /></MudItem>
+                            <MudItem xs="12" md="4"><MudText Typo="Typo.body2">@_result.AwayTeamName</MudText></MudItem>
+                            <MudItem xs="12"><BusyButton Text="Score snapshot" BusyText="Scoring" IsBusy="_applying" Icon="@Icons.Material.Filled.FactCheck" OnClick="ApplyResult" /></MudItem>
+                        </MudGrid>
+                        @if (!string.IsNullOrWhiteSpace(_note))
+                        {
+                            <MudAlert Class="mt-2" Severity="Severity.Info" Variant="Variant.Outlined">@_note</MudAlert>
+                        }
+                    </MudPaper>
+                </MudStack>
+            }
+            else
+            {
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">Select a fixture.</MudAlert>
+            }
+        </MudItem>
+    </MudGrid>
+</MudStack>
 
 @code {
     private List<Fixture> _fixtures = [];
     private Dictionary<string, string> _names = [];
     private Fixture? _selected;
     private MatchPredictionResult? _result;
+    private bool _loaded;
     private bool _busy;
     private bool _saving;
     private bool _saved;
@@ -94,11 +133,13 @@
     private int _homeGoals;
     private int _awayGoals;
     private string _note = "";
+    private string _error = "";
 
     protected override async Task OnInitializedAsync()
     {
         await LoadFixtures();
         _names = await Db.Teams.ToDictionaryAsync(t => t.Id, t => t.Name);
+        _loaded = true;
     }
 
     private async Task Select(Fixture fixture)
@@ -106,12 +147,18 @@
         _selected = fixture;
         _saved = false;
         _note = "";
+        _error = "";
         _homeGoals = fixture.HomeGoals ?? 0;
         _awayGoals = fixture.AwayGoals ?? 0;
         _busy = true;
         try
         {
             _result = await Predictor.PredictFixtureAsync(fixture.Id);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            Snackbar.Add("Prediction failed.", Severity.Error);
         }
         finally
         {
@@ -129,6 +176,12 @@
         {
             await Snapshots.SaveMatchAsync(_result.BestPrediction);
             _saved = true;
+            Snackbar.Add("Prediction snapshot saved.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            Snackbar.Add("Could not save snapshot.", Severity.Error);
         }
         finally
         {
@@ -147,6 +200,12 @@
             var report = await Api.RefreshFixtureContextAsync(_selected.Id);
             _note = report.Errors.Count > 0 ? string.Join(" ", report.Errors) : string.Join(" ", report.Notes);
             _result = await Predictor.PredictFixtureAsync(_selected.Id);
+            Snackbar.Add(report.Errors.Count > 0 ? "API refresh completed with warnings." : "API context refreshed.", report.Errors.Count > 0 ? Severity.Warning : Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            Snackbar.Add("API context refresh failed.", Severity.Error);
         }
         finally
         {
@@ -165,6 +224,12 @@
             var count = await Evaluation.EvaluateLatestSnapshotAsync(_selected, _homeGoals, _awayGoals);
             _note = count == 0 ? "No saved pre-match snapshot was found for this fixture." : "Saved result and evaluated the latest snapshot.";
             await LoadFixtures();
+            Snackbar.Add(_note, count == 0 ? Severity.Warning : Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            Snackbar.Add("Could not score snapshot.", Severity.Error);
         }
         finally
         {
@@ -176,4 +241,5 @@
         _fixtures = await Db.Fixtures.OrderBy(f => f.Group).ThenBy(f => f.HomeTeamId).ToListAsync();
 
     private string Name(string id) => _names.TryGetValue(id, out var name) ? name : id;
+    private string SelectedClass(Fixture fixture) => _selected?.Id == fixture.Id ? "selected" : "";
 }
