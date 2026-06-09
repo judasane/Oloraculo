@@ -4,15 +4,17 @@
     <div class="seg away" style="width:@Pct(Outcome.AwayWin)">@Label(Outcome.AwayWin)</div>
 </div>
 <div class="legend">
-    <span>@HomeLabel @Outcome.HomeWin.ToString("P0")</span>
+    <span><TeamLabel TeamId="@HomeTeamId" Name="@HomeLabel" Compact="true" /> @Outcome.HomeWin.ToString("P0")</span>
     <span>Empate @Outcome.Draw.ToString("P0")</span>
-    <span>@AwayLabel @Outcome.AwayWin.ToString("P0")</span>
+    <span><TeamLabel TeamId="@AwayTeamId" Name="@AwayLabel" Compact="true" /> @Outcome.AwayWin.ToString("P0")</span>
 </div>
 
 @code {
     [Parameter] public OutcomeProbabilities Outcome { get; set; }
     [Parameter] public string HomeLabel { get; set; } = "Local";
     [Parameter] public string AwayLabel { get; set; } = "Visitante";
+    [Parameter] public string? HomeTeamId { get; set; }
+    [Parameter] public string? AwayTeamId { get; set; }
 
     private static string Pct(double value) => $"{Math.Max(value * 100, 0):0.###}%";
     private static string Label(double value) => value >= .08 ? value.ToString("P0") : "";

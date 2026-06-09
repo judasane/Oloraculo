@@ -165,6 +165,41 @@ body {
     flex-wrap: wrap;
 }
 
+.team-label {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    min-width: 0;
+    vertical-align: middle;
+}
+
+.team-label-compact {
+    gap: .35rem;
+}
+
+.team-flag {
+    width: 1.35rem;
+    height: 1rem;
+    flex: 0 0 auto;
+    object-fit: cover;
+    border: 1px solid rgba(23, 32, 51, .16);
+    border-radius: 2px;
+    background: #fff;
+}
+
+.team-label-compact .team-flag {
+    width: 1.15rem;
+    height: .86rem;
+}
+
+.matchup-label {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    min-width: 0;
+    flex-wrap: wrap;
+}
+
 .explain {
     color: #344054;
     line-height: 1.45;

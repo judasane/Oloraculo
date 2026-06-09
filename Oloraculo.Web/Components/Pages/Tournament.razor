@@ -50,7 +50,7 @@
                     <MudTh Class="num">Campeón</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd DataLabel="Equipo">@Name(context.TeamId)</MudTd>
+                    <MudTd DataLabel="Equipo"><TeamLabel TeamId="@context.TeamId" Name="@Name(context.TeamId)" /></MudTd>
                     <MudTd DataLabel="Clasifica" Class="num">@context.Qualify.ToString("P0")</MudTd>
                     <MudTd DataLabel="16avos" Class="num">@context.ReachRoundOf16.ToString("P0")</MudTd>
                     <MudTd DataLabel="4tos" Class="num">@context.ReachQuarterFinal.ToString("P0")</MudTd>

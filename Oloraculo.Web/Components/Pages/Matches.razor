@@ -46,7 +46,13 @@
                                            StartIcon="@Icons.Material.Filled.AutoAwesome">
                                     Predecir
                                 </MudButton>
-                                <MudText Typo="Typo.body2">@Name(fixture.HomeTeamId) vs @Name(fixture.AwayTeamId)</MudText>
+                                <MudText Typo="Typo.body2">
+                                    <span class="matchup-label">
+                                        <TeamLabel TeamId="@fixture.HomeTeamId" Name="@Name(fixture.HomeTeamId)" Compact="true" />
+                                        <span>vs</span>
+                                        <TeamLabel TeamId="@fixture.AwayTeamId" Name="@Name(fixture.AwayTeamId)" Compact="true" />
+                                    </span>
+                                </MudText>
                                 <MudSpacer />
                                 @if (fixture.IsPlayed && fixture.HomeGoals.HasValue && fixture.AwayGoals.HasValue)
                                 {
@@ -73,13 +79,19 @@
             {
                 <MudStack Spacing="2">
                     <MudPaper Class="surface-card final-call" Elevation="0">
-                        <MudText Typo="Typo.h6">@_result.HomeTeamName vs @_result.AwayTeamName</MudText>
+                        <MudText Typo="Typo.h6">
+                            <span class="matchup-label">
+                                <TeamLabel TeamId="@_result.Fixture.HomeTeamId" Name="@_result.HomeTeamName" />
+                                <span>vs</span>
+                                <TeamLabel TeamId="@_result.Fixture.AwayTeamId" Name="@_result.AwayTeamName" />
+                            </span>
+                        </MudText>
                         @if (!string.IsNullOrWhiteSpace(_selected.Venue) || _selected.KickoffUtc is not null)
                         {
                             <MudText Typo="Typo.caption" Color="Color.Secondary">@_selected.KickoffUtc?.ToString("yyyy-MM-dd HH:mm 'UTC'") @_selected.Venue @_selected.Status</MudText>
                         }
                         <div class="prob-wrap">
-                            <ProbabilityBar Outcome="_result.BestPrediction.Outcome" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
+                            <ProbabilityBar Outcome="_result.BestPrediction.Outcome" HomeTeamId="@_result.Fixture.HomeTeamId" AwayTeamId="@_result.Fixture.AwayTeamId" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
                         </div>
                         <MudText Typo="Typo.body2" Class="explain">@_result.BestPrediction.Explanation</MudText>
                         <MudStack Row="true" Spacing="1" Class="action-row">
@@ -97,11 +109,11 @@
                     <MudPaper Class="surface-card" Elevation="0">
                         <MudText Typo="Typo.h6">Resultado</MudText>
                         <MudGrid Spacing="2" Class="control-grid">
-                            <MudItem xs="12" md="3"><MudText Typo="Typo.body2">@_result.HomeTeamName</MudText></MudItem>
+                            <MudItem xs="12" md="3"><MudText Typo="Typo.body2"><TeamLabel TeamId="@_result.Fixture.HomeTeamId" Name="@_result.HomeTeamName" /></MudText></MudItem>
                             <MudItem xs="5" md="2"><MudNumericField T="int" @bind-Value="_homeGoals" Min="0" Variant="Variant.Outlined" /></MudItem>
                             <MudItem xs="2" md="1" Class="score-separator"><MudText Typo="Typo.body1">-</MudText></MudItem>
                             <MudItem xs="5" md="2"><MudNumericField T="int" @bind-Value="_awayGoals" Min="0" Variant="Variant.Outlined" /></MudItem>
-                            <MudItem xs="12" md="4"><MudText Typo="Typo.body2">@_result.AwayTeamName</MudText></MudItem>
+                            <MudItem xs="12" md="4"><MudText Typo="Typo.body2"><TeamLabel TeamId="@_result.Fixture.AwayTeamId" Name="@_result.AwayTeamName" /></MudText></MudItem>
                             <MudItem xs="12"><BusyButton Text="Evaluar snapshot" BusyText="Evaluando" IsBusy="_applying" Icon="@Icons.Material.Filled.FactCheck" OnClick="ApplyResult" /></MudItem>
                         </MudGrid>
                         @if (!string.IsNullOrWhiteSpace(_note))

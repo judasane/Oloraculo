@@ -1,0 +1,26 @@
+@using Oloraculo.Web.Helpers
+
+<span class="@CssClass">
+    @if (FlagCode is not null)
+    {
+        <img class="team-flag" src="@FlagSrc" alt="@($"{DisplayName} flag")" loading="lazy" />
+    }
+    <span>@DisplayName</span>
+</span>
+
+@code {
+    [Parameter] public string? TeamId { get; set; }
+    [Parameter] public string? Name { get; set; }
+    [Parameter] public bool Compact { get; set; }
+    [Parameter] public string? Class { get; set; }
+
+    private string DisplayName => string.IsNullOrWhiteSpace(Name) ? TeamId ?? "" : Name;
+    private string? FlagCode => TeamFlagCatalog.CodeFor(TeamId, Name);
+    private string? FlagSrc => FlagCode is null ? null : $"/flags/4x3/{FlagCode}.svg";
+    private string CssClass => string.Join(" ", new[]
+    {
+        "team-label",
+        Compact ? "team-label-compact" : "",
+        Class ?? ""
+    }.Where(value => !string.IsNullOrWhiteSpace(value)));
+}

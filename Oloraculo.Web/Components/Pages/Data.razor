@@ -81,7 +81,7 @@
                     <MudTh>Fuente</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd DataLabel="Equipo">@Name(context.TeamId)</MudTd>
+                    <MudTd DataLabel="Equipo"><TeamLabel TeamId="@context.TeamId" Name="@Name(context.TeamId)" /></MudTd>
                     <MudTd DataLabel="Tipo">@context.Type</MudTd>
                     <MudTd DataLabel="Valor" Class="num">@context.Value.ToString("0")</MudTd>
                     <MudTd DataLabel="Fuente">@context.Source</MudTd>

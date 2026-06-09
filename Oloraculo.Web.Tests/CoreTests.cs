@@ -38,6 +38,31 @@ public class CoreTests
         Assert.Equal(expected, TeamNameNormalizer.ToId(input));
     }
 
+    [Theory]
+    [InlineData("argentina", "Argentina", "ar")]
+    [InlineData("brazil", "Brazil", "br")]
+    [InlineData("france", "France", "fr")]
+    [InlineData("japan", "Japan", "jp")]
+    [InlineData("united-states", "United States", "us")]
+    [InlineData("south-korea", "South Korea", "kr")]
+    [InlineData("turkey", "Turkey", "tr")]
+    [InlineData("ivory-coast", "Ivory Coast", "ci")]
+    [InlineData("congo-dr", "Congo DR", "cd")]
+    [InlineData("curacao", "Curacao", "cw")]
+    [InlineData("cape-verde", "Cape Verde", "cv")]
+    [InlineData("england", "England", "gb-eng")]
+    [InlineData("scotland", "Scotland", "gb-sct")]
+    public void TeamFlagCatalog_ResolvesStandardAndFootballTeamNames(string id, string name, string expected)
+    {
+        Assert.Equal(expected, TeamFlagCatalog.CodeFor(id, name));
+    }
+
+    [Fact]
+    public void TeamFlagCatalog_ReturnsNoFlagForUnknownTeams()
+    {
+        Assert.Null(TeamFlagCatalog.CodeFor("made-up-xi", "Made Up XI"));
+    }
+
     [Fact]
     public void OutcomeFromExpectation_TreatsEqualMagnitudeGapsSymmetrically()
     {

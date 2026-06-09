@@ -55,7 +55,13 @@
                     <MudTable Items="_best" Dense="true" Hover="true" Elevation="0" Class="dense-table">
                         <HeaderContent><MudTh>Partido</MudTh><MudTh Class="num">RPS</MudTh></HeaderContent>
                         <RowTemplate>
-                            <MudTd DataLabel="Partido">@Name(context.HomeTeamId) @context.HomeGoals-@context.AwayGoals @Name(context.AwayTeamId)</MudTd>
+                            <MudTd DataLabel="Partido">
+                                <span class="matchup-label">
+                                    <TeamLabel TeamId="@context.HomeTeamId" Name="@Name(context.HomeTeamId)" Compact="true" />
+                                    <strong>@context.HomeGoals-@context.AwayGoals</strong>
+                                    <TeamLabel TeamId="@context.AwayTeamId" Name="@Name(context.AwayTeamId)" Compact="true" />
+                                </span>
+                            </MudTd>
                             <MudTd DataLabel="RPS" Class="num">@context.RankedProbabilityScore.ToString("0.000")</MudTd>
                         </RowTemplate>
                     </MudTable>
@@ -67,7 +73,13 @@
                     <MudTable Items="_worst" Dense="true" Hover="true" Elevation="0" Class="dense-table">
                         <HeaderContent><MudTh>Partido</MudTh><MudTh Class="num">Log loss</MudTh></HeaderContent>
                         <RowTemplate>
-                            <MudTd DataLabel="Partido">@Name(context.HomeTeamId) @context.HomeGoals-@context.AwayGoals @Name(context.AwayTeamId)</MudTd>
+                            <MudTd DataLabel="Partido">
+                                <span class="matchup-label">
+                                    <TeamLabel TeamId="@context.HomeTeamId" Name="@Name(context.HomeTeamId)" Compact="true" />
+                                    <strong>@context.HomeGoals-@context.AwayGoals</strong>
+                                    <TeamLabel TeamId="@context.AwayTeamId" Name="@Name(context.AwayTeamId)" Compact="true" />
+                                </span>
+                            </MudTd>
                             <MudTd DataLabel="Log loss" Class="num">@context.LogLoss.ToString("0.000")</MudTd>
                         </RowTemplate>
                     </MudTable>

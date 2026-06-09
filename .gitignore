@@ -25,6 +25,9 @@ bld/
 *.sln.docstates
 *.userprefs
 
+## Codex
+/.codex-tmp/
+
 ## ASP.NET / dotnet
 project.lock.json
 project.fragment.lock.json

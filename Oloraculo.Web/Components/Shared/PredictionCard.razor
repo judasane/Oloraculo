@@ -9,14 +9,14 @@
     </MudStack>
 
     <div class="prob-wrap">
-        <ProbabilityBar Outcome="Prediction.Outcome" HomeLabel="@HomeLabel" AwayLabel="@AwayLabel" />
+        <ProbabilityBar Outcome="Prediction.Outcome" HomeTeamId="@Prediction.HomeTeamId" AwayTeamId="@Prediction.AwayTeamId" HomeLabel="@HomeLabel" AwayLabel="@AwayLabel" />
     </div>
 
     @if (Prediction.ExpectedHomeGoals.HasValue && Prediction.ExpectedAwayGoals.HasValue)
     {
         <MudText Typo="Typo.caption" Color="Color.Secondary">
-            xG @HomeLabel @Prediction.ExpectedHomeGoals.Value.ToString("0.00")
-            - @Prediction.ExpectedAwayGoals.Value.ToString("0.00") @AwayLabel
+            xG <TeamLabel TeamId="@Prediction.HomeTeamId" Name="@HomeLabel" Compact="true" /> @Prediction.ExpectedHomeGoals.Value.ToString("0.00")
+            - @Prediction.ExpectedAwayGoals.Value.ToString("0.00") <TeamLabel TeamId="@Prediction.AwayTeamId" Name="@AwayLabel" Compact="true" />
             @if (Prediction.MostLikelyScore.HasValue)
             {
                 <span> | probable @Prediction.MostLikelyScore.Value.Home-@Prediction.MostLikelyScore.Value.Away</span>
