@@ -44,8 +44,8 @@
                                            Color="Color.Primary"
                                            Disabled="@_busy"
                                            OnClick="() => Select(fixture)"
-                                           StartIcon="@Icons.Material.Filled.AutoAwesome">
-                                    Predecir
+                                           StartIcon="@Icons.Material.Filled.Visibility">
+                                    Ver
                                 </MudButton>
                                 <MudText Typo="Typo.body2">
                                     <span class="matchup-label">
@@ -76,36 +76,82 @@
                     <MudProgressLinear Class="inline-progress" Color="Color.Primary" Indeterminate="true" />
                 </MudPaper>
             }
-            else if (_result is not null && _selected is not null)
+            else if (_selected is not null)
             {
                 <MudStack Spacing="2">
                     <MudPaper Class="surface-card final-call" Elevation="0">
                         <MudText Typo="Typo.h6">
                             <span class="matchup-label">
-                                <TeamLabel TeamId="@_result.Fixture.HomeTeamId" Name="@_result.HomeTeamName" />
+                                <TeamLabel TeamId="@_selected.HomeTeamId" Name="@Name(_selected.HomeTeamId)" />
                                 <span>vs</span>
-                                <TeamLabel TeamId="@_result.Fixture.AwayTeamId" Name="@_result.AwayTeamName" />
+                                <TeamLabel TeamId="@_selected.AwayTeamId" Name="@Name(_selected.AwayTeamId)" />
                             </span>
                         </MudText>
                         @if (!string.IsNullOrWhiteSpace(_selected.Venue) || _selected.KickoffUtc is not null)
                         {
                             <MudText Typo="Typo.caption" Color="Color.Secondary">@_selected.KickoffUtc?.ToString("yyyy-MM-dd HH:mm 'UTC'") @_selected.Venue @_selected.Status</MudText>
                         }
-                        <div class="prob-wrap">
-                            <ProbabilityBar Outcome="_result.BestPrediction.Outcome" HomeTeamId="@_result.Fixture.HomeTeamId" AwayTeamId="@_result.Fixture.AwayTeamId" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
-                        </div>
-                        <MudText Typo="Typo.body2" Class="explain">@_result.BestPrediction.Explanation</MudText>
+                        <MudStack Row="true" Spacing="1" Class="action-row mt-2">
+                            <BusyButton Text="Predecir ahora"
+                                        BusyText="Prediciendo"
+                                        IsBusy="_predicting"
+                                        Disabled="@(_loadingSnapshot || _saving || _refreshing)"
+                                        Icon="@Icons.Material.Filled.AutoAwesome"
+                                        OnClick="PredictSelected" />
+                            <BusyButton Text="Última guardada"
+                                        BusyText="Cargando"
+                                        IsBusy="_loadingSnapshot"
+                                        Disabled="@(_matchSnapshots.Count == 0 || _predicting || _saving || _refreshing)"
+                                        Variant="Variant.Outlined"
+                                        Color="Color.Secondary"
+                                        Icon="@Icons.Material.Filled.History"
+                                        OnClick="LoadLatestSnapshot" />
+                            <MudSelect T="int"
+                                       Dense="true"
+                                       Variant="Variant.Outlined"
+                                       Class="snapshot-select"
+                                       Disabled="@(_matchSnapshots.Count == 0 || _predicting || _saving || _refreshing || _loadingSnapshot)"
+                                       @bind-Value="_selectedMatchSnapshotId">
+                                @foreach (var snapshot in _matchSnapshots)
+                                {
+                                    <MudSelectItem T="int" Value="@snapshot.Id" Disabled="@(!snapshot.IsValid)">@MatchSnapshotText(snapshot)</MudSelectItem>
+                                }
+                            </MudSelect>
+                            <BusyButton Text="Cargar"
+                                        BusyText="Cargando"
+                                        IsBusy="_loadingSnapshot"
+                                        Disabled="@(_selectedMatchSnapshotId == 0 || _predicting || _saving || _refreshing)"
+                                        Variant="Variant.Outlined"
+                                        Color="Color.Secondary"
+                                        Icon="@Icons.Material.Filled.Visibility"
+                                        OnClick="LoadSelectedSnapshot" />
+                        </MudStack>
+                        @if (_result is not null)
+                        {
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">@_resultSource</MudText>
+                            <div class="prob-wrap">
+                                <ProbabilityBar Outcome="_result.BestPrediction.Outcome" HomeTeamId="@_result.Fixture.HomeTeamId" AwayTeamId="@_result.Fixture.AwayTeamId" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
+                            </div>
+                            <MudText Typo="Typo.body2" Class="explain">@_result.BestPrediction.Explanation</MudText>
+                        }
+                        else
+                        {
+                            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Class="mt-2">No hay predicción cargada para este partido.</MudAlert>
+                        }
                         <MudStack Row="true" Spacing="1" Class="action-row">
-                            <BusyButton Text="@(_saved ? "Snapshot guardado" : "Guardar predicción")" BusyText="Guardando" IsBusy="_saving" Disabled="_saved" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Save" OnClick="SaveSnapshot" />
+                            <BusyButton Text="@(_saved ? "Snapshot guardado" : "Guardar predicción")" BusyText="Guardando" IsBusy="_saving" Disabled="@(_saved || _result is null)" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Save" OnClick="SaveSnapshot" />
                             <BusyButton Text="Actualizar contexto API" BusyText="Actualizando" IsBusy="_refreshing" Variant="Variant.Outlined" Color="Color.Secondary" Icon="@Icons.Material.Filled.Sync" OnClick="RefreshContext" />
                         </MudStack>
-                        @if (_refreshing)
+                        @if (_refreshing || _loadingSnapshot)
                         {
                             <MudProgressLinear Class="inline-progress" Color="Color.Secondary" Indeterminate="true" />
                         }
                     </MudPaper>
 
-                    <PredictionCard Prediction="@_result.BestPrediction" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
+                    @if (_result is not null)
+                    {
+                        <PredictionCard Prediction="@_result.BestPrediction" HomeLabel="@_result.HomeTeamName" AwayLabel="@_result.AwayTeamName" />
+                    }
 
                     @if (_availabilityClaims.Count > 0)
                     {
@@ -141,11 +187,11 @@
                     <MudPaper Class="surface-card" Elevation="0">
                         <MudText Typo="Typo.h6">Resultado</MudText>
                         <MudGrid Spacing="2" Class="control-grid">
-                            <MudItem xs="12" md="3"><MudText Typo="Typo.body2"><TeamLabel TeamId="@_result.Fixture.HomeTeamId" Name="@_result.HomeTeamName" /></MudText></MudItem>
+                            <MudItem xs="12" md="3"><MudText Typo="Typo.body2"><TeamLabel TeamId="@_selected.HomeTeamId" Name="@Name(_selected.HomeTeamId)" /></MudText></MudItem>
                             <MudItem xs="5" md="2"><MudNumericField T="int" @bind-Value="_homeGoals" Min="0" Variant="Variant.Outlined" /></MudItem>
                             <MudItem xs="2" md="1" Class="score-separator"><MudText Typo="Typo.body1">-</MudText></MudItem>
                             <MudItem xs="5" md="2"><MudNumericField T="int" @bind-Value="_awayGoals" Min="0" Variant="Variant.Outlined" /></MudItem>
-                            <MudItem xs="12" md="4"><MudText Typo="Typo.body2"><TeamLabel TeamId="@_result.Fixture.AwayTeamId" Name="@_result.AwayTeamName" /></MudText></MudItem>
+                            <MudItem xs="12" md="4"><MudText Typo="Typo.body2"><TeamLabel TeamId="@_selected.AwayTeamId" Name="@Name(_selected.AwayTeamId)" /></MudText></MudItem>
                             <MudItem xs="12"><BusyButton Text="Evaluar snapshot" BusyText="Evaluando" IsBusy="_applying" Icon="@Icons.Material.Filled.FactCheck" OnClick="ApplyResult" /></MudItem>
                         </MudGrid>
                         @if (!string.IsNullOrWhiteSpace(_note))
@@ -168,17 +214,23 @@
     private Dictionary<string, string> _names = [];
     private Fixture? _selected;
     private MatchPredictionResult? _result;
+    private IReadOnlyList<MatchSnapshotSummary> _matchSnapshots = [];
     private List<AvailabilityClaim> _availabilityClaims = [];
     private bool _loaded;
     private bool _busy;
+    private bool _predicting;
     private bool _saving;
     private bool _saved;
+    private bool _loadingSnapshot;
     private bool _refreshing;
     private bool _applying;
+    private int _selectedMatchSnapshotId;
+    private int? _activeMatchSnapshotId;
     private int _homeGoals;
     private int _awayGoals;
     private string _note = "";
     private string _error = "";
+    private string _resultSource = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -190,7 +242,11 @@
     private async Task Select(Fixture fixture)
     {
         _selected = fixture;
+        _result = null;
         _saved = false;
+        _activeMatchSnapshotId = null;
+        _selectedMatchSnapshotId = 0;
+        _resultSource = "";
         _note = "";
         _error = "";
         _homeGoals = fixture.HomeGoals ?? 0;
@@ -198,8 +254,44 @@
         _busy = true;
         try
         {
-            _result = await Predictor.PredictFixtureAsync(fixture.Id);
+            await RefreshMatchSnapshotsForSelected();
             _availabilityClaims = (await Availability.ClaimsForFixtureAsync(fixture.Id)).ToList();
+            if (_matchSnapshots.FirstOrDefault(snapshot => snapshot.IsValid) is { } latest)
+                await LoadMatchSnapshot(latest, showToast: false);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            Snackbar.Add("No se pudo cargar el partido.", Severity.Error);
+        }
+        finally
+        {
+            _busy = false;
+        }
+    }
+
+    private async Task PredictSelected()
+    {
+        if (_selected is null)
+            return;
+
+        _predicting = true;
+        _error = "";
+        _note = "";
+        try
+        {
+            _result = await Predictor.PredictFixtureAsync(_selected.Id);
+            if (_result is null)
+            {
+                Snackbar.Add("No se pudo generar la predicción.", Severity.Warning);
+                return;
+            }
+
+            _saved = false;
+            _activeMatchSnapshotId = null;
+            _selectedMatchSnapshotId = 0;
+            _resultSource = "Predicción generada ahora";
+            _availabilityClaims = (await Availability.ClaimsForFixtureAsync(_selected.Id)).ToList();
         }
         catch (Exception ex)
         {
@@ -208,7 +300,67 @@
         }
         finally
         {
-            _busy = false;
+            _predicting = false;
+        }
+    }
+
+    private async Task LoadLatestSnapshot()
+    {
+        var latest = _matchSnapshots.FirstOrDefault(snapshot => snapshot.IsValid);
+        if (latest is null)
+        {
+            Snackbar.Add("No hay snapshots guardados para este partido.", Severity.Warning);
+            return;
+        }
+
+        await LoadMatchSnapshot(latest, showToast: true);
+    }
+
+    private async Task LoadSelectedSnapshot()
+    {
+        var snapshot = _matchSnapshots.FirstOrDefault(s => s.Id == _selectedMatchSnapshotId);
+        if (snapshot is null)
+            return;
+
+        await LoadMatchSnapshot(snapshot, showToast: true);
+    }
+
+    private async Task LoadMatchSnapshot(MatchSnapshotSummary snapshot, bool showToast)
+    {
+        if (!snapshot.IsValid)
+        {
+            Snackbar.Add(snapshot.Error ?? "El snapshot no está disponible.", Severity.Warning);
+            return;
+        }
+
+        _loadingSnapshot = true;
+        _error = "";
+        try
+        {
+            var result = await Snapshots.LoadMatchSnapshotAsync(snapshot.Id);
+            if (!result.IsValid || result.Prediction is null)
+            {
+                _error = result.Error ?? "No se pudo leer el snapshot.";
+                Snackbar.Add(_error, Severity.Error);
+                return;
+            }
+
+            _result = result.Prediction;
+            _saved = true;
+            _activeMatchSnapshotId = snapshot.Id;
+            _selectedMatchSnapshotId = snapshot.Id;
+            _resultSource = $"Snapshot guardado {snapshot.CreatedAt.ToLocalTime():g}";
+            if (showToast)
+                Snackbar.Add("Snapshot de partido cargado.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            Snackbar.Add("No se pudo cargar el snapshot de partido.", Severity.Error);
+        }
+        finally
+        {
+            _loadingSnapshot = false;
         }
     }
 
@@ -220,8 +372,12 @@
         _saving = true;
         try
         {
-            await Snapshots.SaveMatchAsync(_result.BestPrediction);
+            var snapshot = await Snapshots.SaveMatchAsync(_result.BestPrediction);
             _saved = true;
+            _activeMatchSnapshotId = snapshot.Id;
+            await RefreshMatchSnapshotsForSelected();
+            _selectedMatchSnapshotId = snapshot.Id;
+            _resultSource = $"Snapshot guardado {snapshot.CreatedAt.ToLocalTime():g}";
             Snackbar.Add("Snapshot de predicción guardado.", Severity.Success);
         }
         catch (Exception ex)
@@ -253,6 +409,10 @@
                 notes = $"{notes} {string.Join(" ", availabilityReport.Notes)} {string.Join(" ", availabilityReport.Errors)}".Trim();
             _note = notes;
             _result = await Predictor.PredictFixtureAsync(_selected.Id);
+            _saved = false;
+            _activeMatchSnapshotId = null;
+            _selectedMatchSnapshotId = 0;
+            _resultSource = "Predicción generada con contexto actualizado";
             _availabilityClaims = (await Availability.ClaimsForFixtureAsync(_selected.Id)).ToList();
             Snackbar.Add(report.Errors.Count > 0 ? "La actualización de API terminó con advertencias." : "Contexto API actualizado.", report.Errors.Count > 0 ? Severity.Warning : Severity.Success);
         }
@@ -294,8 +454,25 @@
     private async Task LoadFixtures() =>
         _fixtures = await Db.Fixtures.OrderBy(f => f.Group).ThenBy(f => f.HomeTeamId).ToListAsync();
 
+    private async Task RefreshMatchSnapshotsForSelected()
+    {
+        if (_selected is null)
+        {
+            _matchSnapshots = [];
+            return;
+        }
+
+        _matchSnapshots = await Snapshots.MatchSnapshotsAsync(_selected.Id);
+    }
+
     private string Name(string id) => _names.TryGetValue(id, out var name) ? name : id;
     private string SelectedClass(Fixture fixture) => _selected?.Id == fixture.Id ? "selected" : "";
     private static string SourceText(AvailabilityClaim claim) => string.IsNullOrWhiteSpace(claim.Publisher) ? claim.SourceUrl : claim.Publisher;
     private static string StatusText(AvailabilityClaim claim) => claim.AffectsPrediction ? $"{claim.Status} · impacta" : claim.Status.ToString();
+    private static string MatchSnapshotText(MatchSnapshotSummary snapshot)
+    {
+        var source = snapshot.BatchId.HasValue ? "fixture completo" : "partido";
+        var status = snapshot.IsValid ? source : "no disponible";
+        return $"{snapshot.CreatedAt.ToLocalTime():g} · {status}";
+    }
 }

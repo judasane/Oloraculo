@@ -46,6 +46,7 @@ namespace Oloraculo.Web.DAL
             modelBuilder.Entity<AvailabilitySource>().HasIndex(s => s.Url).IsUnique();
             modelBuilder.Entity<AvailabilityClaim>().HasIndex(c => new { c.TeamId, c.PlayerKey, c.Status, c.SourceUrl });
             modelBuilder.Entity<PredictionSnapshot>().HasIndex(s => new { s.Kind, s.FixtureId, s.CreatedAt });
+            modelBuilder.Entity<PredictionSnapshot>().HasIndex(s => new { s.Kind, s.BatchId, s.CreatedAt });
         }
     }
 }

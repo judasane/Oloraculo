@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Kind { get; set; } = "match";
+        public int? BatchId { get; set; }
         public string? FixtureId { get; set; }
         public string ModelName { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;

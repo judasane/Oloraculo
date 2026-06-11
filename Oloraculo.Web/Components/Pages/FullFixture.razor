@@ -24,14 +24,39 @@
             <BusyButton Text="Guardar snapshots"
                         BusyText="Guardando snapshots"
                         IsBusy="_saving"
-                        Disabled="@(_predictions.Count == 0 || _predicting)"
+                        Disabled="@(!CanSaveFullFixture || _predicting || _loadingSnapshot)"
                         Variant="Variant.Outlined"
                         Icon="@Icons.Material.Filled.Save"
                         OnClick="SaveAll" />
+            <MudSelect T="int"
+                       Dense="true"
+                       Variant="Variant.Outlined"
+                       Class="snapshot-select"
+                       Disabled="@(!_snapshotsLoaded || _fullFixtureSnapshots.Count == 0 || _predicting || _saving || _loadingSnapshot)"
+                       @bind-Value="_selectedFullFixtureSnapshotId">
+                @foreach (var snapshot in _fullFixtureSnapshots)
+                {
+                    <MudSelectItem T="int" Value="@snapshot.Id" Disabled="@(!snapshot.IsValid)">@FullFixtureSnapshotText(snapshot)</MudSelectItem>
+                }
+            </MudSelect>
+            <BusyButton Text="Cargar snapshot"
+                        BusyText="Cargando"
+                        IsBusy="_loadingSnapshot"
+                        Disabled="@(_selectedFullFixtureSnapshotId == 0 || _predicting || _saving)"
+                        Variant="Variant.Outlined"
+                        Color="Color.Secondary"
+                        Icon="@Icons.Material.Filled.History"
+                        OnClick="LoadSelectedFullFixtureSnapshot" />
+            <MudTooltip Text="Actualizar snapshots">
+                <MudIconButton Icon="@Icons.Material.Filled.Refresh"
+                               Color="Color.Secondary"
+                               Disabled="@(_predicting || _saving || _loadingSnapshot)"
+                               OnClick="RefreshFullFixtureSnapshots" />
+            </MudTooltip>
             <MudSpacer />
             <MudText Typo="Typo.body2" Color="Color.Secondary">@StatusText</MudText>
         </MudStack>
-        @if (_predicting || _saving)
+        @if (_predicting || _saving || _loadingSnapshot)
         {
             <MudProgressLinear Class="inline-progress" Color="Color.Primary" Indeterminate="true" />
         }
@@ -142,10 +167,15 @@
     private Dictionary<string, string> _names = [];
     private Dictionary<string, MatchPredictionResult> _predictions = new(StringComparer.Ordinal);
     private Dictionary<string, string> _predictionErrors = new(StringComparer.Ordinal);
+    private IReadOnlyList<FullFixtureSnapshotSummary> _fullFixtureSnapshots = [];
     private bool _loaded;
+    private bool _snapshotsLoaded;
     private bool _predicting;
     private bool _saving;
+    private bool _loadingSnapshot;
     private int _savedCount;
+    private int _selectedFullFixtureSnapshotId;
+    private int? _activeFullFixtureSnapshotId;
     private DateTimeOffset? _predictedAt;
     private string _error = "";
 
@@ -154,6 +184,11 @@
         await LoadFixtures();
         _names = await Db.Teams.AsNoTracking().ToDictionaryAsync(t => t.Id, t => t.Name);
         _loaded = true;
+        await RefreshFullFixtureSnapshots();
+
+        var latest = _fullFixtureSnapshots.FirstOrDefault(snapshot => snapshot.IsValid);
+        if (latest is not null)
+            await LoadFullFixtureSnapshot(latest, showToast: false);
     }
 
     private async Task PredictAll()
@@ -164,6 +199,8 @@
         _predicting = true;
         _error = "";
         _savedCount = 0;
+        _activeFullFixtureSnapshotId = null;
+        _selectedFullFixtureSnapshotId = 0;
         _predictedAt = null;
         _predictions.Clear();
         _predictionErrors.Clear();
@@ -211,16 +248,22 @@
 
     private async Task SaveAll()
     {
-        if (_predictions.Count == 0)
+        if (!CanSaveFullFixture)
+        {
+            Snackbar.Add("El fixture completo solo se puede guardar cuando todos los partidos tienen predicción.", Severity.Warning);
             return;
+        }
 
         _saving = true;
         _error = "";
         try
         {
-            var snapshots = await Snapshots.SaveMatchesAsync(OrderedPredictionResults().Select(result => result.BestPrediction));
-            _savedCount = snapshots.Count;
-            Snackbar.Add($"{_savedCount} snapshots guardados.", Severity.Success);
+            var snapshot = await Snapshots.SaveFullFixtureAsync(OrderedPredictionResults().Select(result => result.BestPrediction));
+            _savedCount = _predictions.Count;
+            _activeFullFixtureSnapshotId = snapshot.Id;
+            await RefreshFullFixtureSnapshots();
+            _selectedFullFixtureSnapshotId = snapshot.Id;
+            Snackbar.Add($"{_savedCount} predicciones guardadas como fixture completo.", Severity.Success);
         }
         catch (Exception ex)
         {
@@ -230,6 +273,75 @@
         finally
         {
             _saving = false;
+        }
+    }
+
+    private async Task RefreshFullFixtureSnapshots()
+    {
+        _snapshotsLoaded = false;
+        try
+        {
+            _fullFixtureSnapshots = await Snapshots.FullFixtureSnapshotsAsync();
+            if (_selectedFullFixtureSnapshotId == 0 && _fullFixtureSnapshots.FirstOrDefault(snapshot => snapshot.IsValid) is { } latest)
+                _selectedFullFixtureSnapshotId = latest.Id;
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            Snackbar.Add("No se pudieron cargar los snapshots de fixture completo.", Severity.Error);
+        }
+        finally
+        {
+            _snapshotsLoaded = true;
+        }
+    }
+
+    private async Task LoadSelectedFullFixtureSnapshot()
+    {
+        var snapshot = _fullFixtureSnapshots.FirstOrDefault(s => s.Id == _selectedFullFixtureSnapshotId);
+        if (snapshot is null)
+            return;
+
+        await LoadFullFixtureSnapshot(snapshot, showToast: true);
+    }
+
+    private async Task LoadFullFixtureSnapshot(FullFixtureSnapshotSummary snapshot, bool showToast)
+    {
+        if (!snapshot.IsValid)
+        {
+            Snackbar.Add(snapshot.Error ?? "El snapshot no está disponible.", Severity.Warning);
+            return;
+        }
+
+        _loadingSnapshot = true;
+        _error = "";
+        try
+        {
+            var result = await Snapshots.LoadFullFixtureSnapshotAsync(snapshot.Id);
+            if (!result.IsValid)
+            {
+                _error = result.Error ?? "No se pudo leer el snapshot.";
+                Snackbar.Add(_error, Severity.Error);
+                return;
+            }
+
+            _predictions = result.Predictions.ToDictionary(prediction => prediction.Fixture.Id, StringComparer.Ordinal);
+            _predictionErrors.Clear();
+            _savedCount = _predictions.Count;
+            _predictedAt = snapshot.CreatedAt.ToLocalTime();
+            _activeFullFixtureSnapshotId = snapshot.Id;
+            _selectedFullFixtureSnapshotId = snapshot.Id;
+            if (showToast)
+                Snackbar.Add("Snapshot de fixture completo cargado.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            Snackbar.Add("No se pudo cargar el snapshot de fixture completo.", Severity.Error);
+        }
+        finally
+        {
+            _loadingSnapshot = false;
         }
     }
 
@@ -251,11 +363,19 @@
             .Where(fixture => _predictions.ContainsKey(fixture.Id))
             .Select(fixture => _predictions[fixture.Id]);
 
+    private bool CanSaveFullFixture =>
+        _loaded &&
+        _fixtures.Count > 0 &&
+        _predictions.Count == _fixtures.Count &&
+        _savedCount == 0 &&
+        _activeFullFixtureSnapshotId is null;
+
     private string Name(string id) => _names.TryGetValue(id, out var name) ? name : id;
 
     private string StatusText => _predictions.Count switch
     {
-        > 0 when _savedCount > 0 => $"{_predictions.Count} predicciones | {_savedCount} snapshots guardados",
+        > 0 when _activeFullFixtureSnapshotId is not null && _predictedAt is not null => $"{_predictions.Count} predicciones cargadas {_predictedAt.Value:g}",
+        > 0 when _savedCount > 0 => $"{_predictions.Count} predicciones | fixture completo guardado",
         > 0 when _predictedAt is not null => $"{_predictions.Count} predicciones generadas {_predictedAt.Value:t}",
         _ when _loaded => $"{_fixtures.Count} partidos de grupo",
         _ => "Cargando fixture"
@@ -293,4 +413,10 @@
 
     private static string ProbabilityLabel(MatchPredictionResult prediction) =>
         $"{prediction.HomeTeamName} {prediction.BestPrediction.Outcome.HomeWin:P0}, empate {prediction.BestPrediction.Outcome.Draw:P0}, {prediction.AwayTeamName} {prediction.BestPrediction.Outcome.AwayWin:P0}";
+
+    private static string FullFixtureSnapshotText(FullFixtureSnapshotSummary snapshot)
+    {
+        var status = snapshot.IsValid ? $"{snapshot.FixtureCount} partidos" : "no disponible";
+        return $"{snapshot.CreatedAt.ToLocalTime():g} · {status}";
+    }
 }

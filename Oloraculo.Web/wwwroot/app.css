@@ -226,6 +226,12 @@ body {
     row-gap: .65rem;
 }
 
+.snapshot-select {
+    min-width: 16rem;
+    max-width: 24rem;
+    flex: 1 1 16rem;
+}
+
 .fixture-board {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));

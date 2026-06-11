@@ -24,6 +24,7 @@ namespace Oloraculo.Web.Services
             await _db.Database.EnsureCreatedAsync(ct);
             await EnsureFixtureResultColumnsAsync(ct);
             await EnsureAvailabilityTablesAsync(ct);
+            await EnsureSnapshotColumnsAsync(ct);
 
             var needsImport =
                 !await _db.Groups.AnyAsync(ct) ||
@@ -42,6 +43,7 @@ namespace Oloraculo.Web.Services
             await _db.Database.EnsureCreatedAsync(ct);
             await EnsureFixtureResultColumnsAsync(ct);
             await EnsureAvailabilityTablesAsync(ct);
+            await EnsureSnapshotColumnsAsync(ct);
             await ImportGroupsAsync(ct);
             await ImportRatingsAsync(ct);
             await ImportHistoricalResultsAsync(ct);
@@ -63,6 +65,7 @@ namespace Oloraculo.Web.Services
         {
             await _db.Database.EnsureCreatedAsync(ct);
             await EnsureAvailabilityTablesAsync(ct);
+            await EnsureSnapshotColumnsAsync(ct);
             await ImportRatingsAsync(ct);
             await _db.SaveChangesAsync(ct);
             return await _db.Ratings.CountAsync(ct);
@@ -320,6 +323,47 @@ namespace Oloraculo.Web.Services
                     await ExecuteSchemaAsync("""ALTER TABLE "FixtureContexts" ADD COLUMN "UnavailableAwayAttackImpact" REAL NOT NULL DEFAULT 0""", ct);
                 if (fixtureColumns.Count > 0 && !fixtureColumns.Contains("UnavailableAwayDefenseImpact"))
                     await ExecuteSchemaAsync("""ALTER TABLE "FixtureContexts" ADD COLUMN "UnavailableAwayDefenseImpact" REAL NOT NULL DEFAULT 0""", ct);
+            }
+            finally
+            {
+                if (shouldClose)
+                    await connection.CloseAsync();
+            }
+
+            async Task<HashSet<string>> ColumnsAsync(string table, CancellationToken token)
+            {
+                var columns = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                await using var command = connection.CreateCommand();
+                command.CommandText = $"PRAGMA table_info(\"{table}\")";
+                await using var reader = await command.ExecuteReaderAsync(token);
+                while (await reader.ReadAsync(token))
+                    columns.Add(reader.GetString(1));
+                return columns;
+            }
+
+            async Task ExecuteSchemaAsync(string sql, CancellationToken token)
+            {
+                await using var command = connection.CreateCommand();
+                command.CommandText = sql;
+                await command.ExecuteNonQueryAsync(token);
+            }
+        }
+
+        private async Task EnsureSnapshotColumnsAsync(CancellationToken ct)
+        {
+            var connection = _db.Database.GetDbConnection();
+            var shouldClose = connection.State != ConnectionState.Open;
+            if (shouldClose)
+                await connection.OpenAsync(ct);
+
+            try
+            {
+                var snapshotColumns = await ColumnsAsync("Snapshots", ct);
+                if (snapshotColumns.Count > 0 && !snapshotColumns.Contains("BatchId"))
+                    await ExecuteSchemaAsync("""ALTER TABLE "Snapshots" ADD COLUMN "BatchId" INTEGER NULL""", ct);
+
+                if (snapshotColumns.Count > 0)
+                    await ExecuteSchemaAsync("""CREATE INDEX IF NOT EXISTS "IX_Snapshots_Kind_BatchId_CreatedAt" ON "Snapshots" ("Kind", "BatchId", "CreatedAt")""", ct);
             }
             finally
             {
