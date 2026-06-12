@@ -734,6 +734,45 @@ public class CoreTests
     }
 
     [Fact]
+    public async Task ApiFootball_RefreshFixturesStoresFinalScores()
+    {
+        await using var db = await NewDb();
+        db.Fixtures.Add(new Fixture { Id = "f1", Group = "A", HomeTeamId = "argentina", AwayTeamId = "france" });
+        await db.SaveChangesAsync();
+        var handler = new FakeHttpMessageHandler(new Dictionary<string, string>
+        {
+            ["https://api.test/fixtures?league=1&season=2026&timezone=UTC"] = """
+                {
+                  "response": [{
+                    "fixture": {
+                      "id": 10,
+                      "date": "2026-06-12T20:00:00+00:00",
+                      "venue": { "name": "Test Stadium", "city": "Test City" },
+                      "status": { "short": "FT" }
+                    },
+                    "teams": {
+                      "home": { "id": 1, "name": "Argentina" },
+                      "away": { "id": 2, "name": "France" }
+                    },
+                    "goals": { "home": 2, "away": 1 }
+                  }]
+                }
+                """
+        });
+        var api = ApiService(db, handler);
+
+        var report = await api.RefreshFixturesAsync();
+        var fixture = await db.Fixtures.FindAsync("f1");
+
+        Assert.Equal(1, report.FixturesMatched);
+        Assert.NotNull(fixture);
+        Assert.True(fixture.IsPlayed);
+        Assert.Equal(2, fixture.HomeGoals);
+        Assert.Equal(1, fixture.AwayGoals);
+        Assert.Equal("FT", fixture.Status);
+    }
+
+    [Fact]
     public void AvailabilityNews_PositionImpactsUseUnknownFallbackAndClampTotals()
     {
         Assert.Equal((0.020, 0.000), AvailabilityNewsService.ImpactForPosition("Unknown"));
@@ -1333,6 +1372,87 @@ public class CoreTests
         Assert.Equal(1.0, mexico.Qualify, 6);
     }
 
+    [Fact]
+    public void ReadmeExporter_ReplacesOnlyMarkedSnapshotBlock()
+    {
+        var readme = """
+        # Title
+
+        before
+        <!-- oloraculo:snapshots:start -->
+        stale
+        <!-- oloraculo:snapshots:end -->
+        after
+        """;
+
+        var updated = ReadmeSnapshotExportService.ReplaceSnapshotBlock(readme, "fresh");
+
+        Assert.Contains("before", updated);
+        Assert.Contains("fresh", updated);
+        Assert.Contains("after", updated);
+        Assert.DoesNotContain("stale", updated);
+    }
+
+    [Fact]
+    public void ReadmeExporter_AppendsSnapshotBlockWhenMarkersAreMissing()
+    {
+        var updated = ReadmeSnapshotExportService.ReplaceSnapshotBlock("# Title", "fresh");
+
+        Assert.Contains(ReadmeSnapshotExportService.StartMarker, updated);
+        Assert.Contains("fresh", updated);
+        Assert.Contains(ReadmeSnapshotExportService.EndMarker, updated);
+    }
+
+    [Fact]
+    public void ReadmeExporter_RendersTournamentRowsByChampionProbability()
+    {
+        var projection = new TournamentProjection
+        {
+            GeneratedAt = DateTimeOffset.Parse("2026-01-01T00:00:00Z"),
+            Simulations = 100,
+            ModelName = "Final",
+            InputSummaryHash = "hash",
+            Teams =
+            [
+                new TeamTournamentProbability { TeamId = "france", Group = "D", Qualify = .7, ReachQuarterFinal = .4, ReachSemiFinal = .3, ReachFinal = .2, WinTournament = .1 },
+                new TeamTournamentProbability { TeamId = "argentina", Group = "C", Qualify = .8, ReachQuarterFinal = .5, ReachSemiFinal = .4, ReachFinal = .3, WinTournament = .2 }
+            ]
+        };
+
+        var rendered = ReadmeSnapshotExportService.RenderSnapshotBlock(projection, [], Names(), DateTimeOffset.Parse("2026-01-02T00:00:00Z"));
+
+        Assert.True(rendered.IndexOf("Argentina", StringComparison.Ordinal) < rendered.IndexOf("France", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ReadmeExporter_RendersActualScoreForPlayedFixtures()
+    {
+        var rendered = ReadmeSnapshotExportService.RenderSnapshotBlock(
+            TournamentProjection("hash", 100, DateTimeOffset.Parse("2026-01-01T00:00:00Z")),
+            [PredictionResult(PlayedFixture())],
+            Names(),
+            DateTimeOffset.Parse("2026-01-02T00:00:00Z"));
+
+        Assert.Contains("**2-1**", rendered);
+        Assert.Contains("Prediction:", rendered);
+        Assert.Contains("FT", rendered);
+    }
+
+    [Fact]
+    public void ReadmeExporter_RendersPredictionForUnplayedFixtures()
+    {
+        var rendered = ReadmeSnapshotExportService.RenderSnapshotBlock(
+            TournamentProjection("hash", 100, DateTimeOffset.Parse("2026-01-01T00:00:00Z")),
+            [PredictionResult(UnplayedFixture())],
+            Names(),
+            DateTimeOffset.Parse("2026-01-02T00:00:00Z"));
+
+        Assert.Contains("| <img", rendered);
+        Assert.Contains("1-0", rendered);
+        Assert.Contains("60", rendered);
+        Assert.Contains("%", rendered);
+    }
+
     private static SimulationService Simulation(OloraculoDbContext db, int simulations, int seed)
     {
         var options = SimulationOptions(simulations, seed);
@@ -1442,7 +1562,51 @@ public class CoreTests
                 ReachFinal = .45,
                 WinTournament = .42
             }
-        ]
+            ]
+    };
+
+    private static IReadOnlyDictionary<string, string> Names() => new Dictionary<string, string>
+    {
+        ["argentina"] = "Argentina",
+        ["france"] = "France"
+    };
+
+    private static Fixture PlayedFixture() => new()
+    {
+        Id = "played",
+        Group = "C",
+        HomeTeamId = "argentina",
+        AwayTeamId = "france",
+        IsPlayed = true,
+        HomeGoals = 2,
+        AwayGoals = 1,
+        Status = "FT"
+    };
+
+    private static Fixture UnplayedFixture() => new()
+    {
+        Id = "unplayed",
+        Group = "C",
+        HomeTeamId = "argentina",
+        AwayTeamId = "france"
+    };
+
+    private static MatchPredictionResult PredictionResult(Fixture fixture) => new()
+    {
+        Fixture = fixture,
+        HomeTeamName = "Argentina",
+        AwayTeamName = "France",
+        BestPrediction = new MatchPrediction
+        {
+            FixtureId = fixture.Id,
+            HomeTeamId = fixture.HomeTeamId,
+            AwayTeamId = fixture.AwayTeamId,
+            PredictorName = "Oraculo final",
+            PredictorPriority = 5,
+            Outcome = new OutcomeProbabilities(.6, .25, .15),
+            MostLikelyScore = (1, 0),
+            Explanation = "test"
+        }
     };
 
     private static MatchPrediction Prediction(

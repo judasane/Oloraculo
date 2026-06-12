@@ -2,6 +2,8 @@
 {
     public class ApiFixtureRow
     {
-        public ApiFixture Fixture { get; set; } = new(); public ApiTeams Teams { get; set; } = new();
+        public ApiFixture Fixture { get; set; } = new();
+        public ApiTeams Teams { get; set; } = new();
+        public ApiGoals Goals { get; set; } = new();
     }
 }

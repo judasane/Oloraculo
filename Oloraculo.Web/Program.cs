@@ -28,6 +28,7 @@ builder.Services.AddScoped<PredictionService>();
 builder.Services.AddScoped<EvaluationService>();
 builder.Services.AddScoped<SnapshotService>();
 builder.Services.AddScoped<SimulationService>();
+builder.Services.AddScoped<ReadmeSnapshotExportService>();
 builder.Services.AddHttpClient<RankingRefreshService>((sp, client) =>
 {
     var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<OloraculoConfig>>().Value;
@@ -54,12 +55,13 @@ builder.Services.AddHttpClient<AvailabilityNewsService>((sp, client) =>
 });
 
 var app = builder.Build();
+var exportReadmeSnapshots = args.Any(arg => string.Equals(arg, "--export-readme-snapshots", StringComparison.OrdinalIgnoreCase));
 
 using (var Scope = app.Services.CreateScope())
 {
     var Config = Scope.ServiceProvider.GetRequiredService<Microsoft.Extensions.Options.IOptions<OloraculoConfig>>().Value;
     var CsvImporterService = Scope.ServiceProvider.GetRequiredService<CsvImportService>();
-    if (Config.RankingRefreshOnStartup)
+    if (Config.RankingRefreshOnStartup && !exportReadmeSnapshots)
     {
         try
         {
@@ -90,6 +92,14 @@ using (var Scope = app.Services.CreateScope())
     }
 
     await CsvImporterService.ImportIfNeededAsync();
+}
+
+if (exportReadmeSnapshots)
+{
+    using var scope = app.Services.CreateScope();
+    var exporter = scope.ServiceProvider.GetRequiredService<ReadmeSnapshotExportService>();
+    await exporter.ExportAsync();
+    return;
 }
 
 // Configure the HTTP request pipeline.

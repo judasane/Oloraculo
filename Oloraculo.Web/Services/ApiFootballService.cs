@@ -189,6 +189,18 @@ namespace Oloraculo.Web.Services
                     fixture.Venue = api.Fixture.Venue?.Name;
                     fixture.City = api.Fixture.Venue?.City;
                     fixture.Status = api.Fixture.Status?.Short;
+                    if (IsFinishedStatus(api.Fixture.Status?.Short) && api.Goals.Home.HasValue && api.Goals.Away.HasValue)
+                    {
+                        fixture.IsPlayed = true;
+                        fixture.HomeGoals = api.Teams.Home.Name is { } homeName &&
+                            TeamNameNormalizer.ToId(homeName) == fixture.HomeTeamId
+                                ? api.Goals.Home.Value
+                                : api.Goals.Away.Value;
+                        fixture.AwayGoals = api.Teams.Away.Name is { } awayName &&
+                            TeamNameNormalizer.ToId(awayName) == fixture.AwayTeamId
+                                ? api.Goals.Away.Value
+                                : api.Goals.Home.Value;
+                    }
                     fixture.Source = "API-Football";
                     matched++;
 
@@ -348,6 +360,9 @@ namespace Oloraculo.Web.Services
 
             return null;
         }
+
+        private static bool IsFinishedStatus(string? status) =>
+            status is "FT" or "AET" or "PEN";
 
         public static string InitialLastKey(string playerName)
         {

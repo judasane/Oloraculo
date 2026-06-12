@@ -1,0 +1,43 @@
+name: Update README snapshots
+
+on:
+  schedule:
+    - cron: "17 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-snapshots:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Test
+        run: dotnet test --configuration Release
+
+      - name: Export README snapshots
+        run: dotnet run --project Oloraculo.Web --configuration Release -- --export-readme-snapshots
+        env:
+          Oloraculo__ApiFootballApiKey: ${{ secrets.API_FOOTBALL_API_KEY }}
+          Oloraculo__OpenRouterApiKey: ${{ secrets.OPENROUTER_API_KEY }}
+
+      - name: Commit snapshot updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md Oloraculo.Web/Data/fifa_rankings.csv Oloraculo.Web/Data/elo_snapshot.csv
+          if git diff --cached --quiet; then
+            echo "No snapshot changes to commit."
+          else
+            git commit -m "Update README snapshots"
+            git push
+          fi
