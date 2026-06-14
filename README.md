@@ -9,7 +9,7 @@ _A medida que se recibe nueva información y se juegan partidos reales, el Olor�
 
 ### Torneo
 
-_Generado 2026-06-14 16:48 UTC a través de 10,000 simulaciones._
+_Generado 2026-06-14 18:25 UTC a través de 10,000 simulaciones._
 
 | Team | Group | Qualify | QF | SF | Final | Champion |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
@@ -52,11 +52,11 @@ _Generado 2026-06-14 16:48 UTC a través de 10,000 simulaciones._
 | Match | Status | Result / Pick | H | D | A |
 | --- | --- | --- | ---: | ---: | ---: |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/qa.svg" width="18" alt=""> Qatar vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ch.svg" width="18" alt=""> Switzerland | FT | **1-1** <br><sub>Prediction: 1-2</sub> | 18 % | 21 % | 61 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ca.svg" width="18" alt=""> Canada vs <img src="Oloraculo.Web/wwwroot/flags/4x3/qa.svg" width="18" alt=""> Qatar | Jun 18 22:00 UTC | 1-0 | 59 % | 23 % | 18 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ca.svg" width="18" alt=""> Canada vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ch.svg" width="18" alt=""> Switzerland | Jun 24 19:00 UTC | 1-1 | 35 % | 28 % | 37 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ca.svg" width="18" alt=""> Canada vs <img src="Oloraculo.Web/wwwroot/flags/4x3/qa.svg" width="18" alt=""> Qatar | Jun 18 22:00 UTC | 1-0 | 60 % | 23 % | 17 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ca.svg" width="18" alt=""> Canada vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ch.svg" width="18" alt=""> Switzerland | Jun 24 19:00 UTC | 1-1 | 36 % | 28 % | 36 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ba.svg" width="18" alt=""> Bosnia and Herzegovina vs <img src="Oloraculo.Web/wwwroot/flags/4x3/qa.svg" width="18" alt=""> Qatar | Scheduled | 1-1 | 27 % | 26 % | 47 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ba.svg" width="18" alt=""> Bosnia and Herzegovina vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ch.svg" width="18" alt=""> Switzerland | Scheduled | 0-2 | 12 % | 20 % | 68 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ca.svg" width="18" alt=""> Canada vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ba.svg" width="18" alt=""> Bosnia and Herzegovina | Final | **1-1** <br><sub>Prediction: 1-0</sub> | 65 % | 22 % | 13 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ca.svg" width="18" alt=""> Canada vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ba.svg" width="18" alt=""> Bosnia and Herzegovina | Final | **1-1** <br><sub>Prediction: 1-0</sub> | 66 % | 22 % | 12 % |
 
 </details>
 
@@ -66,10 +66,10 @@ _Generado 2026-06-14 16:48 UTC a través de 10,000 simulaciones._
 | Match | Status | Result / Pick | H | D | A |
 | --- | --- | --- | ---: | ---: | ---: |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | FT | **1-1** <br><sub>Prediction: 1-1</sub> | 37 % | 27 % | 36 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ht.svg" width="18" alt=""> Haiti vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-sct.svg" width="18" alt=""> Scotland | FT | **0-1** <br><sub>Prediction: 1-1</sub> | 34 % | 26 % | 40 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-sct.svg" width="18" alt=""> Scotland | Jun 19 22:00 UTC | 1-0 | 56 % | 24 % | 20 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ht.svg" width="18" alt=""> Haiti vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-sct.svg" width="18" alt=""> Scotland | FT | **0-1** <br><sub>Prediction: 1-1</sub> | 33 % | 26 % | 41 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-sct.svg" width="18" alt=""> Scotland | Jun 19 22:00 UTC | 1-0 | 55 % | 25 % | 20 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ht.svg" width="18" alt=""> Haiti | Jun 20 00:30 UTC | 2-1 | 62 % | 21 % | 17 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-sct.svg" width="18" alt=""> Scotland | Jun 24 22:00 UTC | 1-1 | 57 % | 23 % | 20 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-sct.svg" width="18" alt=""> Scotland | Jun 24 22:00 UTC | 1-1 | 56 % | 24 % | 20 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ht.svg" width="18" alt=""> Haiti | Jun 24 22:00 UTC | 1-1 | 60 % | 22 % | 18 % |
 
 </details>
@@ -79,12 +79,12 @@ _Generado 2026-06-14 16:48 UTC a través de 10,000 simulaciones._
 
 | Match | Status | Result / Pick | H | D | A |
 | --- | --- | --- | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay | FT | **4-1** <br><sub>Prediction: 1-1</sub> | 50 % | 27 % | 24 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | FT | **2-0** <br><sub>Prediction: 1-1</sub> | 47 % | 26 % | 27 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay | FT | **4-1** <br><sub>Prediction: 1-1</sub> | 50 % | 26 % | 23 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | FT | **2-0** <br><sub>Prediction: 1-1</sub> | 48 % | 25 % | 27 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | Jun 19 19:00 UTC | 1-1 | 36 % | 27 % | 38 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | Jun 20 03:00 UTC | 1-1 | 34 % | 27 % | 38 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay vs <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | Jun 26 02:00 UTC | 0-1 | 23 % | 29 % | 49 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | Jun 26 02:00 UTC | 1-1 | 52 % | 23 % | 26 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay vs <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | Jun 26 02:00 UTC | 0-1 | 22 % | 29 % | 49 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | Jun 26 02:00 UTC | 1-1 | 53 % | 22 % | 25 % |
 
 </details>
 
@@ -93,12 +93,12 @@ _Generado 2026-06-14 16:48 UTC a través de 10,000 simulaciones._
 
 | Match | Status | Result / Pick | H | D | A |
 | --- | --- | --- | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany vs <img src="Oloraculo.Web/wwwroot/flags/4x3/cw.svg" width="18" alt=""> Curacao | Jun 14 17:00 UTC | 2-0 | 68 % | 18 % | 13 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany vs <img src="Oloraculo.Web/wwwroot/flags/4x3/cw.svg" width="18" alt=""> Curacao | Jun 14 17:00 UTC | 2-0 | 69 % | 18 % | 13 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ci.svg" width="18" alt=""> Ivory Coast vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ec.svg" width="18" alt=""> Ecuador | Jun 14 23:00 UTC | 0-0 | 34 % | 32 % | 34 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ci.svg" width="18" alt=""> Ivory Coast | Jun 20 20:00 UTC | 1-1 | 38 % | 28 % | 34 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ci.svg" width="18" alt=""> Ivory Coast | Jun 20 20:00 UTC | 1-1 | 39 % | 27 % | 34 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/cw.svg" width="18" alt=""> Curacao vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ec.svg" width="18" alt=""> Ecuador | Jun 21 00:00 UTC | 0-1 | 17 % | 25 % | 58 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/cw.svg" width="18" alt=""> Curacao vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ci.svg" width="18" alt=""> Ivory Coast | Jun 25 20:00 UTC | 0-1 | 15 % | 23 % | 61 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ec.svg" width="18" alt=""> Ecuador | Jun 25 20:00 UTC | 1-1 | 40 % | 28 % | 31 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ec.svg" width="18" alt=""> Ecuador | Jun 25 20:00 UTC | 1-1 | 41 % | 28 % | 31 % |
 
 </details>
 
@@ -107,12 +107,12 @@ _Generado 2026-06-14 16:48 UTC a través de 10,000 simulaciones._
 
 | Match | Status | Result / Pick | H | D | A |
 | --- | --- | --- | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands vs <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan | Jun 14 20:00 UTC | 1-1 | 34 % | 27 % | 39 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands vs <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan | Jun 14 20:00 UTC | 1-1 | 36 % | 27 % | 37 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/se.svg" width="18" alt=""> Sweden vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tn.svg" width="18" alt=""> Tunisia | Jun 15 02:00 UTC | 1-1 | 33 % | 28 % | 38 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands vs <img src="Oloraculo.Web/wwwroot/flags/4x3/se.svg" width="18" alt=""> Sweden | Jun 20 17:00 UTC | 2-1 | 56 % | 22 % | 22 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands vs <img src="Oloraculo.Web/wwwroot/flags/4x3/se.svg" width="18" alt=""> Sweden | Jun 20 17:00 UTC | 2-1 | 59 % | 21 % | 20 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tn.svg" width="18" alt=""> Tunisia | Jun 21 04:00 UTC | 1-0 | 50 % | 28 % | 22 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan vs <img src="Oloraculo.Web/wwwroot/flags/4x3/se.svg" width="18" alt=""> Sweden | Jun 25 23:00 UTC | 2-1 | 60 % | 21 % | 19 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tn.svg" width="18" alt=""> Tunisia | Jun 25 23:00 UTC | 1-1 | 47 % | 28 % | 25 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tn.svg" width="18" alt=""> Tunisia | Jun 25 23:00 UTC | 1-0 | 49 % | 27 % | 24 % |
 
 </details>
 
@@ -136,11 +136,11 @@ _Generado 2026-06-14 16:48 UTC a través de 10,000 simulaciones._
 | Match | Status | Result / Pick | H | D | A |
 | --- | --- | --- | ---: | ---: | ---: |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/sa.svg" width="18" alt=""> Saudi Arabia vs <img src="Oloraculo.Web/wwwroot/flags/4x3/uy.svg" width="18" alt=""> Uruguay | Jun 15 22:00 UTC | 0-1 | 22 % | 31 % | 47 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain vs <img src="Oloraculo.Web/wwwroot/flags/4x3/sa.svg" width="18" alt=""> Saudi Arabia | Jun 21 16:00 UTC | 1-0 | 58 % | 25 % | 17 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain vs <img src="Oloraculo.Web/wwwroot/flags/4x3/uy.svg" width="18" alt=""> Uruguay | Jun 27 00:00 UTC | 1-1 | 44 % | 28 % | 28 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain vs <img src="Oloraculo.Web/wwwroot/flags/4x3/sa.svg" width="18" alt=""> Saudi Arabia | Jun 21 16:00 UTC | 1-0 | 59 % | 25 % | 17 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain vs <img src="Oloraculo.Web/wwwroot/flags/4x3/uy.svg" width="18" alt=""> Uruguay | Jun 27 00:00 UTC | 1-1 | 45 % | 28 % | 28 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/cv.svg" width="18" alt=""> Cape Verde vs <img src="Oloraculo.Web/wwwroot/flags/4x3/sa.svg" width="18" alt=""> Saudi Arabia | Scheduled | 0-1 | 27 % | 31 % | 41 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/cv.svg" width="18" alt=""> Cape Verde vs <img src="Oloraculo.Web/wwwroot/flags/4x3/uy.svg" width="18" alt=""> Uruguay | Scheduled | 0-1 | 17 % | 27 % | 56 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain vs <img src="Oloraculo.Web/wwwroot/flags/4x3/cv.svg" width="18" alt=""> Cape Verde | Scheduled | 2-0 | 68 % | 21 % | 12 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain vs <img src="Oloraculo.Web/wwwroot/flags/4x3/cv.svg" width="18" alt=""> Cape Verde | Scheduled | 2-0 | 68 % | 20 % | 12 % |
 
 </details>
 
@@ -163,12 +163,12 @@ _Generado 2026-06-14 16:48 UTC a través de 10,000 simulaciones._
 
 | Match | Status | Result / Pick | H | D | A |
 | --- | --- | --- | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina vs <img src="Oloraculo.Web/wwwroot/flags/4x3/dz.svg" width="18" alt=""> Algeria | Jun 17 01:00 UTC | 1-1 | 39 % | 26 % | 34 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina vs <img src="Oloraculo.Web/wwwroot/flags/4x3/dz.svg" width="18" alt=""> Algeria | Jun 17 01:00 UTC | 1-1 | 38 % | 26 % | 35 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/at.svg" width="18" alt=""> Austria vs <img src="Oloraculo.Web/wwwroot/flags/4x3/jo.svg" width="18" alt=""> Jordan | Jun 17 04:00 UTC | 1-1 | 51 % | 25 % | 24 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina vs <img src="Oloraculo.Web/wwwroot/flags/4x3/at.svg" width="18" alt=""> Austria | Jun 22 17:00 UTC | 1-1 | 46 % | 26 % | 27 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina vs <img src="Oloraculo.Web/wwwroot/flags/4x3/at.svg" width="18" alt=""> Austria | Jun 22 17:00 UTC | 1-1 | 46 % | 26 % | 28 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/dz.svg" width="18" alt=""> Algeria vs <img src="Oloraculo.Web/wwwroot/flags/4x3/jo.svg" width="18" alt=""> Jordan | Jun 23 03:00 UTC | 1-1 | 60 % | 22 % | 18 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/dz.svg" width="18" alt=""> Algeria vs <img src="Oloraculo.Web/wwwroot/flags/4x3/at.svg" width="18" alt=""> Austria | Jun 28 02:00 UTC | 1-1 | 42 % | 28 % | 30 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina vs <img src="Oloraculo.Web/wwwroot/flags/4x3/jo.svg" width="18" alt=""> Jordan | Jun 28 02:00 UTC | 2-0 | 63 % | 21 % | 16 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina vs <img src="Oloraculo.Web/wwwroot/flags/4x3/jo.svg" width="18" alt=""> Jordan | Jun 28 02:00 UTC | 2-1 | 62 % | 21 % | 17 % |
 
 </details>
 
