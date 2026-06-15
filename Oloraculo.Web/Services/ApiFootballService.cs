@@ -177,13 +177,17 @@ namespace Oloraculo.Web.Services
                 var local = await _db.Fixtures.ToListAsync(ct);
                 var byPair = local.ToDictionary(f => PairKey(f.HomeTeamId, f.AwayTeamId));
                 var matched = 0;
+                var unmatchedPairs = new List<string>();
 
                 foreach (var api in items)
                 {
                     var home = TeamNameNormalizer.ToId(api.Teams.Home.Name);
                     var away = TeamNameNormalizer.ToId(api.Teams.Away.Name);
                     if (!byPair.TryGetValue(PairKey(home, away), out var fixture))
+                    {
+                        unmatchedPairs.Add($"{api.Teams.Home.Name} vs {api.Teams.Away.Name} ({home} vs {away})");
                         continue;
+                    }
 
                     fixture.KickoffUtc = api.Fixture.Date;
                     fixture.Venue = api.Fixture.Venue?.Name;
@@ -205,14 +209,20 @@ namespace Oloraculo.Web.Services
                     matched++;
 
                     var existing = await _db.ApiMappings.SingleOrDefaultAsync(m => m.LocalFixtureId == fixture.Id, ct);
+                    var updatedAt = DateTimeOffset.UtcNow;
                     if (existing is null)
-                        _db.ApiMappings.Add(new ApiMapping { LocalFixtureId = fixture.Id, ExternalFixtureId = api.Fixture.Id.ToString() });
+                        _db.ApiMappings.Add(new ApiMapping { LocalFixtureId = fixture.Id, ExternalFixtureId = api.Fixture.Id.ToString(), UpdatedAt = updatedAt });
                     else
+                    {
                         existing.ExternalFixtureId = api.Fixture.Id.ToString();
+                        existing.UpdatedAt = updatedAt;
+                    }
                 }
 
                 await _db.SaveChangesAsync(ct);
                 notes.Add($"Se obtuvieron {items.Count} filas de partidos y se matchearon {matched} partidos locales de fase de grupos.");
+                if (unmatchedPairs.Count > 0)
+                    notes.Add($"No se matchearon {unmatchedPairs.Count} filas API contra partidos locales: {string.Join("; ", unmatchedPairs.Take(10))}{(unmatchedPairs.Count > 10 ? "; ..." : "")}");
                 return new ApiFootballRefreshReport { IsConfigured = true, FixturesFetched = items.Count, FixturesMatched = matched, Notes = notes };
             }
             catch (Exception ex)

@@ -139,6 +139,61 @@ public class ApiFootballServiceTests : TestFixtures
     }
 
     [Fact]
+    public async Task ApiFootball_RefreshFixturesMatchesApiFootballNameAliases()
+    {
+        await using var db = await NewDb();
+        db.Fixtures.AddRange(
+            new Fixture { Id = "cape", Group = "H", HomeTeamId = "spain", AwayTeamId = "cape-verde" },
+            new Fixture { Id = "bosnia", Group = "B", HomeTeamId = "canada", AwayTeamId = "bosnia-and-herzegovina" });
+        await db.SaveChangesAsync();
+        var beforeRefresh = DateTimeOffset.UtcNow;
+        var handler = new FakeHttpMessageHandler(new Dictionary<string, string>
+        {
+            [$"https://api.test/{ApiFootballEndpoints.Fixtures(1, 2026)}"] = """
+                {
+                  "response": [
+                    {
+                      "fixture": {
+                        "id": 20,
+                        "date": "2026-06-18T20:00:00+00:00",
+                        "venue": { "name": "Cape Stadium", "city": "Cape City" },
+                        "status": { "short": "NS" }
+                      },
+                      "teams": {
+                        "home": { "id": 1, "name": "Spain" },
+                        "away": { "id": 2, "name": "Cape Verde Islands" }
+                      },
+                      "goals": { "home": null, "away": null }
+                    },
+                    {
+                      "fixture": {
+                        "id": 21,
+                        "date": "2026-06-19T20:00:00+00:00",
+                        "venue": { "name": "Bosnia Stadium", "city": "Bosnia City" },
+                        "status": { "short": "NS" }
+                      },
+                      "teams": {
+                        "home": { "id": 3, "name": "Canada" },
+                        "away": { "id": 4, "name": "Bosnia-Herzegovina" }
+                      },
+                      "goals": { "home": null, "away": null }
+                    }
+                  ]
+                }
+                """
+        });
+        var api = ApiService(db, handler);
+
+        var report = await api.RefreshFixturesAsync();
+        var mappings = await db.ApiMappings.ToDictionaryAsync(m => m.LocalFixtureId);
+
+        Assert.Equal(2, report.FixturesMatched);
+        Assert.Equal("20", mappings["cape"].ExternalFixtureId);
+        Assert.Equal("21", mappings["bosnia"].ExternalFixtureId);
+        Assert.All(mappings.Values, mapping => Assert.InRange(mapping.UpdatedAt, beforeRefresh, DateTimeOffset.UtcNow));
+    }
+
+    [Fact]
     public async Task ApiFootball_RoleEnrichmentUpdatesClaimsWithoutDeletingEvidence()
     {
         await using var db = await NewDb();

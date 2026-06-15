@@ -295,14 +295,6 @@ namespace Oloraculo.Web.Services
             if (!string.IsNullOrWhiteSpace(availability))
                 lines.Add($"Bajas: {availability}");
 
-            var signals = SignalsText(prediction);
-            if (!string.IsNullOrWhiteSpace(signals))
-                lines.Add($"Signals: {signals}");
-
-            var missing = LimitedList(prediction.FeaturesMissing, maxItems: 3, maxItemLength: 70);
-            if (!string.IsNullOrWhiteSpace(missing))
-                lines.Add($"Missing: {missing}");
-
             return string.Join("<br>", lines.Select(line => SanitizeCellSegment(line, maxLength: 220)));
         }
 

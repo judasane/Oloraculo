@@ -25,6 +25,10 @@ public class TeamNameAndFlagTests : TestFixtures
     [InlineData("Korea Republic", "south-korea")]
     [InlineData("Türkiye", "turkey")]
     [InlineData("USA", "united-states")]
+    [InlineData("Cabo Verde", "cape-verde")]
+    [InlineData("Cape Verde Islands", "cape-verde")]
+    [InlineData("Bosnia-Herzegovina", "bosnia-and-herzegovina")]
+    [InlineData("Bosnia & Herzegovina", "bosnia-and-herzegovina")]
     public void TeamNameNormalizer_HandlesAliases(string input, string expected)
     {
         Assert.Equal(expected, TeamNameNormalizer.ToId(input));
