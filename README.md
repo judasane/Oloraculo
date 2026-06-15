@@ -9,7 +9,7 @@ _A medida que se recibe nueva información y se juegan partidos reales, el Olor�
 
 ### Torneo
 
-_Generado 2026-06-15 04:10 UTC a través de 10,000 simulaciones._
+_Generado 2026-06-15 10:11 UTC a través de 10,000 simulaciones._
 
 | Team | Group | Qualify | QF | SF | Final | Champion |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
@@ -65,11 +65,11 @@ _Generado 2026-06-15 04:10 UTC a través de 10,000 simulaciones._
 
 | Match | Status | Result / Pick | Why | H | D | A |
 | --- | --- | --- | --- | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | FT | **1-1** <br><sub>Prediction: 1-1</sub> | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 40 % | 27 % | 33 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | FT | **1-1** <br><sub>Prediction: 1-1</sub> | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Brazil: &#201;der Milit&#227;o (injury), Brazil: Est&#234;v&#227;o (injury), Brazil: Rodrygo (injury) | 37 % | 27 % | 36 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ht.svg" width="18" alt=""> Haiti vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-sct.svg" width="18" alt=""> Scotland | FT | **0-1** <br><sub>Prediction: 1-1</sub> | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 33 % | 26 % | 41 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-sct.svg" width="18" alt=""> Scotland | Jun 19 22:00 UTC | 1-0 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 55 % | 25 % | 20 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ht.svg" width="18" alt=""> Haiti | Jun 20 00:30 UTC | 2-0 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 65 % | 20 % | 15 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-sct.svg" width="18" alt=""> Scotland | Jun 24 22:00 UTC | 1-0 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 59 % | 23 % | 18 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ht.svg" width="18" alt=""> Haiti | Jun 20 00:30 UTC | 2-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Brazil: &#201;der Milit&#227;o (injury), Brazil: Est&#234;v&#227;o (injury), Brazil: Rodrygo (injury) | 63 % | 20 % | 17 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-sct.svg" width="18" alt=""> Scotland | Jun 24 22:00 UTC | 1-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Brazil: &#201;der Milit&#227;o (injury), Brazil: Est&#234;v&#227;o (injury), Brazil: Rodrygo (injury) | 57 % | 23 % | 20 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ht.svg" width="18" alt=""> Haiti | Jun 24 22:00 UTC | 1-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 61 % | 22 % | 17 % |
 
 </details>
@@ -79,12 +79,12 @@ _Generado 2026-06-15 04:10 UTC a través de 10,000 simulaciones._
 
 | Match | Status | Result / Pick | Why | H | D | A |
 | --- | --- | --- | --- | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay | FT | **4-1** <br><sub>Prediction: 1-1</sub> | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 51 % | 26 % | 23 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay | FT | **4-1** <br><sub>Prediction: 1-1</sub> | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: United States: Johnny Cardoso (injury) | 50 % | 26 % | 23 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | FT | **2-0** <br><sub>Prediction: 1-1</sub> | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 48 % | 26 % | 27 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | Jun 19 19:00 UTC | 1-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 36 % | 26 % | 37 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | Jun 19 19:00 UTC | 1-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: United States: Johnny Cardoso (injury) | 36 % | 27 % | 38 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | Jun 20 03:00 UTC | 1-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 34 % | 27 % | 38 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay vs <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | Jun 26 02:00 UTC | 0-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 22 % | 29 % | 49 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | Jun 26 02:00 UTC | 1-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 53 % | 22 % | 25 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | Jun 26 02:00 UTC | 1-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: United States: Johnny Cardoso (injury) | 52 % | 22 % | 25 % |
 
 </details>
 
@@ -93,12 +93,12 @@ _Generado 2026-06-15 04:10 UTC a través de 10,000 simulaciones._
 
 | Match | Status | Result / Pick | Why | H | D | A |
 | --- | --- | --- | --- | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany vs <img src="Oloraculo.Web/wwwroot/flags/4x3/cw.svg" width="18" alt=""> Curacao | FT | **7-1** <br><sub>Prediction: 2-0</sub> | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 75 % | 15 % | 10 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany vs <img src="Oloraculo.Web/wwwroot/flags/4x3/cw.svg" width="18" alt=""> Curacao | FT | **7-1** <br><sub>Prediction: 2-0</sub> | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Germany: Lennart Karl (injury), Germany: Serge Gnabry (injury) | 74 % | 16 % | 11 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ci.svg" width="18" alt=""> Ivory Coast vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ec.svg" width="18" alt=""> Ecuador | FT | **1-0** <br><sub>Prediction: 0-0</sub> | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 34 % | 32 % | 34 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ci.svg" width="18" alt=""> Ivory Coast | Jun 20 20:00 UTC | 1-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 41 % | 27 % | 32 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ci.svg" width="18" alt=""> Ivory Coast | Jun 20 20:00 UTC | 1-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Germany: Lennart Karl (injury), Germany: Serge Gnabry (injury) | 39 % | 27 % | 34 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/cw.svg" width="18" alt=""> Curacao vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ec.svg" width="18" alt=""> Ecuador | Jun 21 00:00 UTC | 0-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 15 % | 23 % | 61 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/cw.svg" width="18" alt=""> Curacao vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ci.svg" width="18" alt=""> Ivory Coast | Jun 25 20:00 UTC | 0-2 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 13 % | 21 % | 66 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ec.svg" width="18" alt=""> Ecuador | Jun 25 20:00 UTC | 1-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 43 % | 28 % | 29 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ec.svg" width="18" alt=""> Ecuador | Jun 25 20:00 UTC | 1-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Germany: Lennart Karl (injury), Germany: Serge Gnabry (injury) | 42 % | 28 % | 30 % |
 
 </details>
 
@@ -107,12 +107,12 @@ _Generado 2026-06-15 04:10 UTC a través de 10,000 simulaciones._
 
 | Match | Status | Result / Pick | Why | H | D | A |
 | --- | --- | --- | --- | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands vs <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan | FT | **2-2** <br><sub>Prediction: 1-1</sub> | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Netherlands: Jurri&#235;n Timber (injury) | 35 % | 27 % | 39 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands vs <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan | FT | **2-2** <br><sub>Prediction: 1-1</sub> | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Japan: Kaoru Mitoma (injury), Japan: Takumi Minamino (injury), Netherlands: Jurri&#235;n Timber (injury), +1 more | 35 % | 27 % | 38 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/se.svg" width="18" alt=""> Sweden vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tn.svg" width="18" alt=""> Tunisia | FT | **5-1** <br><sub>Prediction: 1-1</sub> | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 38 % | 26 % | 36 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands vs <img src="Oloraculo.Web/wwwroot/flags/4x3/se.svg" width="18" alt=""> Sweden | Jun 20 17:00 UTC | 2-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Netherlands: Jurri&#235;n Timber (injury) | 56 % | 21 % | 22 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tn.svg" width="18" alt=""> Tunisia | Jun 21 04:00 UTC | 1-0 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 55 % | 26 % | 19 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan vs <img src="Oloraculo.Web/wwwroot/flags/4x3/se.svg" width="18" alt=""> Sweden | Jun 25 23:00 UTC | 2-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 60 % | 21 % | 20 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tn.svg" width="18" alt=""> Tunisia | Jun 25 23:00 UTC | 1-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Netherlands: Jurri&#235;n Timber (injury) | 53 % | 26 % | 22 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands vs <img src="Oloraculo.Web/wwwroot/flags/4x3/se.svg" width="18" alt=""> Sweden | Jun 20 17:00 UTC | 2-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Netherlands: Jurri&#235;n Timber (injury), Netherlands: Matthijs de Ligt (injury) | 56 % | 21 % | 23 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tn.svg" width="18" alt=""> Tunisia | Jun 21 04:00 UTC | 1-0 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Japan: Kaoru Mitoma (injury), Japan: Takumi Minamino (injury) | 54 % | 26 % | 20 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan vs <img src="Oloraculo.Web/wwwroot/flags/4x3/se.svg" width="18" alt=""> Sweden | Jun 25 23:00 UTC | 2-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Japan: Kaoru Mitoma (injury), Japan: Takumi Minamino (injury) | 58 % | 21 % | 21 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tn.svg" width="18" alt=""> Tunisia | Jun 25 23:00 UTC | 1-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: Netherlands: Jurri&#235;n Timber (injury), Netherlands: Matthijs de Ligt (injury) | 52 % | 26 % | 22 % |
 
 </details>
 
@@ -149,11 +149,11 @@ _Generado 2026-06-15 04:10 UTC a través de 10,000 simulaciones._
 
 | Match | Status | Result / Pick | Why | H | D | A |
 | --- | --- | --- | --- | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France vs <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal | Jun 16 19:00 UTC | 1-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 41 % | 27 % | 32 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France vs <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal | Jun 16 19:00 UTC | 1-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: France: Hugo Ekitik&#233; (injury) | 40 % | 27 % | 32 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/iq.svg" width="18" alt=""> Iraq vs <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | Jun 16 22:00 UTC | 0-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 22 % | 27 % | 52 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France vs <img src="Oloraculo.Web/wwwroot/flags/4x3/iq.svg" width="18" alt=""> Iraq | Jun 22 21:00 UTC | 1-0 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 56 % | 26 % | 18 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France vs <img src="Oloraculo.Web/wwwroot/flags/4x3/iq.svg" width="18" alt=""> Iraq | Jun 22 21:00 UTC | 1-0 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: France: Hugo Ekitik&#233; (injury) | 55 % | 26 % | 18 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal vs <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | Jun 23 00:00 UTC | 1-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 37 % | 27 % | 36 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France vs <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | Jun 26 19:00 UTC | 1-1 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 43 % | 25 % | 32 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France vs <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | Jun 26 19:00 UTC | 1-1 | Model: Or&#225;culo final (Goles + contexto reciente)<br>Bajas: France: Hugo Ekitik&#233; (injury) | 42 % | 25 % | 33 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal vs <img src="Oloraculo.Web/wwwroot/flags/4x3/iq.svg" width="18" alt=""> Iraq | Jun 26 19:00 UTC | 1-0 | Model: Or&#225;culo final (Modelo de goles (Poisson)) | 50 % | 29 % | 21 % |
 
 </details>
