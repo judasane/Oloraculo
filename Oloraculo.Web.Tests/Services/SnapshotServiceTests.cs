@@ -161,6 +161,62 @@ public class SnapshotServiceTests : TestFixtures
     }
 
     [Fact]
+    public async Task SnapshotService_LoadsLatestMatchSnapshotAtOrBeforeCutoff()
+    {
+        await using var db = await NewDb();
+        db.Teams.AddRange(new Team { Id = "a", Name = "A" }, new Team { Id = "b", Name = "B" });
+        db.Fixtures.Add(new Fixture { Id = "f1", Group = "A", HomeTeamId = "a", AwayTeamId = "b" });
+        await db.SaveChangesAsync();
+        var service = new SnapshotService(db);
+        var cutoff = DateTimeOffset.Parse("2026-06-11T19:00:00Z");
+        var oldPrediction = Prediction(4, "Old pre-game", .6, .2, .2);
+        var latestPreGamePrediction = Prediction(4, "Latest pre-game", .2, .6, .2);
+        var postGamePrediction = Prediction(4, "Post-game", .1, .1, .8);
+        oldPrediction.FixtureId = "f1";
+        latestPreGamePrediction.FixtureId = "f1";
+        postGamePrediction.FixtureId = "f1";
+
+        var oldSnapshot = await service.SaveMatchAsync(oldPrediction);
+        oldSnapshot.CreatedAt = cutoff.AddHours(-2);
+        var latestPreGameSnapshot = await service.SaveMatchAsync(latestPreGamePrediction);
+        latestPreGameSnapshot.CreatedAt = cutoff.AddMinutes(-1);
+        var postGameSnapshot = await service.SaveMatchAsync(postGamePrediction);
+        postGameSnapshot.CreatedAt = cutoff.AddMinutes(1);
+        await db.SaveChangesAsync();
+
+        var loaded = await service.LoadLatestMatchSnapshotAtOrBeforeAsync("f1", cutoff);
+
+        Assert.True(loaded.IsValid);
+        Assert.Equal(latestPreGameSnapshot.Id, (await service.MatchSnapshotsAsync("f1"))
+            .Single(summary => summary.ModelName == "Latest pre-game").Id);
+        Assert.Equal("Latest pre-game", loaded.Prediction!.BestPrediction.PredictorName);
+        Assert.NotEqual(postGameSnapshot.Id, latestPreGameSnapshot.Id);
+        Assert.NotEqual(oldSnapshot.Id, latestPreGameSnapshot.Id);
+    }
+
+    [Fact]
+    public async Task SnapshotService_LoadLatestMatchSnapshotAtOrBeforeCutoffReturnsEmptyWhenOnlyPostCutoffSnapshotsExist()
+    {
+        await using var db = await NewDb();
+        db.Teams.AddRange(new Team { Id = "a", Name = "A" }, new Team { Id = "b", Name = "B" });
+        db.Fixtures.Add(new Fixture { Id = "f1", Group = "A", HomeTeamId = "a", AwayTeamId = "b" });
+        await db.SaveChangesAsync();
+        var service = new SnapshotService(db);
+        var cutoff = DateTimeOffset.Parse("2026-06-11T19:00:00Z");
+        var prediction = Prediction(4, "Post-game", .1, .1, .8);
+        prediction.FixtureId = "f1";
+
+        var snapshot = await service.SaveMatchAsync(prediction);
+        snapshot.CreatedAt = cutoff.AddSeconds(1);
+        await db.SaveChangesAsync();
+
+        var loaded = await service.LoadLatestMatchSnapshotAtOrBeforeAsync("f1", cutoff);
+
+        Assert.False(loaded.IsValid);
+        Assert.Null(loaded.Prediction);
+    }
+
+    [Fact]
     public async Task SnapshotService_LoadsLegacyMatchSnapshotFromColumnsAndCurrentFixture()
     {
         await using var db = await NewDb();

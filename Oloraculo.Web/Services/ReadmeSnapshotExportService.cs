@@ -84,9 +84,10 @@ namespace Oloraculo.Web.Services
 
             var projection = await _simulation.RunAsync(saveSnapshot: true, ct: ct);
             var names = await _db.Teams.AsNoTracking().ToDictionaryAsync(t => t.Id, t => t.Name, ct);
+            var readmeRows = await ReadmePredictionRowsAsync(orderedFixtures, predictions, names, ct);
             var availabilityClaims = await AvailabilityClaimsByFixtureAsync(orderedFixtures, ct);
 
-            var block = RenderSnapshotBlock(projection, predictions, names, DateTimeOffset.UtcNow, availabilityClaims);
+            var block = RenderSnapshotRows(projection, readmeRows, names, DateTimeOffset.UtcNow, availabilityClaims);
             var readmePath = Path.Combine(RepositoryRoot(), "README.md");
             var existing = File.Exists(readmePath) ? await File.ReadAllTextAsync(readmePath, ct) : "# Oloraculo";
             var updated = ReplaceSnapshotBlock(existing, block);
@@ -143,6 +144,17 @@ namespace Oloraculo.Web.Services
             DateTimeOffset generatedAt,
             IReadOnlyDictionary<string, IReadOnlyList<AvailabilityClaim>>? availabilityClaimsByFixture = null)
         {
+            var rows = predictions.Select(prediction => new ReadmePredictionRow(prediction, HasPrediction: true)).ToList();
+            return RenderSnapshotRows(projection, rows, teamNames, generatedAt, availabilityClaimsByFixture);
+        }
+
+        private static string RenderSnapshotRows(
+            TournamentProjection projection,
+            IReadOnlyList<ReadmePredictionRow> predictionRows,
+            IReadOnlyDictionary<string, string> teamNames,
+            DateTimeOffset generatedAt,
+            IReadOnlyDictionary<string, IReadOnlyList<AvailabilityClaim>>? availabilityClaimsByFixture = null)
+        {
             var builder = new StringBuilder();
             builder.AppendLine("## Predicciones más recientes");
             builder.AppendLine("_A medida que se recibe nueva información y se juegan partidos reales, " +
@@ -164,23 +176,29 @@ namespace Oloraculo.Web.Services
             builder.AppendLine("### Grupos");
             builder.AppendLine();
 
-            foreach (var group in predictions.GroupBy(p => p.Fixture.Group).OrderBy(g => g.Key))
+            foreach (var group in predictionRows.GroupBy(p => p.Result.Fixture.Group).OrderBy(g => g.Key))
             {
                 builder.AppendLine("<details open>");
                 builder.AppendLine($"<summary><strong>Group {Escape(group.Key)}</strong></summary>");
                 builder.AppendLine();
                 builder.AppendLine("| Match | Status | Result / Pick | Why | H | D | A |");
                 builder.AppendLine("| --- | --- | --- | --- | ---: | ---: | ---: |");
-                foreach (var result in OrderedPredictions(group))
+                foreach (var row in OrderedPredictions(group))
                 {
+                    var result = row.Result;
                     var fixture = result.Fixture;
                     var prediction = result.BestPrediction;
                     var home = TeamCell(fixture.HomeTeamId, result.HomeTeamName);
                     var away = TeamCell(fixture.AwayTeamId, result.AwayTeamName);
                     var status = StatusText(fixture);
-                    var pick = ResultOrPickText(fixture, prediction);
-                    var rationale = RationaleText(prediction, fixture.Id, availabilityClaimsByFixture);
-                    builder.AppendLine($"| {home} vs {away} | {status} | {pick} | {rationale} | {Percent(prediction.Outcome.HomeWin, 0)} | {Percent(prediction.Outcome.Draw, 0)} | {Percent(prediction.Outcome.AwayWin, 0)} |");
+                    var pick = ResultOrPickText(fixture, prediction, row.HasPrediction);
+                    var rationale = row.HasPrediction
+                        ? RationaleText(prediction, fixture.Id, fixture.IsPlayed ? null : availabilityClaimsByFixture)
+                        : "No pre-game snapshot";
+                    var homeWin = row.HasPrediction ? Percent(prediction.Outcome.HomeWin, 0) : "-";
+                    var draw = row.HasPrediction ? Percent(prediction.Outcome.Draw, 0) : "-";
+                    var awayWin = row.HasPrediction ? Percent(prediction.Outcome.AwayWin, 0) : "-";
+                    builder.AppendLine($"| {home} vs {away} | {status} | {pick} | {rationale} | {homeWin} | {draw} | {awayWin} |");
                 }
 
                 builder.AppendLine();
@@ -245,6 +263,40 @@ namespace Oloraculo.Web.Services
             return claimsByFixture;
         }
 
+        private async Task<IReadOnlyList<ReadmePredictionRow>> ReadmePredictionRowsAsync(
+            IReadOnlyList<Fixture> orderedFixtures,
+            IReadOnlyList<MatchPredictionResult> freshPredictions,
+            IReadOnlyDictionary<string, string> teamNames,
+            CancellationToken ct)
+        {
+            var freshByFixture = freshPredictions.ToDictionary(result => result.Fixture.Id, StringComparer.Ordinal);
+            var rows = new List<ReadmePredictionRow>(orderedFixtures.Count);
+
+            foreach (var fixture in orderedFixtures)
+            {
+                if (!fixture.IsPlayed)
+                {
+                    if (freshByFixture.TryGetValue(fixture.Id, out var fresh))
+                        rows.Add(new ReadmePredictionRow(fresh, HasPrediction: true));
+                    continue;
+                }
+
+                if (fixture.KickoffUtc.HasValue)
+                {
+                    var snapshot = await _snapshots.LoadLatestMatchSnapshotAtOrBeforeAsync(fixture.Id, fixture.KickoffUtc.Value, ct);
+                    if (snapshot.IsValid && snapshot.Prediction is not null)
+                    {
+                        rows.Add(new ReadmePredictionRow(snapshot.Prediction, HasPrediction: true));
+                        continue;
+                    }
+                }
+
+                rows.Add(new ReadmePredictionRow(UnavailablePredictionResult(fixture, teamNames), HasPrediction: false));
+            }
+
+            return rows;
+        }
+
         private static IEnumerable<Fixture> OrderedFixtures(IEnumerable<Fixture> fixtures) =>
             fixtures
                 .OrderBy(fixture => fixture.KickoffUtc ?? DateTimeOffset.MaxValue)
@@ -252,19 +304,43 @@ namespace Oloraculo.Web.Services
                 .ThenBy(fixture => fixture.HomeTeamId)
                 .ThenBy(fixture => fixture.AwayTeamId);
 
-        private static IEnumerable<MatchPredictionResult> OrderedPredictions(IEnumerable<MatchPredictionResult> predictions) =>
+        private static IEnumerable<ReadmePredictionRow> OrderedPredictions(IEnumerable<ReadmePredictionRow> predictions) =>
             predictions
-                .OrderBy(result => result.Fixture.KickoffUtc ?? DateTimeOffset.MaxValue)
-                .ThenBy(result => result.HomeTeamName)
-                .ThenBy(result => result.AwayTeamName);
+                .OrderBy(row => row.Result.Fixture.KickoffUtc ?? DateTimeOffset.MaxValue)
+                .ThenBy(row => row.Result.HomeTeamName)
+                .ThenBy(row => row.Result.AwayTeamName);
 
-        private static string ResultOrPickText(Fixture fixture, MatchPrediction prediction)
+        private static string ResultOrPickText(Fixture fixture, MatchPrediction prediction, bool hasPrediction)
         {
-            var predictionText = PredictionText(prediction);
+            var predictionText = hasPrediction ? PredictionText(prediction) : "unavailable";
             if (fixture.IsPlayed && fixture.HomeGoals.HasValue && fixture.AwayGoals.HasValue)
                 return $"**{fixture.HomeGoals}-{fixture.AwayGoals}** <br><sub>Prediction: {predictionText}</sub>";
 
             return predictionText;
+        }
+
+        private static MatchPredictionResult UnavailablePredictionResult(
+            Fixture fixture,
+            IReadOnlyDictionary<string, string> teamNames)
+        {
+            var prediction = new MatchPrediction
+            {
+                FixtureId = fixture.Id,
+                HomeTeamId = fixture.HomeTeamId,
+                AwayTeamId = fixture.AwayTeamId,
+                PredictorName = "No pre-game snapshot",
+                PredictorPriority = 0,
+                Explanation = "No pre-game snapshot"
+            };
+
+            return new MatchPredictionResult
+            {
+                Fixture = fixture,
+                HomeTeamName = Name(teamNames, fixture.HomeTeamId),
+                AwayTeamName = Name(teamNames, fixture.AwayTeamId),
+                Predictions = [],
+                BestPrediction = prediction
+            };
         }
 
         private static string PredictionText(MatchPrediction prediction)
@@ -290,6 +366,14 @@ namespace Oloraculo.Web.Services
             {
                 $"Model: {ModelText(prediction)}"
             };
+
+            var signals = SignalsText(prediction);
+            if (!string.IsNullOrWhiteSpace(signals))
+                lines.Add($"Signals: {signals}");
+
+            var missing = LimitedList(prediction.FeaturesMissing, maxItems: 3, maxItemLength: 80);
+            if (!string.IsNullOrWhiteSpace(missing))
+                lines.Add($"Missing: {missing}");
 
             var availability = AvailabilityText(fixtureId, availabilityClaimsByFixture);
             if (!string.IsNullOrWhiteSpace(availability))
@@ -477,5 +561,7 @@ namespace Oloraculo.Web.Services
             values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value));
 
         private static string Escape(string value) => WebUtility.HtmlEncode(value);
+
+        private sealed record ReadmePredictionRow(MatchPredictionResult Result, bool HasPrediction);
     }
 }

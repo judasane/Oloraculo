@@ -223,6 +223,33 @@ namespace Oloraculo.Web.Services
                 : await LoadMatchSnapshotAsync(latest.Id, ct);
         }
 
+        public async Task<MatchSnapshotLoadResult> LoadLatestMatchSnapshotAtOrBeforeAsync(
+            string fixtureId,
+            DateTimeOffset cutoff,
+            CancellationToken ct = default)
+        {
+            await EnsureSnapshotColumnsAsync(ct);
+            var snapshots = await _db.Snapshots
+                .AsNoTracking()
+                .Where(s =>
+                    s.Kind == MatchKind &&
+                    s.FixtureId == fixtureId &&
+                    s.HomeWin.HasValue &&
+                    s.Draw.HasValue &&
+                    s.AwayWin.HasValue)
+                .ToListAsync(ct);
+
+            var snapshot = snapshots
+                .Where(s => s.CreatedAt <= cutoff)
+                .OrderByDescending(s => s.CreatedAt)
+                .ThenByDescending(s => s.Id)
+                .FirstOrDefault();
+
+            return snapshot is null
+                ? new MatchSnapshotLoadResult(null, "No hay snapshots guardados para este partido antes del corte.")
+                : await ToMatchPredictionResultAsync(snapshot, ct);
+        }
+
         public async Task<MatchSnapshotLoadResult> LoadMatchSnapshotAsync(int id, CancellationToken ct = default)
         {
             await EnsureSnapshotColumnsAsync(ct);
