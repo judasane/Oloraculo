@@ -8,7 +8,7 @@ namespace Oloraculo.Web.Predictors
         private const double DefaultAverageGoals = 1.25;
         private const double PriorMatches = 2.0;
         private const double GoalScale = 1.10;
-        private const double LowScoreRho = -0.03;
+        private const double LowScoreRho = 0.00;
         private const double HomeAdvantageMultiplier = 1.08;
         private const int MinimumTeamMatches = 3;
         private const int Iterations = 8;
