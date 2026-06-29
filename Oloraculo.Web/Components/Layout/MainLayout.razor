@@ -12,6 +12,7 @@
         <MudSpacer />
         <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)" 
                        Color="Color.Inherit" 
+                       aria-label="@ThemeToggleLabel"
                        OnClick="ToggleDarkMode" 
                        Class="mr-2" />
         <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small">Oráculo mundialista</MudChip>
@@ -55,6 +56,7 @@
 
     private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
     private void ToggleDarkMode() => _isDarkMode = !_isDarkMode;
+    private string ThemeToggleLabel => _isDarkMode ? "Cambiar a tema claro" : "Cambiar a tema oscuro";
 
     private readonly MudTheme _theme = new()
     {
@@ -79,8 +81,11 @@
         PaletteDark = new PaletteDark
         {
             Primary = "#1abc9c",       // Brighter teal for dark theme
+            PrimaryContrastText = "#0d1117",
             Secondary = "#4a90e2",     // Brighter blue
+            SecondaryContrastText = "#0d1117",
             Tertiary = "#f39c12",      // Brighter amber
+            TertiaryContrastText = "#0d1117",
             Background = "#0d1117",    // Deep sleek dark blue-grey (GitHub-like)
             Surface = "#161b22",       // Slightly lighter surface card
             AppbarBackground = "#090d13",
@@ -91,8 +96,11 @@
             TextSecondary = "#8b949e",
             Divider = "#30363d",
             Success = "#2ea043",
+            SuccessContrastText = "#0d1117",
             Error = "#f85149",
-            Warning = "#f0883e"
+            ErrorContrastText = "#0d1117",
+            Warning = "#f0883e",
+            WarningContrastText = "#0d1117"
         },
         LayoutProperties = new LayoutProperties
         {
