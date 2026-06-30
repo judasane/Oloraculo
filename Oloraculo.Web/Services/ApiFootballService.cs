@@ -31,7 +31,7 @@ namespace Oloraculo.Web.Services
         public async Task<ApiFootballRefreshReport> RefreshFixtureContextAsync(string fixtureId, CancellationToken ct = default)
         {
             if (!IsConfigured)
-                return new ApiFootballRefreshReport { IsConfigured = false, Notes = ["La clave de API-Football no est· configurada."] };
+                return new ApiFootballRefreshReport { IsConfigured = false, Notes = ["La clave de API-Football no est√° configurada."] };
 
             var errors = new List<string>();
             var notes = new List<string>();
@@ -39,7 +39,7 @@ namespace Oloraculo.Web.Services
             {
                 var fixture = await _db.Fixtures.FindAsync([fixtureId], ct);
                 if (fixture is null)
-                    return new ApiFootballRefreshReport { IsConfigured = true, Errors = [$"No se encontrÛ el partido {fixtureId}."] };
+                    return new ApiFootballRefreshReport { IsConfigured = true, Errors = [$"No se encontr√≥ el partido {fixtureId}."] };
 
                 var mapping = await _db.ApiMappings.SingleOrDefaultAsync(m => m.LocalFixtureId == fixtureId, ct);
                 if (mapping is null)
@@ -47,7 +47,7 @@ namespace Oloraculo.Web.Services
                     var refresh = await RefreshFixturesAsync(ct);
                     mapping = await _db.ApiMappings.SingleOrDefaultAsync(m => m.LocalFixtureId == fixtureId, ct);
                     if (mapping is null)
-                        return new ApiFootballRefreshReport { IsConfigured = true, Notes = refresh.Notes, Errors = ["No se encontrÛ un mapeo de API para este partido local."] };
+                        return new ApiFootballRefreshReport { IsConfigured = true, Notes = refresh.Notes, Errors = ["No se encontr√≥ un mapeo de API para este partido local."] };
                 }
 
                 var coverage = await GetApiAsync<ApiLeagueResponse>(
@@ -136,11 +136,11 @@ namespace Oloraculo.Web.Services
                     notes.Add($"Lesiones API-Football con impacto enriquecido: {externalUnavailablePlayers.Count(p => !PlayerImpactSources.IsFallback(p.ImpactSource))}/{externalUnavailablePlayers.Count}.");
                 notes.Add($"Filas de alineaciones: {lineupRows}. Filas de cuotas previas: {preMatchOddsRows}. Filas de cuotas en vivo: {liveOddsRows}.");
                 if (fixtureInjuryRows == 0 && leagueInjuryRows == 0)
-                    notes.Add("No llegaron filas de lesiones. API-Football puede soportar lesiones para la competencia, pero todavÌa no tener bajas asociadas.");
+                    notes.Add("No llegaron filas de lesiones. API-Football puede soportar lesiones para la competencia, pero todav√≠a no tener bajas asociadas.");
                 if (preMatchOddsRows == 0)
-                    notes.Add("No llegaron cuotas previas. API-Football documenta las cuotas previas como limitadas a los ˙ltimos 7 dÌas.");
+                    notes.Add("No llegaron cuotas previas. API-Football documenta las cuotas previas como limitadas a los √∫ltimos 7 d√≠as.");
                 if (liveOddsRows == 0)
-                    notes.Add("No llegaron cuotas en vivo. Es esperable salvo que el partido estÈ cerca de empezar, en vivo o reciÈn terminado.");
+                    notes.Add("No llegaron cuotas en vivo. Es esperable salvo que el partido est√© cerca de empezar, en vivo o reci√©n terminado.");
 
                 return new ApiFootballRefreshReport
                 {
@@ -166,7 +166,7 @@ namespace Oloraculo.Web.Services
         public async Task<ApiFootballRefreshReport> RefreshFixturesAsync(CancellationToken ct = default)
         {
             if (!IsConfigured)
-                return new ApiFootballRefreshReport { IsConfigured = false, Notes = ["La clave de API-Football no est· configurada. Los datos CSV siguen funcionando."] };
+                return new ApiFootballRefreshReport { IsConfigured = false, Notes = ["La clave de API-Football no est√° configurada. Los datos CSV siguen funcionando."] };
 
             var errors = new List<string>();
             var notes = new List<string>();
@@ -182,27 +182,28 @@ namespace Oloraculo.Web.Services
                 var matched = 0;
                 var played = 0;
                 var unmatchedPairs = new List<string>();
-                var usedKnockoutIds = local
-                    .Where(f => f.Id.StartsWith(OfficialBracketService.KnockoutFixturePrefix, StringComparison.Ordinal))
-                    .Select(f => f.Id)
-                    .ToHashSet(StringComparer.Ordinal);
-                var knockoutAssignments = AllocateNewKnockoutIds(items, local, mappingsByExternal, usedKnockoutIds);
-
                 foreach (var api in items)
                 {
                     var externalId = api.Fixture.Id.ToString();
                     var home = TeamNameNormalizer.ToId(api.Teams.Home.Name);
                     var away = TeamNameNormalizer.ToId(api.Teams.Away.Name);
                     var stage = OfficialBracketService.StageFromRound(api.League.Round);
+                    var knockoutMatchNumber = stage.HasValue
+                        ? WorldCup2026Bracket.ResolveMatchNumber(stage.Value, api.Fixture.Date, api.Fixture.Venue?.Name, home, away)
+                        : null;
 
                     Fixture? fixture = null;
                     if (mappingsByExternal.TryGetValue(externalId, out var mapped))
                     {
                         fixture = local.FirstOrDefault(f => f.Id == mapped.LocalFixtureId);
+                        if (fixture is not null && knockoutMatchNumber.HasValue)
+                            fixture.KnockoutMatchNumber = knockoutMatchNumber;
                     }
                     else if (stage.HasValue)
                     {
-                        fixture = await CreateOfficialKnockoutFixtureAsync(api, stage.Value, home, away, knockoutAssignments, local, mappings, mappingsByLocal, mappingsByExternal, ct);
+                        fixture = knockoutMatchNumber.HasValue
+                            ? CreateOfficialKnockoutFixture(api, stage.Value, knockoutMatchNumber.Value, home, away, local, mappingsByLocal)
+                            : null;
                     }
                     else
                     {
@@ -256,7 +257,7 @@ namespace Oloraculo.Web.Services
         public async Task<AvailabilityRefreshReport> EnrichAvailabilityRolesAsync(CancellationToken ct = default)
         {
             if (!IsConfigured)
-                return new AvailabilityRefreshReport { IsConfigured = false, Notes = ["La clave de API-Football no est· configurada. No se pueden resolver roles."] };
+                return new AvailabilityRefreshReport { IsConfigured = false, Notes = ["La clave de API-Football no est√° configurada. No se pueden resolver roles."] };
 
             var errors = new List<string>();
             var notes = new List<string>();
@@ -487,63 +488,33 @@ namespace Oloraculo.Web.Services
                 ? PlayerImpactService.FallbackImpact(position)
                 : await _impact.CalculateAsync(teamId, player, playerKey, position, statistics, ct);
 
-        private static Dictionary<long, string> AllocateNewKnockoutIds(
-            IReadOnlyList<ApiFixtureRow> items,
-            IReadOnlyList<Fixture> local,
-            IReadOnlyDictionary<string, ApiMapping> mappingsByExternal,
-            HashSet<string> usedKnockoutIds)
-        {
-            var assignments = new Dictionary<long, string>();
-            foreach (var stageGroup in items
-                .Where(item => OfficialBracketService.StageFromRound(item.League.Round).HasValue && !mappingsByExternal.ContainsKey(item.Fixture.Id.ToString()))
-                .GroupBy(item => OfficialBracketService.StageFromRound(item.League.Round)!.Value))
-            {
-                var availableIds = OfficialBracketService.TieIdsForStage(stageGroup.Key)
-                    .Select(OfficialBracketService.FixtureId)
-                    .Where(id => !usedKnockoutIds.Contains(id))
-                    .ToList();
-                var rows = stageGroup
-                    .OrderBy(item => item.Fixture.Date ?? DateTimeOffset.MaxValue)
-                    .ThenBy(item => item.Fixture.Id)
-                    .ToList();
-
-                for (var i = 0; i < rows.Count && i < availableIds.Count; i++)
-                {
-                    assignments[rows[i].Fixture.Id] = availableIds[i];
-                    usedKnockoutIds.Add(availableIds[i]);
-                }
-            }
-
-            return assignments;
-        }
-
-        private async Task<Fixture?> CreateOfficialKnockoutFixtureAsync(
+        private Fixture? CreateOfficialKnockoutFixture(
             ApiFixtureRow api,
             KnockoutStageEnum stage,
+            int knockoutMatchNumber,
             string home,
             string away,
-            IReadOnlyDictionary<long, string> knockoutAssignments,
             List<Fixture> local,
-            List<ApiMapping> mappings,
-            Dictionary<string, ApiMapping> mappingsByLocal,
-            Dictionary<string, ApiMapping> mappingsByExternal,
-            CancellationToken ct)
+            Dictionary<string, ApiMapping> mappingsByLocal)
         {
-            if (string.IsNullOrWhiteSpace(home) || string.IsNullOrWhiteSpace(away) || !knockoutAssignments.TryGetValue(api.Fixture.Id, out var fixtureId))
+            if (string.IsNullOrWhiteSpace(home) || string.IsNullOrWhiteSpace(away))
                 return null;
 
+            if (local.Any(f => f.KnockoutMatchNumber == knockoutMatchNumber && mappingsByLocal.ContainsKey(f.Id)))
+                return null;
+
+            var preferredId = OfficialBracketService.FixtureId(knockoutMatchNumber);
+            var fixtureId = local.Any(f => f.Id == preferredId)
+                ? $"{OfficialBracketService.KnockoutFixturePrefix}api:{api.Fixture.Id}"
+                : preferredId;
             var fixture = local.FirstOrDefault(f => f.Id == fixtureId);
-            if (fixture is not null)
-            {
-                if (!mappingsByLocal.ContainsKey(fixture.Id))
-                    return null;
-            }
-            else
+            if (fixture is null)
             {
                 fixture = new Fixture
                 {
                     Id = fixtureId,
                     Group = "KO",
+                    KnockoutMatchNumber = knockoutMatchNumber,
                     HomeTeamId = home,
                     AwayTeamId = away,
                     NeutralVenue = true,

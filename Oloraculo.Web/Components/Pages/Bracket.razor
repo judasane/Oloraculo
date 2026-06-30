@@ -42,6 +42,14 @@
         <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@_error</MudAlert>
     }
 
+    @if (_projection?.Warnings.Count > 0)
+    {
+        @foreach (var warning in _projection.Warnings)
+        {
+            <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined">@warning</MudAlert>
+        }
+    }
+
     @if (_projection is null)
     {
         <MudProgressLinear Color="Color.Primary" Indeterminate="true" />

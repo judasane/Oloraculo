@@ -32,11 +32,9 @@ namespace Oloraculo.Web.Services
                 .ToListAsync(ct);
             var officialIdSet = officialFixtureIds.ToHashSet(StringComparer.Ordinal);
             var fixtures = (await _db.Fixtures.AsNoTracking()
-                .Where(f => officialIdSet.Contains(f.Id))
+                .Where(f => officialIdSet.Contains(f.Id) && f.KnockoutMatchNumber.HasValue)
                 .ToListAsync(ct))
-                .OrderBy(StageSortFromFixture)
-                .ThenBy(f => TieIdFromFixtureId(f.Id))
-                .ThenBy(f => f.KickoffUtc ?? DateTimeOffset.MaxValue)
+                .OrderBy(f => f.KnockoutMatchNumber)
                 .ToList();
 
             if (fixtures.Count == 0)
@@ -57,27 +55,71 @@ namespace Oloraculo.Web.Services
                 .Distinct()
                 .ToHashSetAsync(StringComparer.Ordinal, ct);
             var predictors = await _prediction.BuildPredictorsAsync(ct);
+            var warnings = new List<string>();
+            var officialByMatch = new Dictionary<int, Fixture>();
+            foreach (var group in fixtures.GroupBy(f => f.KnockoutMatchNumber!.Value))
+            {
+                if (group.Count() != 1)
+                {
+                    warnings.Add($"El partido FIFA {group.Key} tiene {group.Count()} fixtures oficiales asociados; se omitio por ambiguedad.");
+                    continue;
+                }
+
+                officialByMatch[group.Key] = group.Single();
+            }
+
+            var forcedWinners = ConfirmedAdvancementFromLaterFixtures(officialByMatch, warnings);
             var ties = new List<BracketTieProjection>();
             var winners = new Dictionary<int, string>();
 
-            foreach (var fixture in fixtures)
+            foreach (var tie in WorldCup2026Bracket.KnockoutTies)
             {
-                var projection = await ProjectOfficialFixtureAsync(fixture, latestSnapshots, evaluatedFixtures, predictors, ct);
-                ties.Add(projection);
-                var advancing = projection.ActualWinnerTeamId ?? projection.PredictedWinnerTeamId;
-                if (!string.IsNullOrWhiteSpace(advancing))
-                    winners[projection.TieId] = advancing;
-            }
+                BracketTieProjection? projection;
+                if (officialByMatch.TryGetValue(tie.Id, out var officialFixture))
+                {
+                    if (tie.Stage != KnockoutStageEnum.RoundOf32 &&
+                        (!TryResolveProjectedTie(tie, winners, out var expectedHome, out var expectedAway) ||
+                         !SameTeams(officialFixture, expectedHome, expectedAway)))
+                    {
+                        warnings.Add($"El fixture oficial del partido FIFA {tie.Id} contradice la ruta proyectada; se detuvo esa rama.");
+                        continue;
+                    }
 
-            foreach (var tie in WorldCup2026Bracket.KnockoutTies.Where(t => !ties.Any(existing => existing.TieId == t.Id)))
-            {
-                if (!TryResolveProjectedTie(tie, winners, out var home, out var away))
+                    projection = await ProjectOfficialFixtureAsync(officialFixture, tie.Id, latestSnapshots, evaluatedFixtures, predictors, ct);
+                }
+                else
+                {
+                    if (tie.Stage == KnockoutStageEnum.RoundOf32 || !TryResolveProjectedTie(tie, winners, out var home, out var away))
+                        continue;
+                    projection = await ProjectSyntheticTieAsync(tie, home, away, predictors, ct);
+                }
+
+                var forcedWinner = forcedWinners.GetValueOrDefault(tie.Id);
+                if (!string.IsNullOrWhiteSpace(forcedWinner))
+                {
+                    if (projection.ActualWinnerTeamId is not null && projection.ActualWinnerTeamId != forcedWinner)
+                    {
+                        warnings.Add($"El ganador real del partido FIFA {tie.Id} contradice un cruce oficial posterior; se detuvo esa rama.");
+                        continue;
+                    }
+
+                    if (forcedWinner != projection.HomeTeamId && forcedWinner != projection.AwayTeamId)
+                    {
+                        warnings.Add($"El equipo confirmado para avanzar desde el partido FIFA {tie.Id} no pertenece a ese cruce; se detuvo esa rama.");
+                        continue;
+                    }
+                }
+
+                if (StageContainsTeam(ties, projection.StageLabel, projection.HomeTeamId, projection.AwayTeamId))
+                {
+                    warnings.Add($"El partido FIFA {tie.Id} duplicaria un equipo dentro de {projection.StageLabel}; se omitio.");
                     continue;
+                }
 
-                var projection = await ProjectSyntheticTieAsync(tie, home, away, predictors, ct);
                 ties.Add(projection);
-                if (!string.IsNullOrWhiteSpace(projection.PredictedWinnerTeamId))
-                    winners[tie.Id] = projection.PredictedWinnerTeamId;
+                var advancing = projection.ActualWinnerTeamId ?? forcedWinner ?? projection.PredictedWinnerTeamId;
+                if (!string.IsNullOrWhiteSpace(advancing))
+                    winners[tie.Id] = advancing;
             }
 
             ties = ties.OrderBy(t => StageSort(t.StageLabel)).ThenBy(t => t.TieId).ToList();
@@ -86,6 +128,7 @@ namespace Oloraculo.Web.Services
                 GeneratedAt = generatedAt,
                 ModelName = "Cuadro oficial",
                 InputSummaryHash = InputHash(fixtures, ties),
+                Warnings = warnings,
                 Ties = ties
             };
         }
@@ -160,12 +203,12 @@ namespace Oloraculo.Web.Services
 
         private async Task<BracketTieProjection> ProjectOfficialFixtureAsync(
             Fixture fixture,
+            int tieId,
             IReadOnlyDictionary<string, int> latestSnapshots,
             IReadOnlySet<string> evaluatedFixtures,
             IReadOnlyList<IPredictor> predictors,
             CancellationToken ct)
         {
-            var tieId = TieIdFromFixtureId(fixture.Id) ?? 0;
             var stage = StageFromTieId(tieId);
             var projection = new BracketTieProjection
             {
@@ -258,6 +301,98 @@ namespace Oloraculo.Web.Services
             if (!winners.TryGetValue(tie.Home.TieId.Value, out home) || !winners.TryGetValue(tie.Away.TieId.Value, out away))
                 return false;
             return true;
+        }
+
+        private static IReadOnlyDictionary<int, string> ConfirmedAdvancementFromLaterFixtures(
+            IReadOnlyDictionary<int, Fixture> officialByMatch,
+            ICollection<string> warnings)
+        {
+            var ties = WorldCup2026Bracket.KnockoutTies.ToDictionary(tie => tie.Id);
+            var forced = new Dictionary<int, string>();
+            var branchTeams = new Dictionary<int, IReadOnlySet<string>>();
+
+            foreach (var (matchNumber, fixture) in officialByMatch.Where(item => item.Key >= 89).OrderBy(item => item.Key))
+            {
+                if (!ties.TryGetValue(matchNumber, out var tie) || !tie.Home.TieId.HasValue || !tie.Away.TieId.HasValue)
+                    continue;
+
+                var parentMatches = new[] { tie.Home.TieId.Value, tie.Away.TieId.Value };
+                foreach (var team in new[] { fixture.HomeTeamId, fixture.AwayTeamId })
+                {
+                    var matchingParents = parentMatches
+                        .Where(parent => TeamsInBranch(parent).Contains(team))
+                        .ToList();
+                    if (matchingParents.Count != 1)
+                    {
+                        warnings.Add($"No se pudo ubicar a {team} en una unica rama anterior al partido FIFA {matchNumber}.");
+                        continue;
+                    }
+
+                    ForcePath(matchingParents[0], team, matchNumber);
+                }
+            }
+
+            return forced;
+
+            IReadOnlySet<string> TeamsInBranch(int matchNumber)
+            {
+                if (branchTeams.TryGetValue(matchNumber, out var cached))
+                    return cached;
+
+                var teams = new HashSet<string>(StringComparer.Ordinal);
+                if (officialByMatch.TryGetValue(matchNumber, out var official) && matchNumber <= 88)
+                {
+                    teams.Add(official.HomeTeamId);
+                    teams.Add(official.AwayTeamId);
+                }
+                else if (ties.TryGetValue(matchNumber, out var branch) && branch.Home.TieId.HasValue && branch.Away.TieId.HasValue)
+                {
+                    teams.UnionWith(TeamsInBranch(branch.Home.TieId.Value));
+                    teams.UnionWith(TeamsInBranch(branch.Away.TieId.Value));
+                }
+
+                branchTeams[matchNumber] = teams;
+                return teams;
+            }
+
+            void ForcePath(int matchNumber, string team, int confirmingMatch)
+            {
+                if (forced.TryGetValue(matchNumber, out var existing) && existing != team)
+                {
+                    warnings.Add($"Los cruces oficiales confirman ganadores incompatibles para el partido FIFA {matchNumber}.");
+                    return;
+                }
+
+                forced[matchNumber] = team;
+                if (!ties.TryGetValue(matchNumber, out var tie) || !tie.Home.TieId.HasValue || !tie.Away.TieId.HasValue)
+                    return;
+
+                var matchingChildren = new[] { tie.Home.TieId.Value, tie.Away.TieId.Value }
+                    .Where(child => TeamsInBranch(child).Contains(team))
+                    .ToList();
+                if (matchingChildren.Count == 1)
+                    ForcePath(matchingChildren[0], team, confirmingMatch);
+                else
+                    warnings.Add($"El partido FIFA {confirmingMatch} no permite confirmar una ruta unica para {team}.");
+            }
+        }
+
+        private static bool SameTeams(Fixture fixture, string home, string away) =>
+            (fixture.HomeTeamId == home && fixture.AwayTeamId == away) ||
+            (fixture.HomeTeamId == away && fixture.AwayTeamId == home);
+
+        private static bool StageContainsTeam(
+            IEnumerable<BracketTieProjection> ties,
+            string stage,
+            string? homeTeamId,
+            string? awayTeamId)
+        {
+            if (string.IsNullOrWhiteSpace(homeTeamId) || string.IsNullOrWhiteSpace(awayTeamId) || homeTeamId == awayTeamId)
+                return true;
+
+            return ties.Any(tie => tie.StageLabel == stage &&
+                (tie.HomeTeamId == homeTeamId || tie.AwayTeamId == homeTeamId ||
+                 tie.HomeTeamId == awayTeamId || tie.AwayTeamId == awayTeamId));
         }
 
         private async Task<IReadOnlyDictionary<string, int>> LatestSnapshotIdsAsync(CancellationToken ct)

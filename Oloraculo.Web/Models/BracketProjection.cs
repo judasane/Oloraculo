@@ -6,6 +6,7 @@ namespace Oloraculo.Web.Models
         public string ModelName { get; set; } = "Cuadro oficial";
         public string InputSummaryHash { get; set; } = "";
         public string? PendingMessage { get; set; }
+        public IReadOnlyList<string> Warnings { get; set; } = [];
         public IReadOnlyList<BracketTieProjection> Ties { get; set; } = [];
         public bool HasOfficialFixtures => Ties.Any(t => t.IsOfficialFixture);
     }

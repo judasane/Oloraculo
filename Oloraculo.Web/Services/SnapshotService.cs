@@ -518,6 +518,7 @@ namespace Oloraculo.Web.Services
             ModelName = projection.ModelName,
             InputSummaryHash = projection.InputSummaryHash,
             PendingMessage = projection.PendingMessage,
+            Warnings = projection.Warnings.ToList(),
             Ties = projection.Ties.Select(SerializableBracketTie).ToList()
         };
 

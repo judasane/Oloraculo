@@ -329,7 +329,7 @@ public class ApiFootballServiceTests : TestFixtures
                   "response": [{
                     "fixture": {
                       "id": 730,
-                      "date": "2026-07-01T20:00:00+00:00",
+                      "date": "2026-06-29T20:30:00+00:00",
                       "venue": { "name": "KO Stadium", "city": "KO City" },
                       "status": { "short": "NS" }
                     },
@@ -346,7 +346,7 @@ public class ApiFootballServiceTests : TestFixtures
         var api = ApiService(db, handler);
 
         var report = await api.RefreshFixturesAsync();
-        var fixture = await db.Fixtures.FindAsync("ko:73");
+        var fixture = await db.Fixtures.FindAsync("ko:74");
         var mapping = await db.ApiMappings.SingleAsync();
 
         Assert.Equal(1, report.FixturesMatched);
@@ -354,7 +354,8 @@ public class ApiFootballServiceTests : TestFixtures
         Assert.Equal("germany", fixture.HomeTeamId);
         Assert.Equal("paraguay", fixture.AwayTeamId);
         Assert.Equal("API-Football", fixture.Source);
-        Assert.Equal("ko:73", mapping.LocalFixtureId);
+        Assert.Equal(74, fixture.KnockoutMatchNumber);
+        Assert.Equal("ko:74", mapping.LocalFixtureId);
         Assert.Equal("730", mapping.ExternalFixtureId);
     }
 
@@ -369,7 +370,7 @@ public class ApiFootballServiceTests : TestFixtures
             [$"https://api.test/{ApiFootballEndpoints.Fixtures(1, 2026)}"] = """
                 {
                   "response": [{
-                    "fixture": { "id": 731, "date": "2026-07-01T21:00:00+00:00", "status": { "short": "NS" } },
+                    "fixture": { "id": 731, "date": "2026-06-29T20:30:00+00:00", "status": { "short": "NS" } },
                     "league": { "round": "Round of 32" },
                     "teams": {
                       "home": { "id": 1, "name": "Germany" },
@@ -390,6 +391,7 @@ public class ApiFootballServiceTests : TestFixtures
         Assert.Equal("bosnia-and-herzegovina", legacy!.AwayTeamId);
         Assert.NotNull(official);
         Assert.Equal("paraguay", official.AwayTeamId);
+        Assert.Equal(74, official.KnockoutMatchNumber);
         Assert.Equal("ko:74", mapping.LocalFixtureId);
     }
 
@@ -426,6 +428,64 @@ public class ApiFootballServiceTests : TestFixtures
         Assert.Equal(1, fixture.HomeGoals);
         Assert.Equal(1, fixture.AwayGoals);
         Assert.Equal("paraguay", fixture.WinnerTeamId);
+        Assert.Equal(74, fixture.KnockoutMatchNumber);
+    }
+
+    [Fact]
+    public async Task ApiFootball_MapsPublishedRoundOf16FixtureToOfficialMatch90()
+    {
+        await using var db = await NewDb();
+        var handler = new FakeHttpMessageHandler(new Dictionary<string, string>
+        {
+            [$"https://api.test/{ApiFootballEndpoints.Fixtures(1, 2026)}"] = """
+                {
+                  "response": [{
+                    "fixture": { "id": 900, "date": "2026-07-04T17:00:00+00:00", "status": { "short": "NS" } },
+                    "league": { "round": "Round of 16" },
+                    "teams": {
+                      "home": { "id": 1, "name": "Canada" },
+                      "away": { "id": 2, "name": "Morocco" }
+                    },
+                    "goals": { "home": null, "away": null }
+                  }]
+                }
+                """
+        });
+
+        await ApiService(db, handler).RefreshFixturesAsync();
+
+        var fixture = await db.Fixtures.SingleAsync(f => f.Id.StartsWith("ko:"));
+        Assert.Equal(90, fixture.KnockoutMatchNumber);
+        Assert.Equal("canada", fixture.HomeTeamId);
+        Assert.Equal("morocco", fixture.AwayTeamId);
+    }
+
+    [Fact]
+    public async Task ApiFootball_SkipsKnockoutFixtureWhenOfficialSlotIsAmbiguous()
+    {
+        await using var db = await NewDb();
+        var handler = new FakeHttpMessageHandler(new Dictionary<string, string>
+        {
+            [$"https://api.test/{ApiFootballEndpoints.Fixtures(1, 2026)}"] = """
+                {
+                  "response": [{
+                    "fixture": { "id": 999, "date": "2026-07-08T12:00:00+00:00", "status": { "short": "NS" } },
+                    "league": { "round": "Round of 16" },
+                    "teams": {
+                      "home": { "id": 1, "name": "Canada" },
+                      "away": { "id": 2, "name": "Morocco" }
+                    },
+                    "goals": { "home": null, "away": null }
+                  }]
+                }
+                """
+        });
+
+        var report = await ApiService(db, handler).RefreshFixturesAsync();
+
+        Assert.Equal(0, report.FixturesMatched);
+        Assert.Empty(await db.Fixtures.Where(f => f.Id.StartsWith("ko:")).ToListAsync());
+        Assert.Contains(report.Notes, note => note.Contains("No se matchearon 1", StringComparison.Ordinal));
     }
 
     private static ApiFootballService ApiService(OloraculoDbContext db, HttpMessageHandler handler)

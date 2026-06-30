@@ -237,6 +237,12 @@ namespace Oloraculo.Web.Services
             builder.AppendLine($"_Generado {bracket.GeneratedAt.UtcDateTime:yyyy-MM-dd HH:mm} UTC desde cruces oficiales API-Football._");
             builder.AppendLine();
 
+            foreach (var warning in bracket.Warnings)
+            {
+                builder.AppendLine($"> Advertencia: {Escape(warning)}");
+                builder.AppendLine();
+            }
+
             foreach (var stage in bracket.Ties.GroupBy(t => t.StageLabel).OrderBy(g => StageOrder(g.Key)))
             {
                 builder.AppendLine($"#### {Escape(stage.Key)}");

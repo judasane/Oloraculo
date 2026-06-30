@@ -15,6 +15,7 @@ namespace Oloraculo.Web.Models
         public int? HomeGoals { get; set; }
         public int? AwayGoals { get; set; }
         public string? WinnerTeamId { get; set; }
+        public int? KnockoutMatchNumber { get; set; }
         public string Source { get; set; } = "derived";
         public static string GenerateFixtureId(string Group, string HomeTeamId, string AwayTeamId) => $"grp:{Group}:{HomeTeamId}:{AwayTeamId}";
     }
