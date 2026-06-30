@@ -8,7 +8,7 @@ En este repo vas a encontrar todo el código del proyecto Oloráculo: un orácul
 _A medida que se recibe nueva información y se juegan partidos reales, el Oloráculo ajusta sus predicciones y las publica acá. A continuación vas a encontrar las más recientes._
 ### Cuadro
 
-_Generado 2026-06-30 13:25 UTC desde cruces oficiales API-Football._
+_Generado 2026-06-30 14:51 UTC desde cruces oficiales API-Football._
 
 #### 16avos
 
@@ -69,7 +69,7 @@ _Generado 2026-06-30 13:25 UTC desde cruces oficiales API-Football._
 
 ### Torneo
 
-_Generado 2026-06-30 13:25 UTC a través de 10,000 simulaciones._
+_Generado 2026-06-30 14:51 UTC a través de 10,000 simulaciones._
 
 | Team | Group | Qualify | QF | SF | Final | Champion |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
