@@ -166,6 +166,65 @@ public class KnockoutFeatureTests : TestFixtures
         Assert.Contains(await db.Results.ToListAsync(), result => result.Id == "api-football:api-73");
     }
 
+    [Fact]
+    public async Task VenueLessRoundOf16UsesAuthoritativeUpstreamWinners()
+    {
+        await using var db = await ImportedDb();
+        var feed = new StubFixtureSource(
+        [
+            // Deliberately returned before its upstream fixtures.
+            new TournamentFixtureFeedRow
+            {
+                ExternalFixtureId = "1568100",
+                Round = "Round of 16",
+                KickoffUtc = new DateTimeOffset(2026, 7, 5, 20, 0, 0, TimeSpan.Zero),
+                Status = "NS",
+                HomeTeamId = "brazil",
+                AwayTeamId = "norway"
+            },
+            new TournamentFixtureFeedRow
+            {
+                ExternalFixtureId = "api-76",
+                Round = "Round of 32",
+                KickoffUtc = new DateTimeOffset(2026, 6, 30, 1, 0, 0, TimeSpan.Zero),
+                Venue = "Houston Stadium",
+                Status = "FT",
+                HomeTeamId = "brazil",
+                AwayTeamId = "japan",
+                HomeGoals = 2,
+                AwayGoals = 1,
+                WinnerTeamId = "brazil",
+                IsFinished = true
+            },
+            new TournamentFixtureFeedRow
+            {
+                ExternalFixtureId = "api-78",
+                Round = "Round of 32",
+                KickoffUtc = new DateTimeOffset(2026, 6, 30, 17, 0, 0, TimeSpan.Zero),
+                Venue = "Dallas Stadium",
+                Status = "FT",
+                HomeTeamId = "ivory-coast",
+                AwayTeamId = "norway",
+                HomeGoals = 0,
+                AwayGoals = 1,
+                WinnerTeamId = "norway",
+                IsFinished = true
+            }
+        ]);
+        var options = Options.Create(new OloraculoConfig { RecentResultCount = 8, GoalModelYearsWindow = 4 });
+        var service = new KnockoutUpdateService(db, feed, new PredictionService(db, options), new SnapshotService(db));
+
+        var report = await service.RefreshAsync();
+        var persisted = await db.KnockoutMatches.FindAsync(91);
+
+        Assert.NotNull(persisted);
+        Assert.Equal("1568100", persisted.ExternalFixtureId);
+        Assert.Equal("brazil", persisted.ConfirmedHomeTeamId);
+        Assert.Equal("norway", persisted.ConfirmedAwayTeamId);
+        Assert.DoesNotContain(report.Board.Warnings, warning =>
+            warning.Contains("No se pudo asociar", StringComparison.Ordinal) && warning.Contains("1568100", StringComparison.Ordinal));
+    }
+
     private static MatchPrediction MatchPrediction(string home, string away) => new()
     {
         FixtureId = "wc2026:match:74",
