@@ -194,16 +194,16 @@ namespace Oloraculo.Web.Services
                     builder.AppendLine("<details open>");
                     builder.AppendLine($"<summary><strong>{KnockoutUpdateService.StageLabel(round.Key)}</strong></summary>");
                     builder.AppendLine();
-                    builder.AppendLine("| Match | Teams | Status | Prediction | Result |");
-                    builder.AppendLine("| ---: | --- | --- | --- | --- |");
+                    builder.AppendLine("| # | Home | Away | Status | Prediction | Result |");
+                    builder.AppendLine("| ---: | --- | --- | :---: | --- | --- |");
                     foreach (var match in round)
                     {
-                        var home = KnockoutTeamText(match.HomeTeamName, match.HomeResolution);
-                        var away = KnockoutTeamText(match.AwayTeamName, match.AwayResolution);
+                        var home = KnockoutTeamText(match.HomeTeamId, match.HomeTeamName, match.HomeResolution);
+                        var away = KnockoutTeamText(match.AwayTeamId, match.AwayTeamName, match.AwayResolution);
                         var status = string.IsNullOrWhiteSpace(match.Status) ? "Scheduled" : Escape(match.Status);
                         var prediction = KnockoutPredictionText(match);
                         var result = KnockoutResultText(match);
-                        builder.AppendLine($"| {match.MatchNumber} | {home} vs {away} | {status} | {prediction} | {result} |");
+                        builder.AppendLine($"| {match.MatchNumber} | {home} | {away} | {status} | {prediction} | {result} |");
                     }
                     builder.AppendLine();
                     builder.AppendLine("</details>");
@@ -248,15 +248,15 @@ namespace Oloraculo.Web.Services
             return builder.ToString();
         }
 
-        private static string KnockoutTeamText(string? name, ParticipantResolution resolution)
+        private static string KnockoutTeamText(string? teamId, string? name, ParticipantResolution resolution)
         {
-            var label = resolution switch
-            {
-                ParticipantResolution.Confirmed => "confirmed",
-                ParticipantResolution.Projected => "projected",
-                _ => "TBD"
-            };
-            return $"{Escape(name ?? "TBD")} <sub>{label}</sub>";
+            if (resolution == ParticipantResolution.Tbd || string.IsNullOrWhiteSpace(teamId))
+                return "_TBD_";
+
+            var team = TeamCell(teamId, name ?? teamId);
+            return resolution == ParticipantResolution.Projected
+                ? $"{team} <sub>projected</sub>"
+                : team;
         }
 
         private static string KnockoutPredictionText(KnockoutMatchView match)
@@ -265,7 +265,7 @@ namespace Oloraculo.Web.Services
             if (!match.PredictedHomeGoals.HasValue || !match.PredictedAwayGoals.HasValue) return "-";
             var score = $"{match.PredictedHomeGoals}-{match.PredictedAwayGoals}";
             var winner = KnockoutDisplayHelper.PredictedWinnerName(match);
-            return winner is null ? score : $"{score}; {Escape(winner)} advances";
+            return winner is null ? $"**{score}**" : $"**{score}** · {Escape(winner)} advances";
         }
 
         private static string KnockoutResultText(KnockoutMatchView match)
