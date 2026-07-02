@@ -152,7 +152,20 @@ public class KnockoutFeatureTests : TestFixtures
                     AwayTeamName = "Sweden",
                     PredictedHomeGoals = 1,
                     PredictedAwayGoals = 0,
-                    PredictedWinnerTeamId = "unknown-team"
+                    PredictedWinnerTeamId = "unknown-team",
+                    IsPlayed = true,
+                    HomeGoals = 1,
+                    AwayGoals = 1,
+                    HomePenaltyGoals = 5,
+                    AwayPenaltyGoals = 4
+                },
+                new KnockoutMatchView
+                {
+                    MatchNumber = 78,
+                    Stage = KnockoutStageEnum.RoundOf32,
+                    HomeResolution = ParticipantResolution.Tbd,
+                    AwayResolution = ParticipantResolution.Tbd,
+                    PredictionUnavailable = true
                 }
             ]
         };
@@ -161,15 +174,20 @@ public class KnockoutFeatureTests : TestFixtures
             projection, [], new Dictionary<string, string>(), DateTimeOffset.UtcNow, knockoutBoard: board);
 
         Assert.Contains("### Eliminatorias", rendered);
-        Assert.Contains("Germany <sub>confirmed</sub>", rendered);
+        Assert.Contains("| # | Home | Away | Status | Prediction | Result |", rendered);
+        Assert.Contains("flags/4x3/de.svg", rendered);
+        Assert.Contains("flags/4x3/py.svg", rendered);
+        Assert.DoesNotContain("Germany <sub>confirmed</sub>", rendered);
         Assert.Contains("Paraguay <sub>projected</sub>", rendered);
-        Assert.Contains("1-1; Paraguay advances", rendered);
-        Assert.Contains("2-1; Spain advances", rendered);
-        Assert.Contains("0-2; Norway advances", rendered);
+        Assert.Contains("**1-1** · Paraguay advances", rendered);
+        Assert.Contains("**2-1** · Spain advances", rendered);
+        Assert.Contains("**0-2** · Norway advances", rendered);
         Assert.Contains("| 77 |", rendered);
-        Assert.Contains("| 1-0 |", rendered);
+        Assert.Contains("| **1-0** |", rendered);
         Assert.DoesNotContain("unknown-team advances", rendered);
         Assert.Contains("**0-1**", rendered);
+        Assert.Contains("**1-1** (5-4 pens)", rendered);
+        Assert.Contains("| 78 | _TBD_ | _TBD_ | Scheduled | Pre-match prediction unavailable | - |", rendered);
     }
 
     [Fact]

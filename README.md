@@ -9,7 +9,7 @@ _A medida que se recibe nueva información y se juegan partidos reales, el Olor�
 
 ### Torneo
 
-_Generado 2026-07-02 13:36 UTC a través de 10,000 simulaciones._
+_Generado 2026-07-02 15:51 UTC a través de 10,000 simulaciones._
 
 | Team | Group | Qualify | QF | SF | Final | Champion |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
@@ -37,80 +37,80 @@ _Los equipos marcados como proyectados todavía no están confirmados por la fue
 <details open>
 <summary><strong>Dieciseisavos</strong></summary>
 
-| Match | Teams | Status | Prediction | Result |
-| ---: | --- | --- | --- | --- |
-| 73 | South Africa <sub>confirmed</sub> vs Canada <sub>confirmed</sub> | FT | Pre-match prediction unavailable | **0-1** |
-| 74 | Germany <sub>confirmed</sub> vs Paraguay <sub>confirmed</sub> | PEN | Pre-match prediction unavailable | **1-1** (3-4 pens) |
-| 75 | Netherlands <sub>confirmed</sub> vs Morocco <sub>confirmed</sub> | PEN | Pre-match prediction unavailable | **1-1** (2-3 pens) |
-| 76 | Brazil <sub>confirmed</sub> vs Japan <sub>confirmed</sub> | FT | Pre-match prediction unavailable | **2-1** |
-| 77 | France <sub>confirmed</sub> vs Sweden <sub>confirmed</sub> | FT | Pre-match prediction unavailable | **3-0** |
-| 78 | Ivory Coast <sub>confirmed</sub> vs Norway <sub>confirmed</sub> | FT | Pre-match prediction unavailable | **1-2** |
-| 79 | Mexico <sub>confirmed</sub> vs Ecuador <sub>confirmed</sub> | FT | 1-1; Mexico advances | **2-0** |
-| 80 | England <sub>confirmed</sub> vs Congo DR <sub>confirmed</sub> | FT | 1-1; England advances | **2-1** |
-| 81 | United States <sub>confirmed</sub> vs Bosnia and Herzegovina <sub>confirmed</sub> | FT | 3-1; United States advances | **2-0** |
-| 82 | Belgium <sub>confirmed</sub> vs Senegal <sub>confirmed</sub> | AET | 1-1; Belgium advances | **3-2** |
-| 83 | Portugal <sub>confirmed</sub> vs Croatia <sub>confirmed</sub> | NS | 2-1; Portugal advances | - |
-| 84 | Spain <sub>confirmed</sub> vs Austria <sub>confirmed</sub> | NS | 2-1; Spain advances | - |
-| 85 | Switzerland <sub>confirmed</sub> vs Algeria <sub>confirmed</sub> | NS | 2-1; Switzerland advances | - |
-| 86 | Argentina <sub>confirmed</sub> vs Cape Verde <sub>confirmed</sub> | NS | 2-0; Argentina advances | - |
-| 87 | Colombia <sub>confirmed</sub> vs Ghana <sub>confirmed</sub> | NS | 2-1; Colombia advances | - |
-| 88 | Australia <sub>confirmed</sub> vs Egypt <sub>confirmed</sub> | NS | 1-1; Australia advances | - |
+| # | Home | Away | Status | Prediction | Result |
+| ---: | --- | --- | :---: | --- | --- |
+| 73 | <img src="Oloraculo.Web/wwwroot/flags/4x3/za.svg" width="18" alt=""> South Africa | <img src="Oloraculo.Web/wwwroot/flags/4x3/ca.svg" width="18" alt=""> Canada | FT | Pre-match prediction unavailable | **0-1** |
+| 74 | <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany | <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay | PEN | Pre-match prediction unavailable | **1-1** (3-4 pens) |
+| 75 | <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands | <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | PEN | Pre-match prediction unavailable | **1-1** (2-3 pens) |
+| 76 | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil | <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan | FT | Pre-match prediction unavailable | **2-1** |
+| 77 | <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France | <img src="Oloraculo.Web/wwwroot/flags/4x3/se.svg" width="18" alt=""> Sweden | FT | Pre-match prediction unavailable | **3-0** |
+| 78 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ci.svg" width="18" alt=""> Ivory Coast | <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | FT | Pre-match prediction unavailable | **1-2** |
+| 79 | <img src="Oloraculo.Web/wwwroot/flags/4x3/mx.svg" width="18" alt=""> Mexico | <img src="Oloraculo.Web/wwwroot/flags/4x3/ec.svg" width="18" alt=""> Ecuador | FT | **1-1** · Mexico advances | **2-0** |
+| 80 | <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England | <img src="Oloraculo.Web/wwwroot/flags/4x3/cd.svg" width="18" alt=""> Congo DR | FT | **1-1** · England advances | **2-1** |
+| 81 | <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States | <img src="Oloraculo.Web/wwwroot/flags/4x3/ba.svg" width="18" alt=""> Bosnia and Herzegovina | FT | **3-1** · United States advances | **2-0** |
+| 82 | <img src="Oloraculo.Web/wwwroot/flags/4x3/be.svg" width="18" alt=""> Belgium | <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal | AET | **1-1** · Belgium advances | **3-2** |
+| 83 | <img src="Oloraculo.Web/wwwroot/flags/4x3/pt.svg" width="18" alt=""> Portugal | <img src="Oloraculo.Web/wwwroot/flags/4x3/hr.svg" width="18" alt=""> Croatia | NS | **2-1** · Portugal advances | - |
+| 84 | <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain | <img src="Oloraculo.Web/wwwroot/flags/4x3/at.svg" width="18" alt=""> Austria | NS | **2-1** · Spain advances | - |
+| 85 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ch.svg" width="18" alt=""> Switzerland | <img src="Oloraculo.Web/wwwroot/flags/4x3/dz.svg" width="18" alt=""> Algeria | NS | **2-1** · Switzerland advances | - |
+| 86 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina | <img src="Oloraculo.Web/wwwroot/flags/4x3/cv.svg" width="18" alt=""> Cape Verde | NS | **2-0** · Argentina advances | - |
+| 87 | <img src="Oloraculo.Web/wwwroot/flags/4x3/co.svg" width="18" alt=""> Colombia | <img src="Oloraculo.Web/wwwroot/flags/4x3/gh.svg" width="18" alt=""> Ghana | NS | **2-1** · Colombia advances | - |
+| 88 | <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | <img src="Oloraculo.Web/wwwroot/flags/4x3/eg.svg" width="18" alt=""> Egypt | NS | **1-1** · Australia advances | - |
 
 </details>
 
 <details open>
 <summary><strong>Octavos de final</strong></summary>
 
-| Match | Teams | Status | Prediction | Result |
-| ---: | --- | --- | --- | --- |
-| 89 | Paraguay <sub>confirmed</sub> vs France <sub>confirmed</sub> | NS | 1-2; France advances | - |
-| 90 | Canada <sub>confirmed</sub> vs Morocco <sub>confirmed</sub> | NS | 1-1; Morocco advances | - |
-| 91 | Brazil <sub>confirmed</sub> vs Norway <sub>confirmed</sub> | NS | 2-1; Brazil advances | - |
-| 92 | Mexico <sub>confirmed</sub> vs England <sub>confirmed</sub> | NS | 1-1; England advances | - |
-| 93 | Portugal <sub>projected</sub> vs Spain <sub>projected</sub> | Scheduled | 1-1; Spain advances | - |
-| 94 | United States <sub>confirmed</sub> vs Belgium <sub>confirmed</sub> | NS | 1-2; Belgium advances | - |
-| 95 | Argentina <sub>projected</sub> vs Australia <sub>projected</sub> | Scheduled | 1-1; Argentina advances | - |
-| 96 | Switzerland <sub>projected</sub> vs Colombia <sub>projected</sub> | Scheduled | 1-2; Colombia advances | - |
+| # | Home | Away | Status | Prediction | Result |
+| ---: | --- | --- | :---: | --- | --- |
+| 89 | <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay | <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France | NS | **1-2** · France advances | - |
+| 90 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ca.svg" width="18" alt=""> Canada | <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | NS | **1-1** · Morocco advances | - |
+| 91 | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil | <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | NS | **2-1** · Brazil advances | - |
+| 92 | <img src="Oloraculo.Web/wwwroot/flags/4x3/mx.svg" width="18" alt=""> Mexico | <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England | NS | **1-1** · England advances | - |
+| 93 | <img src="Oloraculo.Web/wwwroot/flags/4x3/pt.svg" width="18" alt=""> Portugal <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain <sub>projected</sub> | Scheduled | **1-1** · Spain advances | - |
+| 94 | <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States | <img src="Oloraculo.Web/wwwroot/flags/4x3/be.svg" width="18" alt=""> Belgium | NS | **1-2** · Belgium advances | - |
+| 95 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia <sub>projected</sub> | Scheduled | **1-1** · Argentina advances | - |
+| 96 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ch.svg" width="18" alt=""> Switzerland <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/co.svg" width="18" alt=""> Colombia <sub>projected</sub> | Scheduled | **1-2** · Colombia advances | - |
 
 </details>
 
 <details open>
 <summary><strong>Cuartos de final</strong></summary>
 
-| Match | Teams | Status | Prediction | Result |
-| ---: | --- | --- | --- | --- |
-| 97 | France <sub>projected</sub> vs Morocco <sub>projected</sub> | Scheduled | 1-1; France advances | - |
-| 98 | Spain <sub>projected</sub> vs Belgium <sub>projected</sub> | Scheduled | 2-1; Spain advances | - |
-| 99 | Brazil <sub>projected</sub> vs England <sub>projected</sub> | Scheduled | 1-1; Brazil advances | - |
-| 100 | Argentina <sub>projected</sub> vs Colombia <sub>projected</sub> | Scheduled | 1-1; Argentina advances | - |
+| # | Home | Away | Status | Prediction | Result |
+| ---: | --- | --- | :---: | --- | --- |
+| 97 | <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco <sub>projected</sub> | Scheduled | **1-1** · France advances | - |
+| 98 | <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/be.svg" width="18" alt=""> Belgium <sub>projected</sub> | Scheduled | **2-1** · Spain advances | - |
+| 99 | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England <sub>projected</sub> | Scheduled | **1-1** · Brazil advances | - |
+| 100 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/co.svg" width="18" alt=""> Colombia <sub>projected</sub> | Scheduled | **1-1** · Argentina advances | - |
 
 </details>
 
 <details open>
 <summary><strong>Semifinales</strong></summary>
 
-| Match | Teams | Status | Prediction | Result |
-| ---: | --- | --- | --- | --- |
-| 101 | France <sub>projected</sub> vs Spain <sub>projected</sub> | Scheduled | 1-1; Spain advances | - |
-| 102 | Brazil <sub>projected</sub> vs Argentina <sub>projected</sub> | Scheduled | 1-1; Argentina advances | - |
+| # | Home | Away | Status | Prediction | Result |
+| ---: | --- | --- | :---: | --- | --- |
+| 101 | <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain <sub>projected</sub> | Scheduled | **1-1** · Spain advances | - |
+| 102 | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina <sub>projected</sub> | Scheduled | **1-1** · Argentina advances | - |
 
 </details>
 
 <details open>
 <summary><strong>Tercer puesto</strong></summary>
 
-| Match | Teams | Status | Prediction | Result |
-| ---: | --- | --- | --- | --- |
-| 103 | France <sub>projected</sub> vs Brazil <sub>projected</sub> | Scheduled | 1-1; France advances | - |
+| # | Home | Away | Status | Prediction | Result |
+| ---: | --- | --- | :---: | --- | --- |
+| 103 | <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil <sub>projected</sub> | Scheduled | **1-1** · France advances | - |
 
 </details>
 
 <details open>
 <summary><strong>Final</strong></summary>
 
-| Match | Teams | Status | Prediction | Result |
-| ---: | --- | --- | --- | --- |
-| 104 | Spain <sub>projected</sub> vs Argentina <sub>projected</sub> | Scheduled | 1-1; Argentina advances | - |
+| # | Home | Away | Status | Prediction | Result |
+| ---: | --- | --- | :---: | --- | --- |
+| 104 | <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina <sub>projected</sub> | Scheduled | **1-1** · Argentina advances | - |
 
 </details>
 
