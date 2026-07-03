@@ -9,7 +9,7 @@ _A medida que se recibe nueva información y se juegan partidos reales, el Olor�
 
 ### Torneo
 
-_Generado 2026-07-03 16:54 UTC a través de 10,000 simulaciones._
+_Generado 2026-07-03 19:52 UTC a través de 10,000 simulaciones._
 _Probabilidades calculadas desde el estado actual del torneo. Los partidos ya jugados se tratan como hechos fijos; solo se simulan partidos pendientes._
 
 > Advertencia: el feed de resultados no se actualizó; estas probabilidades pueden estar desfasadas.
