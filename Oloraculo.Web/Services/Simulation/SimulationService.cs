@@ -41,8 +41,28 @@ namespace Oloraculo.Web.Services.Simulation
 
             if (state.IsKnockoutStarted)
             {
+                var countProjectedAlive = WorldCup2026Bracket.RoundOf32.Any(tie =>
+                    !state.KnockoutMatches.TryGetValue(tie.Id, out var match) ||
+                    match.ConfirmedHomeTeamId is null ||
+                    match.ConfirmedAwayTeamId is null);
+
                 for (var i = 0; i < n; i++)
-                    await RunKnockoutFromCurrentStateAsync(state, sampler, rng, counters, ct);
+                {
+                    var (groupSlots, bestThirds) = await ProjectRemainingGroupSlotsAsync(countProjectedAlive);
+                    if (countProjectedAlive)
+                    {
+                        foreach (var group in groupSlots.Values)
+                        {
+                            CountProjectedAlive(group.Winner);
+                            CountProjectedAlive(group.RunnerUp);
+                        }
+                        foreach (var third in bestThirds)
+                            CountProjectedAlive(third.TeamId);
+                    }
+
+                    var thirdAssignments = WorldCup2026Bracket.AssignThirdPlaceGroups(bestThirds.Select(t => t.Group).ToList());
+                    await RunKnockoutFromCurrentStateAsync(state, groupSlots, thirdAssignments, sampler, rng, counters, n, ct);
+                }
             }
             else
             {
@@ -75,6 +95,43 @@ namespace Oloraculo.Web.Services.Simulation
                     var thirdAssignments = WorldCup2026Bracket.AssignThirdPlaceGroups(bestThirds.Select(t => t.Group).ToList());
                     await RunKnockoutAsync(groupSlots, bestThirds, thirdAssignments, sampler, rng, counters, state.KnockoutMatches, ct);
                 }
+            }
+
+            async Task<(Dictionary<string, GroupSlots> GroupSlots, List<GroupStanding> BestThirds)> ProjectRemainingGroupSlotsAsync(bool countGroupMetrics)
+            {
+                var groupSlots = new Dictionary<string, GroupSlots>(StringComparer.OrdinalIgnoreCase);
+                var thirds = new List<GroupStanding>();
+
+                foreach (var group in groups)
+                {
+                    var table = await SimulateGroupAsync(group, fixtures, fifaPoints, sampler, rng, ct);
+                    var groupRanked = table.Rank();
+                    if (countGroupMetrics)
+                    {
+                        for (var pos = 0; pos < groupRanked.Count; pos++)
+                            counters[groupRanked[pos].TeamId].GroupPoints += groupRanked[pos].Points;
+                        counters[groupRanked[0].TeamId].WinGroup++;
+                    }
+
+                    var ranked = table.Rank()
+                        .Where(t => !state.EliminatedTeamIds.Contains(t.TeamId))
+                        .ToList();
+                    if (ranked.Count < 3)
+                        ranked = groupRanked.ToList();
+
+                    groupSlots[group.Name] = new GroupSlots(ranked[0].TeamId, ranked[1].TeamId, ranked[2].TeamId);
+                    thirds.Add(ranked[2]);
+                }
+
+                return (groupSlots, GroupTable.RankBestThirds(thirds, fifaPoints).Take(8).ToList());
+            }
+
+            void CountProjectedAlive(string team)
+            {
+                if (state.EliminatedTeamIds.Contains(team))
+                    return;
+                if (counters.TryGetValue(team, out var counter) && counter.Qualify < n)
+                    counter.Qualify++;
             }
 
             var projection = new TournamentProjection
@@ -198,12 +255,17 @@ namespace Oloraculo.Web.Services.Simulation
 
         private static void ApplyKnownState(Dictionary<string, Counter> counters, CurrentTournamentState state, int simulations)
         {
+            foreach (var team in state.AliveTeamIds)
+            {
+                if (counters.TryGetValue(team, out var counter))
+                    counter.Qualify = Math.Max(counter.Qualify, simulations);
+            }
+
             foreach (var (team, stage) in state.ReachedStageByTeam)
             {
                 if (!counters.TryGetValue(team, out var counter))
                     continue;
 
-                counter.Qualify = Math.Max(counter.Qualify, simulations);
                 if (stage >= KnockoutStageEnum.RoundOf16)
                     counter.R16 = Math.Max(counter.R16, simulations);
                 if (stage >= KnockoutStageEnum.QuarterFinal)
@@ -224,9 +286,12 @@ namespace Oloraculo.Web.Services.Simulation
 
         private async Task RunKnockoutFromCurrentStateAsync(
             CurrentTournamentState state,
+            IReadOnlyDictionary<string, GroupSlots> groupSlots,
+            IReadOnlyDictionary<int, string> thirdAssignments,
             MatchSamplerCache sampler,
             Random rng,
             Dictionary<string, Counter> counters,
+            int simulations,
             CancellationToken ct)
         {
             var winners = new Dictionary<int, string>();
@@ -253,8 +318,8 @@ namespace Oloraculo.Web.Services.Simulation
             async Task<string> PlayTieAsync(BracketTie tie, CancellationToken token)
             {
                 state.KnockoutMatches.TryGetValue(tie.Id, out var known);
-                var home = known?.ConfirmedHomeTeamId ?? ResolveSlot(tie.Home);
-                var away = known?.ConfirmedAwayTeamId ?? ResolveSlot(tie.Away);
+                var home = known?.ConfirmedHomeTeamId ?? ResolveSlot(tie, tie.Home);
+                var away = known?.ConfirmedAwayTeamId ?? ResolveSlot(tie, tie.Away);
 
                 if (home is null || away is null)
                     throw new InvalidOperationException($"No se pudo resolver el partido {tie.Id} desde el estado actual del torneo.");
@@ -267,9 +332,12 @@ namespace Oloraculo.Web.Services.Simulation
                 return winner;
             }
 
-            string? ResolveSlot(BracketSlot slot) =>
+            string? ResolveSlot(BracketTie tie, BracketSlot slot) =>
                 slot.Kind switch
                 {
+                    BracketSlotKindEnum.GroupWinner => groupSlots.GetValueOrDefault(slot.Group!)?.Winner,
+                    BracketSlotKindEnum.GroupRunnerUp => groupSlots.GetValueOrDefault(slot.Group!)?.RunnerUp,
+                    BracketSlotKindEnum.GroupThird => groupSlots.GetValueOrDefault(thirdAssignments[tie.Id])?.Third,
                     BracketSlotKindEnum.WinnerOfTie => winners.GetValueOrDefault(slot.TieId!.Value),
                     BracketSlotKindEnum.LoserOfTie => losers.GetValueOrDefault(slot.TieId!.Value),
                     _ => null
@@ -280,20 +348,23 @@ namespace Oloraculo.Web.Services.Simulation
                 if (!counters.TryGetValue(team, out var counter))
                     return;
 
-                counter.Qualify = Math.Max(counter.Qualify, 1);
                 switch (stage)
                 {
                     case KnockoutStageEnum.RoundOf16:
-                        counter.R16++;
+                        if (counter.R16 < simulations)
+                            counter.R16++;
                         break;
                     case KnockoutStageEnum.QuarterFinal:
-                        counter.Qf++;
+                        if (counter.Qf < simulations)
+                            counter.Qf++;
                         break;
                     case KnockoutStageEnum.SemiFinal:
-                        counter.Sf++;
+                        if (counter.Sf < simulations)
+                            counter.Sf++;
                         break;
                     case KnockoutStageEnum.Final:
-                        counter.Final++;
+                        if (counter.Final < simulations)
+                            counter.Final++;
                         break;
                 }
             }

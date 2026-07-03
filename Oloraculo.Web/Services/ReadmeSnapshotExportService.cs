@@ -174,6 +174,11 @@ namespace Oloraculo.Web.Services
             builder.AppendLine();
             builder.AppendLine($"_Generado {generatedAt.UtcDateTime:yyyy-MM-dd HH:mm} UTC a través de {projection.Simulations.ToString("N0", CultureInfo.InvariantCulture)} simulaciones._");
             builder.AppendLine("_Probabilidades calculadas desde el estado actual del torneo. Los partidos ya jugados se tratan como hechos fijos; solo se simulan partidos pendientes._");
+            if (knockoutBoard is not null && !knockoutBoard.SourceRefreshSucceeded)
+            {
+                builder.AppendLine();
+                builder.AppendLine("> Advertencia: el feed de resultados no se actualizó; estas probabilidades pueden estar desfasadas.");
+            }
             builder.AppendLine();
             builder.AppendLine("| Team | Group | Alive | R16 | QF | SF | Final | Champion |");
             builder.AppendLine("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |");
