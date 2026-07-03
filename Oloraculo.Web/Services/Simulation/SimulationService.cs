@@ -26,8 +26,9 @@ namespace Oloraculo.Web.Services.Simulation
 
         public async Task<TournamentProjection> RunAsync(int? simulations = null, int? seed = null, bool saveSnapshot = true, CancellationToken ct = default)
         {
-            var groups = await _db.Groups.AsNoTracking().OrderBy(g => g.Name).ToListAsync(ct);
-            var fixtures = await _db.Fixtures.AsNoTracking().ToListAsync(ct);
+            var state = await new CurrentTournamentStateBuilder(_db).BuildAsync(ct);
+            var groups = state.Groups;
+            var fixtures = state.Fixtures;
             var fifaPoints = await FifaPointsAsync(ct);
             var teams = groups.SelectMany(g => g.TeamIds).Distinct().ToList();
             var rng = new Random(seed ?? _config.SimulationSeed ?? Environment.TickCount);
@@ -35,43 +36,52 @@ namespace Oloraculo.Web.Services.Simulation
             var counters = teams.ToDictionary(t => t, _ => new Counter());
             var predictionContext = await SimulationPredictionContext.CreateAsync(_db, _config, ct);
             var sampler = new MatchSamplerCache(predictionContext.PredictPairAsync);
-            var knownKnockout = await _db.KnockoutMatches.AsNoTracking().ToDictionaryAsync(m => m.MatchNumber, ct);
 
-            for (var i = 0; i < n; i++)
+            ApplyKnownState(counters, state, n);
+
+            if (state.IsKnockoutStarted)
             {
-                var groupSlots = new Dictionary<string, GroupSlots>(StringComparer.OrdinalIgnoreCase);
-                var thirds = new List<GroupStanding>();
-
-                foreach (var group in groups)
+                for (var i = 0; i < n; i++)
+                    await RunKnockoutFromCurrentStateAsync(state, sampler, rng, counters, ct);
+            }
+            else
+            {
+                for (var i = 0; i < n; i++)
                 {
-                    var table = await SimulateGroupAsync(group, fixtures, fifaPoints, sampler, rng, ct);
-                    var ranked = table.Rank();
-                    for (var pos = 0; pos < ranked.Count; pos++)
-                        counters[ranked[pos].TeamId].GroupPoints += ranked[pos].Points;
+                    var groupSlots = new Dictionary<string, GroupSlots>(StringComparer.OrdinalIgnoreCase);
+                    var thirds = new List<GroupStanding>();
 
-                    counters[ranked[0].TeamId].WinGroup++;
-                    groupSlots[group.Name] = new GroupSlots(ranked[0].TeamId, ranked[1].TeamId, ranked[2].TeamId);
-                    thirds.Add(ranked[2]);
+                    foreach (var group in groups)
+                    {
+                        var table = await SimulateGroupAsync(group, fixtures, fifaPoints, sampler, rng, ct);
+                        var ranked = table.Rank();
+                        for (var pos = 0; pos < ranked.Count; pos++)
+                            counters[ranked[pos].TeamId].GroupPoints += ranked[pos].Points;
+
+                        counters[ranked[0].TeamId].WinGroup++;
+                        groupSlots[group.Name] = new GroupSlots(ranked[0].TeamId, ranked[1].TeamId, ranked[2].TeamId);
+                        thirds.Add(ranked[2]);
+                    }
+
+                    var bestThirds = GroupTable.RankBestThirds(thirds, fifaPoints).Take(8).ToList();
+                    foreach (var group in groupSlots.Values)
+                    {
+                        counters[group.Winner].Qualify++;
+                        counters[group.RunnerUp].Qualify++;
+                    }
+                    foreach (var third in bestThirds)
+                        counters[third.TeamId].Qualify++;
+
+                    var thirdAssignments = WorldCup2026Bracket.AssignThirdPlaceGroups(bestThirds.Select(t => t.Group).ToList());
+                    await RunKnockoutAsync(groupSlots, bestThirds, thirdAssignments, sampler, rng, counters, state.KnockoutMatches, ct);
                 }
-
-                var bestThirds = GroupTable.RankBestThirds(thirds, fifaPoints).Take(8).ToList();
-                foreach (var group in groupSlots.Values)
-                {
-                    counters[group.Winner].Qualify++;
-                    counters[group.RunnerUp].Qualify++;
-                }
-                foreach (var third in bestThirds)
-                    counters[third.TeamId].Qualify++;
-
-                var thirdAssignments = WorldCup2026Bracket.AssignThirdPlaceGroups(bestThirds.Select(t => t.Group).ToList());
-                await RunKnockoutAsync(groupSlots, bestThirds, thirdAssignments, sampler, rng, counters, knownKnockout, ct);
             }
 
             var projection = new TournamentProjection
             {
                 Simulations = n,
                 ModelName = "Final",
-                InputSummaryHash = InputHash(groups, fixtures, n, seed ?? _config.SimulationSeed),
+                InputSummaryHash = InputHash(groups, fixtures, state.KnockoutMatches, n, seed ?? _config.SimulationSeed),
                 Teams = teams.Select(team =>
                 {
                     var group = groups.First(g => g.TeamIds.Contains(team)).Name;
@@ -186,6 +196,109 @@ namespace Oloraculo.Web.Services.Simulation
                 };
         }
 
+        private static void ApplyKnownState(Dictionary<string, Counter> counters, CurrentTournamentState state, int simulations)
+        {
+            foreach (var (team, stage) in state.ReachedStageByTeam)
+            {
+                if (!counters.TryGetValue(team, out var counter))
+                    continue;
+
+                counter.Qualify = Math.Max(counter.Qualify, simulations);
+                if (stage >= KnockoutStageEnum.RoundOf16)
+                    counter.R16 = Math.Max(counter.R16, simulations);
+                if (stage >= KnockoutStageEnum.QuarterFinal)
+                    counter.Qf = Math.Max(counter.Qf, simulations);
+                if (stage >= KnockoutStageEnum.SemiFinal)
+                    counter.Sf = Math.Max(counter.Sf, simulations);
+                if (stage >= KnockoutStageEnum.Final)
+                    counter.Final = Math.Max(counter.Final, simulations);
+                if (stage == KnockoutStageEnum.Final &&
+                    state.KnockoutMatches.TryGetValue(WorldCup2026Bracket.Final.Id, out var final) &&
+                    final is { IsPlayed: true, WinnerTeamId: not null } &&
+                    string.Equals(final.WinnerTeamId, team, StringComparison.OrdinalIgnoreCase))
+                {
+                    counter.Champion = Math.Max(counter.Champion, simulations);
+                }
+            }
+        }
+
+        private async Task RunKnockoutFromCurrentStateAsync(
+            CurrentTournamentState state,
+            MatchSamplerCache sampler,
+            Random rng,
+            Dictionary<string, Counter> counters,
+            CancellationToken ct)
+        {
+            var winners = new Dictionary<int, string>();
+            var losers = new Dictionary<int, string>();
+
+            await RunRoundAsync(WorldCup2026Bracket.RoundOf32, KnockoutStageEnum.RoundOf16, ct);
+            await RunRoundAsync(WorldCup2026Bracket.RoundOf16, KnockoutStageEnum.QuarterFinal, ct);
+            await RunRoundAsync(WorldCup2026Bracket.QuarterFinals, KnockoutStageEnum.SemiFinal, ct);
+            await RunRoundAsync(WorldCup2026Bracket.SemiFinals, KnockoutStageEnum.Final, ct);
+
+            var champion = await PlayTieAsync(WorldCup2026Bracket.Final, ct);
+            counters[champion].Champion++;
+
+            async Task RunRoundAsync(IReadOnlyList<BracketTie> ties, KnockoutStageEnum reachedStage, CancellationToken token)
+            {
+                foreach (var tie in ties)
+                {
+                    var winner = await PlayTieAsync(tie, token);
+                    if (!state.KnockoutMatches.TryGetValue(tie.Id, out var known) || !known.IsPlayed)
+                        CountReached(winner, reachedStage);
+                }
+            }
+
+            async Task<string> PlayTieAsync(BracketTie tie, CancellationToken token)
+            {
+                state.KnockoutMatches.TryGetValue(tie.Id, out var known);
+                var home = known?.ConfirmedHomeTeamId ?? ResolveSlot(tie.Home);
+                var away = known?.ConfirmedAwayTeamId ?? ResolveSlot(tie.Away);
+
+                if (home is null || away is null)
+                    throw new InvalidOperationException($"No se pudo resolver el partido {tie.Id} desde el estado actual del torneo.");
+
+                var winner = known is { IsPlayed: true, WinnerTeamId: not null }
+                    ? known.WinnerTeamId
+                    : await sampler.KnockoutWinnerAsync(home, away, rng, token);
+                winners[tie.Id] = winner;
+                losers[tie.Id] = winner == home ? away : home;
+                return winner;
+            }
+
+            string? ResolveSlot(BracketSlot slot) =>
+                slot.Kind switch
+                {
+                    BracketSlotKindEnum.WinnerOfTie => winners.GetValueOrDefault(slot.TieId!.Value),
+                    BracketSlotKindEnum.LoserOfTie => losers.GetValueOrDefault(slot.TieId!.Value),
+                    _ => null
+                };
+
+            void CountReached(string team, KnockoutStageEnum stage)
+            {
+                if (!counters.TryGetValue(team, out var counter))
+                    return;
+
+                counter.Qualify = Math.Max(counter.Qualify, 1);
+                switch (stage)
+                {
+                    case KnockoutStageEnum.RoundOf16:
+                        counter.R16++;
+                        break;
+                    case KnockoutStageEnum.QuarterFinal:
+                        counter.Qf++;
+                        break;
+                    case KnockoutStageEnum.SemiFinal:
+                        counter.Sf++;
+                        break;
+                    case KnockoutStageEnum.Final:
+                        counter.Final++;
+                        break;
+                }
+            }
+        }
+
         public static (int Home, int Away) SampleScoreFromPrediction(MatchPredictionResult prediction, Random rng) =>
             MatchSamplerCache.SampleScoreFromPrediction(prediction, rng);
 
@@ -196,14 +309,22 @@ namespace Oloraculo.Web.Services.Simulation
                 .GroupBy(r => r.TeamId)
                 .ToDictionary(g => g.Key, g => g.OrderByDescending(r => r.AsOf).First().Value, StringComparer.OrdinalIgnoreCase);
 
-        private static string InputHash(IReadOnlyList<Group> groups, IReadOnlyList<Fixture> fixtures, int simulations, int? seed)
+        private static string InputHash(
+            IReadOnlyList<Group> groups,
+            IReadOnlyList<Fixture> fixtures,
+            IReadOnlyDictionary<int, KnockoutMatch> knockout,
+            int simulations,
+            int? seed)
         {
             var groupTokens = groups.Select(g => $"{g.Name}:{string.Join("-", g.TeamIds)}");
             var resultTokens = fixtures
                 .Where(f => f is { IsPlayed: true, HomeGoals: not null, AwayGoals: not null })
                 .OrderBy(f => f.Id)
                 .Select(f => $"{f.Id}:{f.HomeGoals}-{f.AwayGoals}");
-            return CryptoUtil.GetSha256($"{simulations}|{seed}|{string.Join("|", groupTokens)}|{string.Join("|", resultTokens)}");
+            var knockoutTokens = knockout.Values
+                .OrderBy(m => m.MatchNumber)
+                .Select(m => $"{m.MatchNumber}:{m.ConfirmedHomeTeamId}-{m.ConfirmedAwayTeamId}:{m.IsPlayed}:{m.HomeGoals}-{m.AwayGoals}:{m.HomePenaltyGoals}-{m.AwayPenaltyGoals}:{m.WinnerTeamId}");
+            return CryptoUtil.GetSha256($"{simulations}|{seed}|{string.Join("|", groupTokens)}|{string.Join("|", resultTokens)}|{string.Join("|", knockoutTokens)}");
         }
 
         private sealed record GroupSlots(string Winner, string RunnerUp, string Third);
