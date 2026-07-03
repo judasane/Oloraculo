@@ -9,27 +9,29 @@ _A medida que se recibe nueva información y se juegan partidos reales, el Olor�
 
 ### Torneo
 
-_Generado 2026-07-03 16:18 UTC a través de 10,000 simulaciones._
+_Generado 2026-07-03 16:54 UTC a través de 10,000 simulaciones._
 _Probabilidades calculadas desde el estado actual del torneo. Los partidos ya jugados se tratan como hechos fijos; solo se simulan partidos pendientes._
+
+> Advertencia: el feed de resultados no se actualizó; estas probabilidades pueden estar desfasadas.
 
 | Team | Group | Alive | R16 | QF | SF | Final | Champion |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina | J | 89 % | 61 % | 43 % | 30 % | 19 % | **11.8 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain | H | 94 % | 62 % | 43 % | 29 % | 19 % | **11.2 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | C | 92 % | 59 % | 41 % | 27 % | 17 % | **10.1 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan | F | 94 % | 59 % | 43 % | 28 % | 17 % | **10.0 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England | L | 89 % | 55 % | 33 % | 19 % | 11 % | **5.8 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France | I | 77 % | 48 % | 27 % | 15 % | 8 % | **4.2 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany | E | 87 % | 55 % | 29 % | 16 % | 8 % | **4.1 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | D | 86 % | 53 % | 29 % | 15 % | 8 % | **3.8 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/pt.svg" width="18" alt=""> Portugal | K | 77 % | 48 % | 27 % | 15 % | 8 % | **3.7 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/co.svg" width="18" alt=""> Colombia | K | 73 % | 44 % | 24 % | 13 % | 7 % | **3.4 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands | F | 82 % | 44 % | 26 % | 14 % | 7 % | **3.3 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil | C | 77 % | 39 % | 22 % | 11 % | 5 % | **2.3 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal | I | 74 % | 42 % | 22 % | 11 % | 5 % | **2.2 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | I | 72 % | 41 % | 21 % | 10 % | 5 % | **2.1 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/mx.svg" width="18" alt=""> Mexico | A | 82 % | 49 % | 23 % | 10 % | 5 % | **2.0 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/dz.svg" width="18" alt=""> Algeria | J | 72 % | 36 % | 19 % | 9 % | 4 % | **1.9 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina | J | 90 % | 62 % | 45 % | 31 % | 21 % | **13.2 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain | H | 95 % | 61 % | 42 % | 29 % | 19 % | **11.9 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil | C | 100 % | 100 % | 69 % | 36 % | 18 % | **7.7 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England | L | 90 % | 56 % | 35 % | 21 % | 12 % | **6.6 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France | I | 78 % | 49 % | 30 % | 18 % | 10 % | **5.4 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | C | 92 % | 26 % | 19 % | 13 % | 8 % | **5.1 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/pt.svg" width="18" alt=""> Portugal | K | 77 % | 49 % | 28 % | 15 % | 9 % | **4.5 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | D | 87 % | 55 % | 30 % | 16 % | 8 % | **4.0 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany | E | 87 % | 55 % | 29 % | 16 % | 8 % | **4.0 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/co.svg" width="18" alt=""> Colombia | K | 75 % | 45 % | 25 % | 13 % | 7 % | **3.4 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands | F | 90 % | 36 % | 24 % | 13 % | 6 % | **3.3 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal | I | 76 % | 45 % | 24 % | 13 % | 6 % | **2.9 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | I | 74 % | 43 % | 23 % | 12 % | 6 % | **2.8 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/mx.svg" width="18" alt=""> Mexico | A | 82 % | 49 % | 24 % | 12 % | 6 % | **2.4 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/dz.svg" width="18" alt=""> Algeria | J | 72 % | 36 % | 19 % | 9 % | 4 % | **2.0 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ir.svg" width="18" alt=""> Iran | G | 75 % | 42 % | 20 % | 9 % | 4 % | **1.8 %** |
 
 ### Eliminatorias
 
@@ -41,14 +43,14 @@ _Los equipos marcados como proyectados todavía no están confirmados por la fue
 | # | Home | Away | Status | Prediction | Result |
 | ---: | --- | --- | :---: | --- | --- |
 | 73 | <img src="Oloraculo.Web/wwwroot/flags/4x3/mx.svg" width="18" alt=""> Mexico <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/ca.svg" width="18" alt=""> Canada <sub>projected</sub> | Scheduled | **1-1** · Mexico advances | - |
-| 74 | <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/qa.svg" width="18" alt=""> Qatar <sub>projected</sub> | Scheduled | **3-1** · Germany advances | - |
-| 75 | <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco <sub>projected</sub> | Scheduled | **1-1** · Morocco advances | - |
-| 76 | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands <sub>projected</sub> | Scheduled | **1-2** · Netherlands advances | - |
+| 74 | <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/za.svg" width="18" alt=""> South Africa <sub>projected</sub> | Scheduled | **2-1** · Germany advances | - |
+| 75 | <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco <sub>projected</sub> | Scheduled | **1-1** · Morocco advances | - |
+| 76 | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil | <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan | Finished | Pre-match prediction unavailable | **2-1** |
 | 77 | <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay <sub>projected</sub> | Scheduled | **2-1** · France advances | - |
 | 78 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ci.svg" width="18" alt=""> Ivory Coast <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal <sub>projected</sub> | Scheduled | **1-1** · Senegal advances | - |
 | 79 | <img src="Oloraculo.Web/wwwroot/flags/4x3/kr.svg" width="18" alt=""> South Korea <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/ec.svg" width="18" alt=""> Ecuador <sub>projected</sub> | Scheduled | **1-1** · Ecuador advances | - |
 | 80 | <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/uz.svg" width="18" alt=""> Uzbekistan <sub>projected</sub> | Scheduled | **1-1** · England advances | - |
-| 81 | <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/tn.svg" width="18" alt=""> Tunisia <sub>projected</sub> | Scheduled | **1-1** · Australia advances | - |
+| 81 | <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/qa.svg" width="18" alt=""> Qatar <sub>projected</sub> | Scheduled | **2-1** · Australia advances | - |
 | 82 | <img src="Oloraculo.Web/wwwroot/flags/4x3/be.svg" width="18" alt=""> Belgium <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway <sub>projected</sub> | Scheduled | **1-2** · Norway advances | - |
 | 83 | <img src="Oloraculo.Web/wwwroot/flags/4x3/cd.svg" width="18" alt=""> Congo DR <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/hr.svg" width="18" alt=""> Croatia <sub>projected</sub> | Scheduled | **1-1** · Croatia advances | - |
 | 84 | <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/dz.svg" width="18" alt=""> Algeria <sub>projected</sub> | Scheduled | **2-1** · Spain advances | - |
@@ -66,7 +68,7 @@ _Los equipos marcados como proyectados todavía no están confirmados por la fue
 | ---: | --- | --- | :---: | --- | --- |
 | 89 | <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France <sub>projected</sub> | Scheduled | **2-2** · France advances | - |
 | 90 | <img src="Oloraculo.Web/wwwroot/flags/4x3/mx.svg" width="18" alt=""> Mexico <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco <sub>projected</sub> | Scheduled | **1-1** · Morocco advances | - |
-| 91 | <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal <sub>projected</sub> | Scheduled | **1-1** · Netherlands advances | - |
+| 91 | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal <sub>projected</sub> | Scheduled | **1-1** · Brazil advances | - |
 | 92 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ec.svg" width="18" alt=""> Ecuador <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England <sub>projected</sub> | Scheduled | **1-1** · England advances | - |
 | 93 | <img src="Oloraculo.Web/wwwroot/flags/4x3/hr.svg" width="18" alt=""> Croatia <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain <sub>projected</sub> | Scheduled | **1-2** · Spain advances | - |
 | 94 | <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway <sub>projected</sub> | Scheduled | **1-1** · Norway advances | - |
@@ -82,7 +84,7 @@ _Los equipos marcados como proyectados todavía no están confirmados por la fue
 | ---: | --- | --- | :---: | --- | --- |
 | 97 | <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco <sub>projected</sub> | Scheduled | **1-1** · France advances | - |
 | 98 | <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway <sub>projected</sub> | Scheduled | **2-1** · Spain advances | - |
-| 99 | <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England <sub>projected</sub> | Scheduled | **1-1** · England advances | - |
+| 99 | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England <sub>projected</sub> | Scheduled | **1-1** · England advances | - |
 | 100 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/pt.svg" width="18" alt=""> Portugal <sub>projected</sub> | Scheduled | **2-1** · Argentina advances | - |
 
 </details>

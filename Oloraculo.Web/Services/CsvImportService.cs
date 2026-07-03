@@ -456,6 +456,42 @@ namespace Oloraculo.Web.Services
             }
 
             await _db.SaveChangesAsync(ct);
+            await ImportSeededKnockoutResultsAsync(ct);
+            await _db.SaveChangesAsync(ct);
+        }
+
+        private async Task ImportSeededKnockoutResultsAsync(CancellationToken ct)
+        {
+            var path = FullPath(OloraculoDataFiles.KnockoutResultsCsv);
+            if (!File.Exists(path))
+                return;
+
+            foreach (var row in CsvParsingHelper.ReadCsv<KnockoutResultCsvRow>(path))
+            {
+                var match = await _db.KnockoutMatches.FindAsync([row.MatchNumber], ct);
+                if (match is null)
+                {
+                    match = new KnockoutMatch { MatchNumber = row.MatchNumber };
+                    _db.KnockoutMatches.Add(match);
+                }
+
+                if (match.IsPlayed && !string.Equals(match.Source, OloraculoDataFiles.KnockoutResultsCsv, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                match.Stage = Enum.Parse<Services.Simulation.KnockoutStageEnum>(row.Stage, ignoreCase: true);
+                match.ConfirmedHomeTeamId = TeamNameNormalizer.ToId(row.HomeTeam);
+                match.ConfirmedAwayTeamId = TeamNameNormalizer.ToId(row.AwayTeam);
+                match.HomeGoals = row.HomeGoals;
+                match.AwayGoals = row.AwayGoals;
+                match.HomePenaltyGoals = row.HomePenaltyGoals;
+                match.AwayPenaltyGoals = row.AwayPenaltyGoals;
+                match.WinnerTeamId = TeamNameNormalizer.ToId(row.WinnerTeam);
+                match.Status = string.IsNullOrWhiteSpace(row.Status) ? "Finished" : row.Status;
+                match.IsPlayed = true;
+                match.Source = OloraculoDataFiles.KnockoutResultsCsv;
+                if (DateTimeOffset.TryParse(row.SourceUpdatedAt, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var updatedAt))
+                    match.SourceUpdatedAt = updatedAt;
+            }
         }
 
         private string FullPath(string fileName) => Path.Combine(_environment.ContentRootPath, "Data", fileName);

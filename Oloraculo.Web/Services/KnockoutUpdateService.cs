@@ -54,9 +54,10 @@ public class KnockoutUpdateService
         var warnings = refreshWarnings?.ToList() ?? [];
         var names = await _db.Teams.AsNoTracking().ToDictionaryAsync(t => t.Id, t => t.Name, ct);
         var predictors = await _predictions.BuildPredictorsAsync(ct);
-        var groupSlots = await ProjectGroupSlotsAsync(predictors, ct);
-        var thirdAssignments = WorldCup2026Bracket.AssignThirdPlaceGroups(groupSlots.BestThirds.Select(t => t.Group).ToList());
         var persisted = await _db.KnockoutMatches.AsNoTracking().ToDictionaryAsync(m => m.MatchNumber, ct);
+        var eliminated = EliminatedTeams(persisted.Values);
+        var groupSlots = await ProjectGroupSlotsAsync(predictors, eliminated, ct);
+        var thirdAssignments = WorldCup2026Bracket.AssignThirdPlaceGroups(groupSlots.BestThirds.Select(t => t.Group).ToList());
         var winners = new Dictionary<int, string>();
         var losers = new Dictionary<int, string>();
         var views = new List<KnockoutMatchView>(32);
@@ -362,7 +363,10 @@ public class KnockoutUpdateService
         }
     }
 
-    private async Task<ProjectedGroupSlots> ProjectGroupSlotsAsync(IReadOnlyList<IPredictor> predictors, CancellationToken ct)
+    private async Task<ProjectedGroupSlots> ProjectGroupSlotsAsync(
+        IReadOnlyList<IPredictor> predictors,
+        IReadOnlySet<string> eliminated,
+        CancellationToken ct)
     {
         var groups = await _db.Groups.AsNoTracking().OrderBy(g => g.Name).ToListAsync(ct);
         var fixtures = await _db.Fixtures.AsNoTracking().ToListAsync(ct);
@@ -385,7 +389,11 @@ public class KnockoutUpdateService
                     score = PredictionScore(await _predictions.PredictAsync(fixture, predictors, ct));
                 table.AddMatch(new SimulatedMatch(group.Name, fixture.HomeTeamId, fixture.AwayTeamId, score.Home, score.Away, known));
             }
-            var ranked = table.Rank();
+            var ranked = table.Rank()
+                .Where(t => !eliminated.Contains(t.TeamId))
+                .ToList();
+            if (ranked.Count < 3)
+                ranked = table.Rank().ToList();
             slots[group.Name] = new GroupSlots(ranked[0].TeamId, ranked[1].TeamId, ranked[2].TeamId);
             thirds.Add(ranked[2]);
         }
@@ -395,6 +403,23 @@ public class KnockoutUpdateService
             slots,
             bestThirds,
             bestThirds.ToDictionary(t => t.Group, t => t.TeamId, StringComparer.OrdinalIgnoreCase));
+    }
+
+    private static HashSet<string> EliminatedTeams(IEnumerable<KnockoutMatch> matches)
+    {
+        var eliminated = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var match in matches)
+        {
+            if (!match.IsPlayed || match.WinnerTeamId is null ||
+                match.ConfirmedHomeTeamId is null || match.ConfirmedAwayTeamId is null)
+                continue;
+
+            eliminated.Add(string.Equals(match.WinnerTeamId, match.ConfirmedHomeTeamId, StringComparison.OrdinalIgnoreCase)
+                ? match.ConfirmedAwayTeamId
+                : match.ConfirmedHomeTeamId);
+        }
+
+        return eliminated;
     }
 
     internal static KnockoutStageEnum? ParseStage(string? round)

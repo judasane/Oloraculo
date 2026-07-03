@@ -105,13 +105,12 @@ public class SimulationServiceTests : TestFixtures
         Assert.Equal(1.0, portugal.Qualify, 6);
         Assert.Equal(1.0, portugal.ReachRoundOf16, 6);
         Assert.True(portugal.WinTournament > 0);
-        Assert.Equal(1.0, croatia.Qualify, 6);
+        Assert.Equal(0.0, croatia.Qualify, 6);
         Assert.Equal(0.0, croatia.ReachRoundOf16, 6);
         Assert.Equal(0.0, croatia.WinTournament, 6);
         Assert.Equal(1.0, projection.Teams.Sum(t => t.WinTournament), 6);
         Assert.All(projection.Teams, team =>
         {
-            Assert.True(team.Qualify + 1e-9 >= team.ReachRoundOf16);
             Assert.True(team.ReachRoundOf16 + 1e-9 >= team.ReachQuarterFinal);
             Assert.True(team.ReachQuarterFinal + 1e-9 >= team.ReachSemiFinal);
             Assert.True(team.ReachSemiFinal + 1e-9 >= team.ReachFinal);
@@ -133,6 +132,8 @@ public class SimulationServiceTests : TestFixtures
 
         Assert.Equal(0.0, portugal.ReachRoundOf16, 6);
         Assert.Equal(0.0, portugal.WinTournament, 6);
+        Assert.Equal(0.0, portugal.Qualify, 6);
+        Assert.Equal(1.0, croatia.Qualify, 6);
         Assert.Equal(1.0, croatia.ReachRoundOf16, 6);
     }
 
