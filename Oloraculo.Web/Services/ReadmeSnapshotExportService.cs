@@ -173,13 +173,14 @@ namespace Oloraculo.Web.Services
             builder.AppendLine("### Torneo");
             builder.AppendLine();
             builder.AppendLine($"_Generado {generatedAt.UtcDateTime:yyyy-MM-dd HH:mm} UTC a través de {projection.Simulations.ToString("N0", CultureInfo.InvariantCulture)} simulaciones._");
+            builder.AppendLine("_Probabilidades calculadas desde el estado actual del torneo. Los partidos ya jugados se tratan como hechos fijos; solo se simulan partidos pendientes._");
             builder.AppendLine();
-            builder.AppendLine("| Team | Group | Qualify | QF | SF | Final | Champion |");
-            builder.AppendLine("| --- | --- | ---: | ---: | ---: | ---: | ---: |");
+            builder.AppendLine("| Team | Group | Alive | R16 | QF | SF | Final | Champion |");
+            builder.AppendLine("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |");
             foreach (var team in projection.Teams.OrderByDescending(t => t.WinTournament).ThenBy(t => Name(teamNames, t.TeamId)).Take(16))
             {
                 builder.AppendLine(
-                    $"| {TeamCell(team.TeamId, Name(teamNames, team.TeamId))} | {Escape(team.Group)} | {Percent(team.Qualify, 0)} | {Percent(team.ReachQuarterFinal, 0)} | {Percent(team.ReachSemiFinal, 0)} | {Percent(team.ReachFinal, 0)} | **{Percent(team.WinTournament, 1)}** |");
+                    $"| {TeamCell(team.TeamId, Name(teamNames, team.TeamId))} | {Escape(team.Group)} | {Percent(team.Qualify, 0)} | {Percent(team.ReachRoundOf16, 0)} | {Percent(team.ReachQuarterFinal, 0)} | {Percent(team.ReachSemiFinal, 0)} | {Percent(team.ReachFinal, 0)} | **{Percent(team.WinTournament, 1)}** |");
             }
 
             if (knockoutBoard is not null)
