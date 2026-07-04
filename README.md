@@ -9,8 +9,10 @@ _A medida que se recibe nueva información y se juegan partidos reales, el Olor�
 
 ### Torneo
 
-_Generado 2026-07-04 21:15 UTC a través de 10,000 simulaciones._
+_Generado 2026-07-04 21:25 UTC a través de 10,000 simulaciones._
 _Probabilidades calculadas desde el estado actual del torneo. Los partidos ya jugados se tratan como hechos fijos; solo se simulan partidos pendientes._
+
+> Advertencia: el feed de resultados no se actualizó; estas probabilidades pueden estar desfasadas.
 
 | Team | Group | Alive | R16 | QF | SF | Final | Champion |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -39,7 +41,7 @@ _Los equipos marcados como proyectados todavía no están confirmados por la fue
 
 | # | Home | Away | Status | Prediction | Result |
 | ---: | --- | --- | :---: | --- | --- |
-| 73 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ca.svg" width="18" alt=""> Canada | <img src="Oloraculo.Web/wwwroot/flags/4x3/za.svg" width="18" alt=""> South Africa | Finished | Pre-match prediction unavailable | **1-0** |
+| 73 | <img src="Oloraculo.Web/wwwroot/flags/4x3/za.svg" width="18" alt=""> South Africa | <img src="Oloraculo.Web/wwwroot/flags/4x3/ca.svg" width="18" alt=""> Canada | Finished | Pre-match prediction unavailable | **0-1** |
 | 74 | <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany | <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay | Finished | Pre-match prediction unavailable | **1-1** (3-4 pens) |
 | 75 | <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands | <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | Finished | Pre-match prediction unavailable | **1-1** (2-3 pens) |
 | 76 | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil | <img src="Oloraculo.Web/wwwroot/flags/4x3/jp.svg" width="18" alt=""> Japan | Finished | Pre-match prediction unavailable | **2-1** |
