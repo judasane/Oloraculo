@@ -9,29 +9,29 @@ _A medida que se recibe nueva información y se juegan partidos reales, el Olor�
 
 ### Torneo
 
-_Generado 2026-07-04 09:03 UTC a través de 10,000 simulaciones._
+_Generado 2026-07-04 14:01 UTC a través de 10,000 simulaciones._
 _Probabilidades calculadas desde el estado actual del torneo. Los partidos ya jugados se tratan como hechos fijos; solo se simulan partidos pendientes._
 
 > Advertencia: el feed de resultados no se actualizó; estas probabilidades pueden estar desfasadas.
 
 | Team | Group | Alive | R16 | QF | SF | Final | Champion |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina | J | 90 % | 62 % | 44 % | 31 % | 21 % | **13.0 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain | H | 95 % | 62 % | 42 % | 29 % | 19 % | **12.0 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil | C | 100 % | 100 % | 70 % | 37 % | 18 % | **8.0 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina | J | 90 % | 62 % | 44 % | 31 % | 21 % | **13.1 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain | H | 94 % | 62 % | 42 % | 29 % | 19 % | **12.0 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil | C | 100 % | 100 % | 70 % | 37 % | 18 % | **7.9 %** |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England | L | 90 % | 56 % | 35 % | 20 % | 12 % | **6.5 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France | I | 78 % | 49 % | 30 % | 17 % | 10 % | **5.3 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | C | 92 % | 26 % | 19 % | 13 % | 8 % | **5.2 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/pt.svg" width="18" alt=""> Portugal | K | 78 % | 49 % | 29 % | 15 % | 9 % | **4.4 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France | I | 78 % | 49 % | 30 % | 18 % | 10 % | **5.2 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | C | 92 % | 26 % | 19 % | 13 % | 8 % | **5.1 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/pt.svg" width="18" alt=""> Portugal | K | 78 % | 49 % | 29 % | 15 % | 8 % | **4.4 %** |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany | E | 87 % | 55 % | 29 % | 16 % | 8 % | **4.2 %** |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | D | 88 % | 55 % | 30 % | 16 % | 8 % | **3.9 %** |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands | F | 90 % | 36 % | 23 % | 12 % | 6 % | **3.3 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/co.svg" width="18" alt=""> Colombia | K | 74 % | 45 % | 25 % | 13 % | 7 % | **3.2 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal | I | 76 % | 45 % | 25 % | 12 % | 6 % | **2.9 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/co.svg" width="18" alt=""> Colombia | K | 74 % | 45 % | 25 % | 13 % | 7 % | **3.3 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal | I | 76 % | 44 % | 25 % | 12 % | 6 % | **3.0 %** |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | I | 74 % | 42 % | 23 % | 12 % | 6 % | **2.8 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/mx.svg" width="18" alt=""> Mexico | A | 81 % | 49 % | 24 % | 12 % | 5 % | **2.4 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/dz.svg" width="18" alt=""> Algeria | J | 72 % | 36 % | 19 % | 10 % | 5 % | **2.1 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/kr.svg" width="18" alt=""> South Korea | A | 82 % | 46 % | 22 % | 10 % | 4 % | **1.9 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/mx.svg" width="18" alt=""> Mexico | A | 81 % | 49 % | 24 % | 12 % | 6 % | **2.4 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/dz.svg" width="18" alt=""> Algeria | J | 72 % | 36 % | 19 % | 9 % | 5 % | **2.1 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/kr.svg" width="18" alt=""> South Korea | A | 83 % | 47 % | 22 % | 10 % | 4 % | **1.9 %** |
 
 ### Eliminatorias
 
@@ -282,9 +282,9 @@ _Los equipos marcados como proyectados todavía no están confirmados por la fue
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/hr.svg" width="18" alt=""> Croatia vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gh.svg" width="18" alt=""> Ghana | Scheduled | 2-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 59 % | 25 % | 16 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/hr.svg" width="18" alt=""> Croatia vs <img src="Oloraculo.Web/wwwroot/flags/4x3/pa.svg" width="18" alt=""> Panama | Scheduled | 2-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 50 % | 28 % | 22 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England vs <img src="Oloraculo.Web/wwwroot/flags/4x3/hr.svg" width="18" alt=""> Croatia | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 47 % | 30 % | 23 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gh.svg" width="18" alt=""> Ghana | Scheduled | 2-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 67 % | 22 % | 10 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England vs <img src="Oloraculo.Web/wwwroot/flags/4x3/gh.svg" width="18" alt=""> Ghana | Scheduled | 2-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 68 % | 22 % | 10 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England vs <img src="Oloraculo.Web/wwwroot/flags/4x3/pa.svg" width="18" alt=""> Panama | Scheduled | 2-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 61 % | 25 % | 14 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/gh.svg" width="18" alt=""> Ghana vs <img src="Oloraculo.Web/wwwroot/flags/4x3/pa.svg" width="18" alt=""> Panama | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 26 % | 30 % | 44 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/gh.svg" width="18" alt=""> Ghana vs <img src="Oloraculo.Web/wwwroot/flags/4x3/pa.svg" width="18" alt=""> Panama | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 26 % | 30 % | 45 % |
 
 </details>
 <!-- oloraculo:snapshots:end -->
