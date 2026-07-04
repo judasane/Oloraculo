@@ -207,6 +207,19 @@ Important keys:
 
 Keep secrets such as API-Football and OpenRouter keys in `appsettings.Development.json` or user secrets.
 
+### Automatic README Updates
+
+`.github/workflows/update-readme-snapshots.yml` runs every 30 minutes and on manual dispatch. To refresh results automatically from API-Football, configure this repository secret:
+
+- `API_FOOTBALL_API_KEY`
+
+Optional repository variables:
+
+- `API_FOOTBALL_LEAGUE_ID` (defaults to `1`)
+- `API_FOOTBALL_SEASON` (defaults to `2026`)
+
+If the secret is missing or the feed fails, the generated README shows a warning and falls back to versioned CSV data.
+
 ## Testing
 
 ```bash
