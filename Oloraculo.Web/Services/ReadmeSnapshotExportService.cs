@@ -182,7 +182,11 @@ namespace Oloraculo.Web.Services
             builder.AppendLine();
             builder.AppendLine("| Team | Group | Alive | R16 | QF | SF | Final | Champion |");
             builder.AppendLine("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |");
-            foreach (var team in projection.Teams.OrderByDescending(t => t.WinTournament).ThenBy(t => Name(teamNames, t.TeamId)).Take(16))
+            foreach (var team in projection.Teams
+                .Where(t => t.Qualify > 0 || t.WinTournament > 0)
+                .OrderByDescending(t => t.WinTournament)
+                .ThenBy(t => Name(teamNames, t.TeamId))
+                .Take(16))
             {
                 builder.AppendLine(
                     $"| {TeamCell(team.TeamId, Name(teamNames, team.TeamId))} | {Escape(team.Group)} | {Percent(team.Qualify, 0)} | {Percent(team.ReachRoundOf16, 0)} | {Percent(team.ReachQuarterFinal, 0)} | {Percent(team.ReachSemiFinal, 0)} | {Percent(team.ReachFinal, 0)} | **{Percent(team.WinTournament, 1)}** |");
@@ -217,38 +221,41 @@ namespace Oloraculo.Web.Services
                 }
             }
 
-            builder.AppendLine();
-            builder.AppendLine("### Grupos");
-            builder.AppendLine();
-
-            foreach (var group in predictionRows.GroupBy(p => p.Result.Fixture.Group).OrderBy(g => g.Key))
+            if (knockoutBoard is null || !knockoutBoard.Matches.Any(match => match.IsPlayed))
             {
-                builder.AppendLine("<details open>");
-                builder.AppendLine($"<summary><strong>Group {Escape(group.Key)}</strong></summary>");
                 builder.AppendLine();
-                builder.AppendLine("| Match | Status | Result / Pick | Why | H | D | A |");
-                builder.AppendLine("| --- | --- | --- | --- | ---: | ---: | ---: |");
-                foreach (var row in OrderedPredictions(group))
-                {
-                    var result = row.Result;
-                    var fixture = result.Fixture;
-                    var prediction = result.BestPrediction;
-                    var home = TeamCell(fixture.HomeTeamId, result.HomeTeamName);
-                    var away = TeamCell(fixture.AwayTeamId, result.AwayTeamName);
-                    var status = StatusText(fixture);
-                    var pick = ResultOrPickText(fixture, prediction, row.HasPrediction);
-                    var rationale = row.HasPrediction
-                        ? RationaleText(prediction, fixture.Id, fixture.IsPlayed ? null : availabilityClaimsByFixture)
-                        : "No pre-game snapshot";
-                    var homeWin = row.HasPrediction ? Percent(prediction.Outcome.HomeWin, 0) : "-";
-                    var draw = row.HasPrediction ? Percent(prediction.Outcome.Draw, 0) : "-";
-                    var awayWin = row.HasPrediction ? Percent(prediction.Outcome.AwayWin, 0) : "-";
-                    builder.AppendLine($"| {home} vs {away} | {status} | {pick} | {rationale} | {homeWin} | {draw} | {awayWin} |");
-                }
+                builder.AppendLine("### Grupos");
+                builder.AppendLine();
 
-                builder.AppendLine();
-                builder.AppendLine("</details>");
-                builder.AppendLine();
+                foreach (var group in predictionRows.GroupBy(p => p.Result.Fixture.Group).OrderBy(g => g.Key))
+                {
+                    builder.AppendLine("<details open>");
+                    builder.AppendLine($"<summary><strong>Group {Escape(group.Key)}</strong></summary>");
+                    builder.AppendLine();
+                    builder.AppendLine("| Match | Status | Result / Pick | Why | H | D | A |");
+                    builder.AppendLine("| --- | --- | --- | --- | ---: | ---: | ---: |");
+                    foreach (var row in OrderedPredictions(group))
+                    {
+                        var result = row.Result;
+                        var fixture = result.Fixture;
+                        var prediction = result.BestPrediction;
+                        var home = TeamCell(fixture.HomeTeamId, result.HomeTeamName);
+                        var away = TeamCell(fixture.AwayTeamId, result.AwayTeamName);
+                        var status = StatusText(fixture);
+                        var pick = ResultOrPickText(fixture, prediction, row.HasPrediction);
+                        var rationale = row.HasPrediction
+                            ? RationaleText(prediction, fixture.Id, fixture.IsPlayed ? null : availabilityClaimsByFixture)
+                            : "No pre-game snapshot";
+                        var homeWin = row.HasPrediction ? Percent(prediction.Outcome.HomeWin, 0) : "-";
+                        var draw = row.HasPrediction ? Percent(prediction.Outcome.Draw, 0) : "-";
+                        var awayWin = row.HasPrediction ? Percent(prediction.Outcome.AwayWin, 0) : "-";
+                        builder.AppendLine($"| {home} vs {away} | {status} | {pick} | {rationale} | {homeWin} | {draw} | {awayWin} |");
+                    }
+
+                    builder.AppendLine();
+                    builder.AppendLine("</details>");
+                    builder.AppendLine();
+                }
             }
 
             return builder.ToString();

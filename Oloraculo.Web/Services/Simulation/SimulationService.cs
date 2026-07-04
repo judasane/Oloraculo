@@ -48,7 +48,7 @@ namespace Oloraculo.Web.Services.Simulation
 
                 for (var i = 0; i < n; i++)
                 {
-                    var (groupSlots, bestThirds) = await ProjectRemainingGroupSlotsAsync(countProjectedAlive);
+                    var (groupSlots, bestThirds) = await ProjectRemainingGroupSlotsAsync(countGroupMetrics: true);
                     if (countProjectedAlive)
                     {
                         foreach (var group in groupSlots.Values)
