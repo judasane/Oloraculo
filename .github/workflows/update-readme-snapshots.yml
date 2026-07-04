@@ -3,7 +3,7 @@ name: Update README snapshots
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "*/30 * * * *"
 
 permissions:
   contents: write
@@ -11,6 +11,10 @@ permissions:
 jobs:
   update-readme-snapshots:
     runs-on: ubuntu-latest
+    env:
+      Oloraculo__ApiFootballApiKey: ${{ secrets.API_FOOTBALL_API_KEY }}
+      Oloraculo__ApiFootballLeagueId: ${{ vars.API_FOOTBALL_LEAGUE_ID || '1' }}
+      Oloraculo__ApiFootballSeason: ${{ vars.API_FOOTBALL_SEASON || '2026' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,6 +26,14 @@ jobs:
 
       - name: Restore
         run: dotnet restore Oloraculo.sln
+
+      - name: Verify live results feed configuration
+        run: |
+          if [ -z "$Oloraculo__ApiFootballApiKey" ]; then
+            echo "::warning::API_FOOTBALL_API_KEY is not configured. README snapshots will use versioned fallback data instead of live results."
+          else
+            echo "API-Football key configured; README snapshots will refresh from live tournament results."
+          fi
 
       - name: Run tests
         run: dotnet test Oloraculo.sln --no-restore --nologo
