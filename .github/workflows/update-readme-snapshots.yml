@@ -38,6 +38,9 @@ jobs:
       - name: Run tests
         run: dotnet test Oloraculo.sln --no-restore --nologo
 
+      - name: Refresh public knockout fallback data
+        run: python3 scripts/update_knockout_results.py
+
       - name: Export README snapshots
         run: dotnet run --project Oloraculo.Web -- --export-readme-snapshots
 
