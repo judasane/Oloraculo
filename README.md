@@ -9,29 +9,29 @@ _A medida que se recibe nueva información y se juegan partidos reales, el Olor�
 
 ### Torneo
 
-_Generado 2026-07-03 19:52 UTC a través de 10,000 simulaciones._
+_Generado 2026-07-04 04:04 UTC a través de 10,000 simulaciones._
 _Probabilidades calculadas desde el estado actual del torneo. Los partidos ya jugados se tratan como hechos fijos; solo se simulan partidos pendientes._
 
 > Advertencia: el feed de resultados no se actualizó; estas probabilidades pueden estar desfasadas.
 
 | Team | Group | Alive | R16 | QF | SF | Final | Champion |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina | J | 90 % | 62 % | 45 % | 31 % | 21 % | **13.2 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain | H | 95 % | 61 % | 42 % | 29 % | 19 % | **11.9 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil | C | 100 % | 100 % | 69 % | 36 % | 18 % | **7.7 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England | L | 90 % | 56 % | 35 % | 21 % | 12 % | **6.6 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France | I | 78 % | 49 % | 30 % | 18 % | 10 % | **5.4 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | C | 92 % | 26 % | 19 % | 13 % | 8 % | **5.1 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/pt.svg" width="18" alt=""> Portugal | K | 77 % | 49 % | 28 % | 15 % | 9 % | **4.5 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | D | 87 % | 55 % | 30 % | 16 % | 8 % | **4.0 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany | E | 87 % | 55 % | 29 % | 16 % | 8 % | **4.0 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/co.svg" width="18" alt=""> Colombia | K | 75 % | 45 % | 25 % | 13 % | 7 % | **3.4 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands | F | 90 % | 36 % | 24 % | 13 % | 6 % | **3.3 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal | I | 76 % | 45 % | 24 % | 13 % | 6 % | **2.9 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | I | 74 % | 43 % | 23 % | 12 % | 6 % | **2.8 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/mx.svg" width="18" alt=""> Mexico | A | 82 % | 49 % | 24 % | 12 % | 6 % | **2.4 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/dz.svg" width="18" alt=""> Algeria | J | 72 % | 36 % | 19 % | 9 % | 4 % | **2.0 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ir.svg" width="18" alt=""> Iran | G | 75 % | 42 % | 20 % | 9 % | 4 % | **1.8 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina | J | 90 % | 62 % | 44 % | 31 % | 21 % | **13.0 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain | H | 95 % | 62 % | 42 % | 29 % | 19 % | **12.0 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil | C | 100 % | 100 % | 70 % | 37 % | 18 % | **8.0 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England | L | 90 % | 56 % | 35 % | 20 % | 12 % | **6.5 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France | I | 78 % | 49 % | 30 % | 17 % | 10 % | **5.3 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | C | 92 % | 26 % | 19 % | 13 % | 8 % | **5.2 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/pt.svg" width="18" alt=""> Portugal | K | 78 % | 49 % | 29 % | 15 % | 9 % | **4.4 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/de.svg" width="18" alt=""> Germany | E | 87 % | 55 % | 29 % | 16 % | 8 % | **4.2 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | D | 88 % | 55 % | 30 % | 16 % | 8 % | **3.9 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/nl.svg" width="18" alt=""> Netherlands | F | 90 % | 36 % | 23 % | 12 % | 6 % | **3.3 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/co.svg" width="18" alt=""> Colombia | K | 74 % | 45 % | 25 % | 13 % | 7 % | **3.2 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/sn.svg" width="18" alt=""> Senegal | I | 76 % | 45 % | 25 % | 12 % | 6 % | **2.9 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | I | 74 % | 42 % | 23 % | 12 % | 6 % | **2.8 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/mx.svg" width="18" alt=""> Mexico | A | 81 % | 49 % | 24 % | 12 % | 5 % | **2.4 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/dz.svg" width="18" alt=""> Algeria | J | 72 % | 36 % | 19 % | 10 % | 5 % | **2.1 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/kr.svg" width="18" alt=""> South Korea | A | 82 % | 46 % | 22 % | 10 % | 4 % | **1.9 %** |
 
 ### Eliminatorias
 
@@ -167,10 +167,10 @@ _Los equipos marcados como proyectados todavía no están confirmados por la fue
 
 | Match | Status | Result / Pick | Why | H | D | A |
 | --- | --- | --- | --- | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | Scheduled | 2-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 39 % | 31 % | 30 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay vs <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 26 % | 32 % | 41 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | Scheduled | 2-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 39 % | 31 % | 31 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay vs <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 27 % | 32 % | 41 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 30 % | 32 % | 38 % |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | Scheduled | 1-2 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 32 % | 31 % | 37 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/au.svg" width="18" alt=""> Australia | Scheduled | 1-2 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 33 % | 31 % | 36 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/py.svg" width="18" alt=""> Paraguay | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 41 % | 31 % | 28 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States vs <img src="Oloraculo.Web/wwwroot/flags/4x3/tr.svg" width="18" alt=""> Turkey | Scheduled | 2-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 38 % | 30 % | 32 % |
 
@@ -209,7 +209,7 @@ _Los equipos marcados como proyectados todavía no están confirmados por la fue
 
 | Match | Status | Result / Pick | Why | H | D | A |
 | --- | --- | --- | --- | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/be.svg" width="18" alt=""> Belgium vs <img src="Oloraculo.Web/wwwroot/flags/4x3/eg.svg" width="18" alt=""> Egypt | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 45 % | 30 % | 24 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/be.svg" width="18" alt=""> Belgium vs <img src="Oloraculo.Web/wwwroot/flags/4x3/eg.svg" width="18" alt=""> Egypt | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 45 % | 30 % | 25 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/be.svg" width="18" alt=""> Belgium vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ir.svg" width="18" alt=""> Iran | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 41 % | 30 % | 29 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/be.svg" width="18" alt=""> Belgium vs <img src="Oloraculo.Web/wwwroot/flags/4x3/nz.svg" width="18" alt=""> New Zealand | Scheduled | 2-1 | Model: Or&#225;culo final (Modelo base, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Elo del equipo A, Elo del equipo B, Resultados recientes, Ratings Elo, +6 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 54 % | 25 % | 21 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/eg.svg" width="18" alt=""> Egypt vs <img src="Oloraculo.Web/wwwroot/flags/4x3/ir.svg" width="18" alt=""> Iran | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 30 % | 32 % | 38 % |
@@ -223,7 +223,7 @@ _Los equipos marcados como proyectados todavía no están confirmados por la fue
 
 | Match | Status | Result / Pick | Why | H | D | A |
 | --- | --- | --- | --- | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/cv.svg" width="18" alt=""> Cape Verde vs <img src="Oloraculo.Web/wwwroot/flags/4x3/sa.svg" width="18" alt=""> Saudi Arabia | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 32 % | 33 % | 35 % |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/cv.svg" width="18" alt=""> Cape Verde vs <img src="Oloraculo.Web/wwwroot/flags/4x3/sa.svg" width="18" alt=""> Saudi Arabia | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 31 % | 33 % | 35 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/cv.svg" width="18" alt=""> Cape Verde vs <img src="Oloraculo.Web/wwwroot/flags/4x3/uy.svg" width="18" alt=""> Uruguay | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 18 % | 29 % | 53 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/sa.svg" width="18" alt=""> Saudi Arabia vs <img src="Oloraculo.Web/wwwroot/flags/4x3/uy.svg" width="18" alt=""> Uruguay | Scheduled | 1-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 19 % | 30 % | 51 % |
 | <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain vs <img src="Oloraculo.Web/wwwroot/flags/4x3/cv.svg" width="18" alt=""> Cape Verde | Scheduled | 2-1 | Model: Or&#225;culo final (Modelo base, Ranking FIFA, Elo, Forma reciente, Modelo de goles (Poisson))<br>Signals: Puntos FIFA del equipo A, Puntos FIFA del equipo B, Elo del equipo A, Elo del equipo B, +8 more<br>Missing: disponibilidad de jugadores, alineaciones, cuotas | 72 % | 20 % | 8 % |
