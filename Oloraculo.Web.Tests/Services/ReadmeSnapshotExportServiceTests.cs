@@ -261,6 +261,28 @@ public class ReadmeSnapshotExportServiceTests : TestFixtures
     }
 
     [Fact]
+    public void ReadmeExporter_DoesNotFillTournamentTableWithEliminatedTeams()
+    {
+        var projection = new TournamentProjection
+        {
+            GeneratedAt = DateTimeOffset.Parse("2026-01-01T00:00:00Z"),
+            Simulations = 100,
+            ModelName = "Final",
+            InputSummaryHash = "hash",
+            Teams =
+            [
+                new TeamTournamentProbability { TeamId = "argentina", Group = "C", Qualify = 1, ReachRoundOf16 = 1, ReachQuarterFinal = 1, WinTournament = .2 },
+                new TeamTournamentProbability { TeamId = "germany", Group = "E", Qualify = 0, ReachRoundOf16 = 0, ReachQuarterFinal = 0, WinTournament = 0 }
+            ]
+        };
+
+        var rendered = ReadmeSnapshotExportService.RenderSnapshotBlock(projection, [], Names(), DateTimeOffset.Parse("2026-01-02T00:00:00Z"));
+
+        Assert.Contains("Argentina", rendered);
+        Assert.DoesNotContain("Germany", rendered);
+    }
+
+    [Fact]
     public void ReadmeExporter_RendersActualScoreForPlayedFixtures()
     {
         var rendered = ReadmeSnapshotExportService.RenderSnapshotBlock(
