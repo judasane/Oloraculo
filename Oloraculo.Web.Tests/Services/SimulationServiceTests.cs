@@ -79,6 +79,12 @@ public class SimulationServiceTests : TestFixtures
             fixture.HomeGoals = fixture.HomeTeamId == "mexico" ? 10 : 0;
             fixture.AwayGoals = fixture.AwayTeamId == "mexico" ? 10 : 0;
         }
+
+        var mexicoKnockouts = await db.KnockoutMatches
+            .Where(m => m.ConfirmedHomeTeamId == "mexico" || m.ConfirmedAwayTeamId == "mexico")
+            .ToListAsync();
+        db.KnockoutMatches.RemoveRange(mexicoKnockouts);
+
         await db.SaveChangesAsync();
 
         var projection = await Simulation(db, simulations: 5, seed: 7).RunAsync(saveSnapshot: false);

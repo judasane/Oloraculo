@@ -82,7 +82,18 @@ class Result:
 
 
 def fetch_text(url: str) -> str:
-    request = urllib.request.Request(url, headers={"User-Agent": "Oloraculo"})
+    request = urllib.request.Request(
+        url,
+        headers={
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+            "User-Agent": (
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/126.0.0.0 Safari/537.36 Oloraculo"
+            ),
+        },
+    )
     with urllib.request.urlopen(request, timeout=30) as response:
         raw = response.read().decode("utf-8", errors="replace")
     raw = re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>", " ", raw, flags=re.I)
@@ -215,6 +226,57 @@ def parse_cbs_round_of_32(text: str) -> list[Result]:
     return list(results.values())
 
 
+def parse_cbs_round_of_16(text: str) -> list[Result]:
+    section = re.search(
+        r"Current World Cup bracket[\s\S]*?Round of 16 bracket(?P<body>[\s\S]*?)Round of 32 results",
+        text,
+        re.I,
+    )
+    if not section:
+        raise ValueError("CBS page did not expose Round of 16 bracket")
+
+    body = re.sub(r"\s+", " ", section.group("body"))
+    pattern = re.compile(
+        r"(?P<a>[A-Z][A-Za-z .&]+?)\s+(?P<ag>\d+)\s*(?:,|vs\.)\s*(?:vs\.\s*)?"
+        r"(?P<b>[A-Z][A-Za-z .&]+?)\s+(?P<bg>\d+)"
+        r"(?:\s*\((?P<wp>\d+)-(?P<lp>\d+)\s+on\s+pen(?:s|alties)\))?",
+        re.I,
+    )
+
+    results: dict[int, Result] = {}
+    for match in pattern.finditer(body):
+        result = result_for_pair(
+            match.group("a"),
+            int(match.group("ag")),
+            match.group("b"),
+            int(match.group("bg")),
+            set(),
+            CBS_BRACKET_URL,
+            "2026-07-06T03:30:00Z",
+            (int(match.group("wp")), int(match.group("lp"))) if match.group("wp") else None,
+        )
+        if result is not None and result.stage == "RoundOf16":
+            results[result.match_number] = result
+
+    eliminated = re.search(r"Eliminated teams in the round of 16(?P<body>[\s\S]*)", body, re.I)
+    if eliminated:
+        eliminated_teams = {
+            canonical(line)
+            for line in re.split(r"\s{2,}|(?<=[a-z])(?=[A-Z])", eliminated.group("body"))
+            if canonical(line) in {team for pair in PAIR_TO_MATCH for team in pair}
+        }
+        found_losers = {
+            result.away if result.winner == result.home else result.home
+            for result in results.values()
+            if result.stage == "RoundOf16"
+        }
+        missing = sorted(eliminated_teams - found_losers)
+        if missing:
+            raise ValueError(f"CBS parser missed eliminated Round of 16 teams: {', '.join(missing)}")
+
+    return list(results.values())
+
+
 def parse_sbnation_round_of_16(text: str) -> list[Result]:
     eliminated: set[str] = set()
     results: dict[int, Result] = {}
@@ -267,7 +329,9 @@ def row(result: Result) -> dict[str, str]:
 def main() -> int:
     existing = read_existing()
     updates: dict[int, Result] = {}
-    updates.update({result.match_number: result for result in parse_cbs_round_of_32(fetch_text(CBS_BRACKET_URL))})
+    cbs_text = fetch_text(CBS_BRACKET_URL)
+    updates.update({result.match_number: result for result in parse_cbs_round_of_32(cbs_text)})
+    updates.update({result.match_number: result for result in parse_cbs_round_of_16(cbs_text)})
     updates.update({result.match_number: result for result in parse_sbnation_round_of_16(fetch_text(SBNATION_QUARTERFINAL_URL))})
 
     for result in updates.values():
