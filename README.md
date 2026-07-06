@@ -9,7 +9,7 @@ _A medida que se recibe nueva información y se juegan partidos reales, el Olor�
 
 ### Torneo
 
-_Generado 2026-07-05 23:55 UTC a través de 10,000 simulaciones._
+_Generado 2026-07-06 01:59 UTC a través de 10,000 simulaciones._
 _Probabilidades calculadas desde el estado actual del torneo. Los partidos ya jugados se tratan como hechos fijos; solo se simulan partidos pendientes._
 
 | Team | Group | Alive | R16 | QF | SF | Final | Champion |
