@@ -9,23 +9,21 @@ _A medida que se recibe nueva información y se juegan partidos reales, el Olor�
 
 ### Torneo
 
-_Generado 2026-07-06 23:58 UTC a través de 10,000 simulaciones._
+_Generado 2026-07-07 10:45 UTC a través de 10,000 simulaciones._
 _Probabilidades calculadas desde el estado actual del torneo. Los partidos ya jugados se tratan como hechos fijos; solo se simulan partidos pendientes._
 
 | Team | Group | Alive | R16 | QF | SF | Final | Champion |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | C | 100 % | 100 % | 100 % | 58 % | 35 % | **19.8 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina | J | 100 % | 100 % | 74 % | 50 % | 31 % | **17.3 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England | L | 100 % | 100 % | 100 % | 59 % | 31 % | **15.0 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain | H | 100 % | 100 % | 62 % | 44 % | 23 % | **14.0 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France | I | 100 % | 100 % | 100 % | 42 % | 21 % | **10.2 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | I | 100 % | 100 % | 100 % | 41 % | 17 % | **6.9 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/co.svg" width="18" alt=""> Colombia | K | 100 % | 100 % | 60 % | 26 % | 13 % | **5.3 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/pt.svg" width="18" alt=""> Portugal | K | 100 % | 100 % | 38 % | 23 % | 9 % | **4.4 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/be.svg" width="18" alt=""> Belgium | G | 100 % | 100 % | 53 % | 19 % | 7 % | **2.6 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States | D | 100 % | 100 % | 47 % | 15 % | 5 % | **1.6 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/ch.svg" width="18" alt=""> Switzerland | B | 100 % | 100 % | 40 % | 14 % | 5 % | **1.6 %** |
-| <img src="Oloraculo.Web/wwwroot/flags/4x3/eg.svg" width="18" alt=""> Egypt | G | 100 % | 100 % | 26 % | 10 % | 4 % | **1.2 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain | H | 100 % | 100 % | 100 % | 69 % | 37 % | **21.8 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | C | 100 % | 100 % | 100 % | 58 % | 32 % | **17.9 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina | J | 100 % | 100 % | 75 % | 52 % | 32 % | **17.7 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England | L | 100 % | 100 % | 100 % | 60 % | 31 % | **15.1 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/fr.svg" width="18" alt=""> France | I | 100 % | 100 % | 100 % | 42 % | 19 % | **9.4 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | I | 100 % | 100 % | 100 % | 40 % | 16 % | **6.4 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/co.svg" width="18" alt=""> Colombia | K | 100 % | 100 % | 60 % | 25 % | 12 % | **4.9 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/be.svg" width="18" alt=""> Belgium | G | 100 % | 100 % | 100 % | 31 % | 11 % | **4.1 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/ch.svg" width="18" alt=""> Switzerland | B | 100 % | 100 % | 40 % | 13 % | 5 % | **1.5 %** |
+| <img src="Oloraculo.Web/wwwroot/flags/4x3/eg.svg" width="18" alt=""> Egypt | G | 100 % | 100 % | 25 % | 10 % | 4 % | **1.1 %** |
 
 ### Eliminatorias
 
@@ -64,8 +62,8 @@ _Los equipos marcados como proyectados todavía no están confirmados por la fue
 | 90 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ca.svg" width="18" alt=""> Canada | <img src="Oloraculo.Web/wwwroot/flags/4x3/ma.svg" width="18" alt=""> Morocco | Finished | Pre-match prediction unavailable | **0-3** |
 | 91 | <img src="Oloraculo.Web/wwwroot/flags/4x3/br.svg" width="18" alt=""> Brazil | <img src="Oloraculo.Web/wwwroot/flags/4x3/no.svg" width="18" alt=""> Norway | Finished | Pre-match prediction unavailable | **0-2** |
 | 92 | <img src="Oloraculo.Web/wwwroot/flags/4x3/mx.svg" width="18" alt=""> Mexico | <img src="Oloraculo.Web/wwwroot/flags/4x3/gb-eng.svg" width="18" alt=""> England | Finished | Pre-match prediction unavailable | **2-3** |
-| 93 | <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/pt.svg" width="18" alt=""> Portugal <sub>projected</sub> | Scheduled | **2-1** · Spain advances | - |
-| 94 | <img src="Oloraculo.Web/wwwroot/flags/4x3/be.svg" width="18" alt=""> Belgium <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States <sub>projected</sub> | Scheduled | **2-1** · Belgium advances | - |
+| 93 | <img src="Oloraculo.Web/wwwroot/flags/4x3/pt.svg" width="18" alt=""> Portugal | <img src="Oloraculo.Web/wwwroot/flags/4x3/es.svg" width="18" alt=""> Spain | Finished | Pre-match prediction unavailable | **0-1** |
+| 94 | <img src="Oloraculo.Web/wwwroot/flags/4x3/us.svg" width="18" alt=""> United States | <img src="Oloraculo.Web/wwwroot/flags/4x3/be.svg" width="18" alt=""> Belgium | Finished | Pre-match prediction unavailable | **1-4** |
 | 95 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ar.svg" width="18" alt=""> Argentina <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/eg.svg" width="18" alt=""> Egypt <sub>projected</sub> | Scheduled | **1-1** · Argentina advances | - |
 | 96 | <img src="Oloraculo.Web/wwwroot/flags/4x3/ch.svg" width="18" alt=""> Switzerland <sub>projected</sub> | <img src="Oloraculo.Web/wwwroot/flags/4x3/co.svg" width="18" alt=""> Colombia <sub>projected</sub> | Scheduled | **1-2** · Colombia advances | - |
 
