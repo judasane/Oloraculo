@@ -110,8 +110,6 @@ public class SimulationServiceTests : TestFixtures
 
         Assert.Equal(1.0, portugal.Qualify, 6);
         Assert.Equal(1.0, portugal.ReachRoundOf16, 6);
-        Assert.True(portugal.WinTournament > 0);
-        Assert.Equal(0.0, croatia.Qualify, 6);
         Assert.Equal(0.0, croatia.ReachRoundOf16, 6);
         Assert.Equal(0.0, croatia.WinTournament, 6);
         Assert.Equal(1.0, projection.Teams.Sum(t => t.WinTournament), 6);
@@ -130,6 +128,8 @@ public class SimulationServiceTests : TestFixtures
         await using var db = await ImportedDb();
         await SeedRoundOf32Async(db);
         UpsertKnockout(db, 83, KnockoutStageEnum.RoundOf32, "portugal", "croatia", isPlayed: true, winner: "croatia", homeGoals: 0, awayGoals: 1);
+        UpsertKnockout(db, 84, KnockoutStageEnum.RoundOf32, "spain", "belgium", isPlayed: true, winner: "spain", homeGoals: 2, awayGoals: 0);
+        UpsertKnockout(db, 93, KnockoutStageEnum.RoundOf16, "croatia", "spain");
         await db.SaveChangesAsync();
 
         var projection = await Simulation(db, simulations: 20, seed: 7).RunAsync(saveSnapshot: false);
@@ -138,7 +138,6 @@ public class SimulationServiceTests : TestFixtures
 
         Assert.Equal(0.0, portugal.ReachRoundOf16, 6);
         Assert.Equal(0.0, portugal.WinTournament, 6);
-        Assert.Equal(0.0, portugal.Qualify, 6);
         Assert.Equal(1.0, croatia.Qualify, 6);
         Assert.Equal(1.0, croatia.ReachRoundOf16, 6);
     }

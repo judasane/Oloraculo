@@ -19,3 +19,5 @@ MatchNumber,Stage,HomeTeam,AwayTeam,HomeGoals,AwayGoals,HomePenaltyGoals,AwayPen
 90,RoundOf16,Canada,Morocco,0,3,,,Morocco,Finished,https://www.sbnation.com/fifa-world-cup/1121530/world-cup-2026-quarterfinals-teams,2026-07-04T19:40:00Z
 91,RoundOf16,Brazil,Norway,0,2,,,Norway,Finished,https://www.cbssports.com/soccer/news/2026-fifa-world-cup-bracket-round-of-32-results-round-of-16-matchups-final/,2026-07-06T03:30:00Z
 92,RoundOf16,Mexico,England,2,3,,,England,Finished,https://www.cbssports.com/soccer/news/2026-fifa-world-cup-bracket-round-of-32-results-round-of-16-matchups-final/,2026-07-06T03:30:00Z
+93,RoundOf16,Portugal,Spain,0,1,,,Spain,Finished,https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=760506,2026-07-07T00:00:00Z
+94,RoundOf16,United States,Belgium,1,4,,,Belgium,Finished,https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=760507,2026-07-07T00:00:00Z

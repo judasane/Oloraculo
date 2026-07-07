@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import csv
 import html
+import json
 import re
 import sys
 import urllib.request
@@ -11,6 +12,7 @@ from typing import Optional
 
 CBS_BRACKET_URL = "https://www.cbssports.com/soccer/news/2026-fifa-world-cup-bracket-round-of-32-results-round-of-16-matchups-final/"
 SBNATION_QUARTERFINAL_URL = "https://www.sbnation.com/fifa-world-cup/1121530/world-cup-2026-quarterfinals-teams"
+ESPN_SUMMARY_URL = "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event={event_id}"
 CSV_PATH = Path("Oloraculo.Web/Data/knockout_results.csv")
 
 FIELDS = [
@@ -65,6 +67,11 @@ ALIASES = {
     "USMNT": "United States",
 }
 
+ESPN_EVENT_IDS = {
+    93: "760506",  # Portugal vs. Spain
+    94: "760507",  # United States vs. Belgium
+}
+
 
 @dataclass(frozen=True)
 class Result:
@@ -101,6 +108,18 @@ def fetch_text(url: str) -> str:
     text = html.unescape(raw)
     text = text.replace("\xa0", " ")
     return re.sub(r"\n\s*\n+", "\n", text)
+
+
+def fetch_json(url: str) -> dict:
+    request = urllib.request.Request(
+        url,
+        headers={
+            "Accept": "application/json,text/plain,*/*",
+            "User-Agent": "Oloraculo",
+        },
+    )
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.loads(response.read().decode("utf-8", errors="replace"))
 
 
 def canonical(team: str) -> str:
@@ -302,6 +321,36 @@ def parse_sbnation_round_of_16(text: str) -> list[Result]:
     return list(results.values())
 
 
+def parse_espn_round_of_16() -> list[Result]:
+    results: dict[int, Result] = {}
+    for expected_match_number, event_id in ESPN_EVENT_IDS.items():
+        data = fetch_json(ESPN_SUMMARY_URL.format(event_id=event_id))
+        competition = (data.get("header", {}).get("competitions") or [{}])[0]
+        status = competition.get("status", {}).get("type", {})
+        if not status.get("completed"):
+            continue
+
+        competitors = competition.get("competitors") or []
+        home = next((c for c in competitors if c.get("homeAway") == "home"), None)
+        away = next((c for c in competitors if c.get("homeAway") == "away"), None)
+        if home is None or away is None:
+            continue
+
+        result = result_for_pair(
+            home.get("team", {}).get("displayName", ""),
+            int(home.get("score", 0)),
+            away.get("team", {}).get("displayName", ""),
+            int(away.get("score", 0)),
+            set(),
+            ESPN_SUMMARY_URL.format(event_id=event_id),
+            "2026-07-07T00:00:00Z",
+        )
+        if result is not None and result.match_number == expected_match_number:
+            results[result.match_number] = result
+
+    return list(results.values())
+
+
 def read_existing() -> dict[int, dict[str, str]]:
     if not CSV_PATH.exists():
         return {}
@@ -333,6 +382,7 @@ def main() -> int:
     updates.update({result.match_number: result for result in parse_cbs_round_of_32(cbs_text)})
     updates.update({result.match_number: result for result in parse_cbs_round_of_16(cbs_text)})
     updates.update({result.match_number: result for result in parse_sbnation_round_of_16(fetch_text(SBNATION_QUARTERFINAL_URL))})
+    updates.update({result.match_number: result for result in parse_espn_round_of_16()})
 
     for result in updates.values():
         existing[result.match_number] = row(result)
